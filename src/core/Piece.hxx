@@ -89,6 +89,16 @@ public:
 
   /** return the number of voxels */
   virtual unsigned int nbVoxels() const = 0;
+
+  inline Piece & move(Direction d) {
+    if (d == Xminus) location.addX(-1);
+    if (d == Xplus) location.addX(1);
+    if (d == Yminus) location.addY(-1);
+    if (d == Yplus) location.addY(1);
+    if (d == Zminus) location.addZ(-1);
+    if (d == Zplus) location.addZ(1);
+    return *this;
+  }
 };
 
 

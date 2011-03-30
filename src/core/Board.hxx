@@ -31,10 +31,7 @@ public:
       return *this;
     }
 
-    inline Piece & operator*() {
-      return **it;
-    }
-    inline const Piece & operator*() const {
+    inline Piece & operator*() const {
       return **it;
     }
 
@@ -100,9 +97,13 @@ public:
       delete *b;
   }
 
+  /** add a new piece in the board. This function throws an exception if the configuration is not valid according to
+      the requirements of the board. */
   Board & addPiece(const Piece & b);
 
-
+  /** move piece in the board. This function throws an exception if the configuration is not valid according to
+      the requirements of the board. */
+  Board & movePiece(const iterator & i, Direction d);
 };
 
 #endif

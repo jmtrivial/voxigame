@@ -11,7 +11,18 @@ int main(int, char **) {
   StraightPiece p(2, i, Xminus);
 
   try {
+    std::cout << "Add a piece in the board" << std::endl;
     b.addPiece(p);
+    std::cout << "Move in the Y direction" << std::endl;
+    b.movePiece(b.begin(), Yplus);
+    std::cout << "Move in the Y direction" << std::endl;
+    b.movePiece(b.begin(), Yplus);
+    std::cout << "Move in the Y direction" << std::endl;
+    b.movePiece(b.begin(), Yplus);
+    std::cout << "Move in the Y direction" << std::endl;
+    b.movePiece(b.begin(), Yplus);
+    std::cout << "Move in the Y direction" << std::endl;
+    b.movePiece(b.begin(), Yplus);
   }
   catch (ExceptionOutside e) {
     std::cout << "Piece outside of the board" << std::endl;
