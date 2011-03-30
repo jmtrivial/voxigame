@@ -104,6 +104,13 @@ public:
   /** move piece in the board. This function throws an exception if the configuration is not valid according to
       the requirements of the board. */
   Board & movePiece(const iterator & i, Direction d);
+
+  /** return true if the given piece is inside the board */
+  bool isInsidePiece(const const_iterator & i) const;
+
+  /** return true if the given piece intersects another piece in the board */
+  bool hasIntersectionPiece(const const_iterator & i) const;
+
 };
 
 #endif
