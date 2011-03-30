@@ -3,8 +3,10 @@
 
 #include <cmath>
 
+/** main direction in 3D space */
 typedef enum Direction { Xplus, Xminus, Yplus, Yminus, Zplus, Zminus, Static } Direction;
 
+/** angles for discrete rotations */
 typedef enum Angle { A0, A90, A180, A270 } Angle;
 
 /** increment the direction using the enum ordering */
@@ -19,6 +21,9 @@ Angle operator++(Angle a);
 /** increment the angle using the reverse of enum ordering */
 Angle operator--(Angle a);
 
+/**
+   A class to describe discrete 3D coordinates
+ */
 class Coord {
 private:
   int x;
@@ -38,6 +43,7 @@ public:
   /** accessor */
   inline int getZ() const { return z; }
 
+  /** affectation */
   Coord & operator=(const Coord & c) {
     x = c.x;
     y = c.y;
@@ -45,18 +51,24 @@ public:
     return *this;
   }
 
+  /** comparator */
   inline bool operator==(const Coord & c) const {
     return x == c.x && y == c.y && z == c.z;
   }
 
+  /** comparator */
   inline bool operator !=(const Coord & c) const {
     return x != c.x || y != c.y || z != c.z;
   }
 
+  /** translation along x */
   inline Coord & addX(int v) { x += v; return *this; }
+  /** translation along y */
   inline Coord & addY(int v) { y += v; return *this; }
+  /** translation along z */
   inline Coord & addZ(int v) { z += v; return *this; }
 
+  /** translate the current point in the given direction, with a distance of \p t */
   Coord & translate(const Direction & direction, unsigned int t) {
     if (direction == Xplus)
       addX(t);
@@ -73,6 +85,7 @@ public:
     return *this;
   }
 
+  /** compute the distance between two discrete points */
   double distance(const Coord & c) const {
     return std::sqrt((x - c.x) * (x - c.x) +
 		     (y - c.y) * (y - c.y) +
@@ -80,10 +93,12 @@ public:
   }
 };
 
-
+/** a box is a 3D area parallel to the axes */
 class Box {
 private:
+  /** first corner */
   Coord corner1;
+  /** last corner */
   Coord corner2;
 public:
   /** constructor */
