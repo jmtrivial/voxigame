@@ -13,6 +13,8 @@ private:
   std::vector<Piece *> bricks;
   bool allowIntersections;
   bool allowOutside;
+
+
 public:
 
   class iterator {
@@ -78,6 +80,11 @@ public:
   iterator end() { return iterator(bricks.end()); }
   const_iterator end() const { return const_iterator(bricks.end()); }
 
+private:
+  /** return true if the given piece can be moved in the given direction */
+  void isAvailableLocationForMove(const const_iterator & i, Direction d) const;
+
+public:
   /** default constructor:
       @param x Size in x direction
       @param y Size in y direction
@@ -110,6 +117,9 @@ public:
 
   /** return true if the given piece intersects another piece in the board */
   bool hasIntersectionPiece(const const_iterator & i) const;
+
+  /** return true if the given piece can be moved */
+  bool isMovablePiece(const const_iterator & i) const;
 
 };
 

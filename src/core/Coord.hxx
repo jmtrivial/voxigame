@@ -3,7 +3,13 @@
 
 #include <cmath>
 
-typedef enum Direction { Xplus, Xminus, Yplus, Yminus, Zplus, Zminus } Direction;
+typedef enum Direction { Xplus, Xminus, Yplus, Yminus, Zplus, Zminus, Static } Direction;
+
+typedef enum Angle { A0, A90, A180, A270 } Angle;
+
+Direction operator++(Direction d);
+
+Angle operator++(Angle a);
 
 class Coord {
 private:

@@ -7,10 +7,14 @@ class Piece {
 public:
 
 protected:
+  /** location of the origin */
   Coord location;
 
+  /** main orientation of the piece */
   Direction direction;
 
+  /** rotation according to the main axis */
+  Angle angle;
 public:
   class const_iterator;
 
@@ -57,9 +61,13 @@ public:
 
 
   /** constructor */
-  Piece(const Coord & c, const Direction & d) : location(c), direction(d) {}
+  Piece(const Coord & c,
+	const Direction & d = Xplus,
+	const Angle & a = A0) : location(c), direction(d), angle(a) {}
 
-  Piece(const Piece & p) : location(p.location), direction(p.direction) { }
+  Piece(const Piece & p) : location(p.location),
+			   direction(p.direction),
+			   angle(p.angle){ }
 
   /** destructor */
   virtual ~Piece() {}
@@ -67,6 +75,7 @@ public:
   /** accessor */
   inline const Coord & getLocation() const { return location; }
   inline const Direction & getDirection() const { return direction; }
+  inline const Angle & getAngle() const { return angle; }
 
   /** clone the curent box */
   virtual Piece * clone() const = 0;

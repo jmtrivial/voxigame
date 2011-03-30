@@ -14,20 +14,29 @@ Board & Board::addPiece(const Piece & b) {
   return *this;
 }
 
-Board & Board::movePiece(const iterator & i, Direction d) {
+
+void Board::isAvailableLocationForMove(const const_iterator & i, Direction d) const {
   Piece * newp = (*i).clone();
   (*newp).move(d);
 
-  if (!allowOutside && !contains((*newp).getBoundedBox()))
+  if (!allowOutside && !contains((*newp).getBoundedBox())) {
+    delete newp;
     throw ExceptionOutside();
+  }
   if (!allowIntersections) {
     const_iterator e(bricks.end());
     for(const_iterator it = begin(); it != e; ++it)
-      if ((it != i) && (*it).intersect((*newp)))
+      if ((it != i) && (*it).intersect((*newp))) {
+	delete newp;
 	throw ExceptionIntersection();
+      }
   }
+
+}
+
+Board & Board::movePiece(const iterator & i, Direction d) {
+  isAvailableLocationForMove(i, d);
   (*i).move(d);
-  delete newp;
 
   return *this;
 
@@ -45,3 +54,18 @@ bool Board::hasIntersectionPiece(const const_iterator & i) const {
       return true;
   return false;
 }
+
+bool Board::isMovablePiece(const const_iterator & i) const {
+  for(Direction d = Xplus; d != Static; ++d) {
+    try {
+      isAvailableLocationForMove(i, d);
+      return true;
+    }
+    catch (...) {
+    }
+  }
+  return false;
+}
+
+
+

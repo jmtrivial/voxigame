@@ -6,6 +6,7 @@ Box StraightPiece::getBoundedBox() const {
 }
 
 Coord StraightPiece::getCoordById(unsigned int t) const {
+  // the straight pieces do not care about rotation
   Coord c(location);
   if (t < length)
     c.translate(direction, t);
