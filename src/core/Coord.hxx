@@ -7,9 +7,17 @@ typedef enum Direction { Xplus, Xminus, Yplus, Yminus, Zplus, Zminus, Static } D
 
 typedef enum Angle { A0, A90, A180, A270 } Angle;
 
+/** increment the direction using the enum ordering */
 Direction operator++(Direction d);
 
+/** return true if the two directions are the opposite */
+bool opposite(Direction d1, Direction d2);
+
+/** increment the angle using the enum ordering */
 Angle operator++(Angle a);
+
+/** increment the angle using the reverse of enum ordering */
+Angle operator--(Angle a);
 
 class Coord {
 private:

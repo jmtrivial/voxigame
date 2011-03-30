@@ -22,6 +22,32 @@ Angle operator++(Angle a) {
   }
 }
 
+Angle operator--(Angle a) {
+  switch(a) {
+  case A0: return A270;
+  case A90: return A0;
+  case A180: return A90;
+  case A270: return A180;
+  }
+}
+
+bool opposite(Direction d1, Direction d2) {
+  if ((d1 == Xplus) || (d1 == Yplus) ||
+      (d1 == Zplus)) {
+    Direction d = d1;
+    ++d;
+    return d == d2;
+  }
+  else if ((d2 == Xplus) || (d2 == Yplus) ||
+      (d2 == Zplus)) {
+    Direction d = d2;
+    ++d;
+    return d == d1;
+  }
+  else
+    return false;
+}
+
 Box::Box(int x, int y, int z) : corner1(0, 0, 0), corner2(x - 1, y - 1, z - 1) {
   assert(x > 0);
   assert(y > 0);

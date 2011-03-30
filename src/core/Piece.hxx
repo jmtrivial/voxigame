@@ -108,6 +108,9 @@ public:
     if (d == Zplus) location.addZ(1);
     return *this;
   }
+
+  /** rotate the current piece according to the given direction */
+  Piece & rotate(Direction d);
 };
 
 
