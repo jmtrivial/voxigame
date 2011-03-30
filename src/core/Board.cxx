@@ -69,3 +69,29 @@ bool Board::isMovablePiece(const const_iterator & i) const {
 
 
 
+
+bool Board::isStaticAndValid() const {
+  const_iterator e(bricks.end());
+  for(const_iterator it = begin(); it != e; ++it) {
+    if (!isInsidePiece(it))
+      return false;
+    if (hasIntersectionPiece(it))
+      return false;
+    if (isMovablePiece(it))
+      return false;
+  }
+
+  return true;
+}
+
+bool Board::isValid() const {
+  const_iterator e(bricks.end());
+  for(const_iterator it = begin(); it != e; ++it) {
+    if (!isInsidePiece(it))
+      return false;
+    if (hasIntersectionPiece(it))
+      return false;
+  }
+
+  return true;
+}

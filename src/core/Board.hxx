@@ -121,6 +121,14 @@ public:
   /** return true if the given piece can be moved */
   bool isMovablePiece(const const_iterator & i) const;
 
+
+  /** return true if the current board is both valid (without intersections
+      and pieces outside of the board), and static (without movable pieces */
+  bool isStaticAndValid() const;
+
+  /** return true if the current board is without intersections
+      and pieces outside of the board */
+  bool isValid() const;
 };
 
 #endif
