@@ -111,12 +111,7 @@ public:
 
   /** move the piece according to the given direction */
   inline Piece & move(Direction d) {
-    if (d == Xminus) location.addX(-1);
-    if (d == Xplus) location.addX(1);
-    if (d == Yminus) location.addY(-1);
-    if (d == Yplus) location.addY(1);
-    if (d == Zminus) location.addZ(-1);
-    if (d == Zplus) location.addZ(1);
+    location.translate(d);
     return *this;
   }
 

@@ -33,5 +33,14 @@ int main(int, char **) {
     std::cout << "Intersection with another piece" << std::endl;
   }
 
+  if (b.isValid())
+    std::cout << "The board is valid" << std::endl;
+
+  if (b.isStaticAndValid())
+    std::cout << "The board is static and valid" << std::endl;
+
+  if (b.hasPathBetweenWindows())
+    std::cout << "The board contain a path between the two windows" << std::endl;
+
   return 0;
 }

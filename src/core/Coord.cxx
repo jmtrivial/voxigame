@@ -1,33 +1,33 @@
 #include "Coord.hxx"
 #include <assert.h>
 
-Direction operator++(Direction d) {
+Direction & operator++(Direction & d) {
   switch(d) {
-  case Xplus: return Xminus;
-  case Xminus: return Yplus;
-  case Yplus: return Yminus;
-  case Yminus: return Zplus;
-  case Zplus: return Zminus;
+  case Xplus: d = Xminus; return d;
+  case Xminus: d = Yplus; return d;
+  case Yplus: d = Yminus; return d;
+  case Yminus: d = Zplus; return d;
+  case Zplus: d = Zminus; return d;
   case Zminus:
-  default: return Static;
+  default: d = Static; return d;
   }
 }
 
-Angle operator++(Angle a) {
+Angle & operator++(Angle & a) {
   switch(a) {
-  case A0: return A90;
-  case A90: return A180;
-  case A180: return A270;
-  case A270: return A0;
+  case A0: a = A90; return a;
+  case A90: a = A180; return a;
+  case A180: a = A270; return a;
+  case A270: a = A0; return a;
   }
 }
 
-Angle operator--(Angle a) {
+Angle & operator--(Angle & a) {
   switch(a) {
-  case A0: return A270;
-  case A90: return A0;
-  case A180: return A90;
-  case A270: return A180;
+  case A0: a = A270; return a;
+  case A90: a = A0; return a;
+  case A180: a = A90; return a;
+  case A270: a = A180; return a;
   }
 }
 

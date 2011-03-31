@@ -27,7 +27,7 @@ void Board::isAvailableLocationForMove(const const_iterator & i, Direction d) co
   }
   if (!allowIntersections) {
     for(Piece::const_iterator c = (*newp).begin(); c != (*newp).end(); ++c)
-      if (isEmpty(*c, i)) {
+      if (!isEmpty(*c, i)) {
 	delete newp;
 	throw ExceptionIntersection();
       }
@@ -53,7 +53,7 @@ bool Board::isInsidePiece(const const_iterator & i) const {
 
 bool Board::hasIntersectionPiece(const const_iterator & i) const {
   for(Piece::const_iterator c = (*i).begin(); c != (*i).end(); ++c)
-    if (isEmpty(*c, i) != 0)
+    if (!isEmpty(*c, i))
       return true;
   return false;
 }
@@ -145,4 +145,37 @@ bool Board::isEmpty(const Coord & c, const const_iterator & i) const {
       return (cc.front() == *(i.it));
     }
   }
+}
+
+bool Board::hasPathBetweenWindows() const {
+  if ((getNbPiece(window1) != 0) || (getNbPiece(window2) != 0))
+    return false;
+
+  std::vector<Coord> open;
+  bool seen[getSizeX()][getSizeY()][getSizeZ()];
+  for(unsigned int x = 0; x != getSizeX(); ++x)
+    for(unsigned int y = 0; y != getSizeY(); ++y)
+      for(unsigned int z = 0; z != getSizeZ(); ++z)
+	seen[x][y][z] = false;
+
+  open.push_back(window1);
+  seen[window1.getX()][window1.getY()][window1.getZ()] = true;
+
+  while(open.size() != 0) {
+    Coord c = open.back();
+    open.pop_back();
+    if (c == window2)
+      return true;
+    else {
+      for(Direction d = Xplus; d != Static; ++d) {
+	Coord cc = c + d;
+	if (contains(cc) && !seen[cc.getX()][cc.getY()][cc.getZ()] && (getNbPiece(cc) == 0)) {
+	  seen[cc.getX()][cc.getY()][cc.getZ()] = true;
+	  open.push_back(cc);
+	}
+      }
+    }
+  }
+
+  return false;
 }
