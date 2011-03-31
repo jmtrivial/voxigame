@@ -6,9 +6,8 @@ Board & Board::addPiece(const Piece & b) {
   if (!allowOutside && !contains(b.getBoundedBox()))
     throw ExceptionOutside();
   if (!allowIntersections) {
-    const_iterator e(bricks.end());
-    for(const_iterator i = begin(); i != e; ++i)
-      if ((*i).intersect(b))
+    for(Piece::const_iterator c = b.begin(); c != b.end(); ++c)
+      if (getNbPiece(*c) != 0)
 	throw ExceptionIntersection();
   }
   bricks.push_back(b.clone());
