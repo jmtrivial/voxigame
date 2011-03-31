@@ -26,4 +26,11 @@ public:
   }
 };
 
+class ExceptionInternalError : public Exception {
+public:
+  ExceptionInternalError(const std::string & m = "") : Exception(m) {
+
+  }
+};
+
 #endif

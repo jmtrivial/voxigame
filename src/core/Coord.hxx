@@ -123,6 +123,20 @@ public:
 	    corner1.getZ() <= c.getZ() && c.getZ() <= corner2.getZ());
   }
 
+  /** return corner1 */
+  inline const Coord & getCorner1() const { return corner1; }
+
+  /** return corner2 */
+  inline const Coord & getCorner2() const { return corner2; }
+
+  /** accessor */
+  inline unsigned int getSizeX() const { return corner2.getX() - corner1.getX() + 1; }
+
+  /** accessor */
+  inline unsigned int getSizeY() const { return corner2.getY() - corner1.getY() + 1; }
+
+  /** accessor */
+  inline unsigned int getSizeZ() const { return corner2.getZ() - corner1.getZ() + 1; }
 };
 
 #endif

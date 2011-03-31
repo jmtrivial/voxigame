@@ -1,3 +1,5 @@
+#include <algorithm>
+
 #include "Board.hxx"
 
 Board & Board::addPiece(const Piece & b) {
@@ -10,6 +12,7 @@ Board & Board::addPiece(const Piece & b) {
 	throw ExceptionIntersection();
   }
   bricks.push_back(b.clone());
+  addInCells(bricks.back());
 
   return *this;
 }
@@ -36,7 +39,10 @@ void Board::isAvailableLocationForMove(const const_iterator & i, Direction d) co
 
 Board & Board::movePiece(const iterator & i, Direction d) {
   isAvailableLocationForMove(i, d);
+
+  removeFromCells(*(i.it));
   (*i).move(d);
+  addInCells(*(i.it));
 
   return *this;
 
@@ -95,3 +101,37 @@ bool Board::isValid() const {
 
   return true;
 }
+
+Board & Board::removePiece(const iterator & i) {
+  // remove from cells
+  removeFromCells(*(i.it));
+  // remove the piece
+  delete *(i.it);
+  // remove it from the list
+  bricks.erase(i.it);
+
+  return *this;
+}
+
+void Board::removeFromCells(Piece * p) {
+  for(Piece::const_iterator c = (*p).begin(); c != (*p).end(); ++c) {
+    Coord cc = *c;
+    if (contains(cc)) {
+      std::vector<Piece *> cList = getCell(cc);
+      std::vector<Piece *>::iterator cListPos = std::find(cList.begin(), cList.end(), p);
+      if (cListPos == cList.end())
+	throw ExceptionInternalError();
+      cList.erase(cListPos);
+    }
+  }
+}
+
+void Board::addInCells(Piece * p) {
+  for(Piece::const_iterator c = (*p).begin(); c != (*p).end(); ++c) {
+    Coord cc = *c;
+    if (contains(cc)) {
+      getCell(cc).push_back(p);
+    }
+  }
+}
+
