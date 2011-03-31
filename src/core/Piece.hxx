@@ -16,6 +16,10 @@ protected:
 
   /** rotation according to the main axis */
   Angle angle;
+
+  /** return the xml attributes corresponding to the parameters of the current class */
+  virtual std::string toXMLAttributes() const;
+
 public:
   /** iterator along pieces */
   class const_iterator;
@@ -117,6 +121,9 @@ public:
 
   /** rotate the current piece according to the given direction */
   Piece & rotate(Direction d);
+
+  /** generate an xml version of the piece */
+  virtual std::string toXML() const = 0;
 };
 
 
@@ -124,6 +131,10 @@ public:
 class StraightPiece : public Piece {
 private:
   unsigned int length;
+
+  /** return the xml attributes corresponding to the parameters of the current class */
+  virtual std::string toXMLAttributes() const;
+
 public:
   /** construtor */
   StraightPiece(unsigned int l, const Coord & c, const Direction & d) : Piece(c, d),
@@ -151,6 +162,9 @@ public:
   inline unsigned int nbVoxels() const {
     return length;
   }
+
+  /** generate an xml version of the piece */
+  std::string toXML() const;
 };
 
 #endif

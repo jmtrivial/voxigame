@@ -22,6 +22,12 @@ Angle & operator++(Angle & a);
 /** increment the angle using the reverse of enum ordering */
 Angle & operator--(Angle & a);
 
+/** return a string corresponding to the xml attributes that describe the given direction, using the given prefix */
+std::string toXMLAttributesDirection(Direction d, const std::string & prefix = "");
+
+/** return a string corresponding to the xml attributes that describe the given direction, using the given prefix */
+std::string toXMLAttributesAngle(Angle a, const std::string & prefix = "");
+
 /**
    A class to describe discrete 3D coordinates
  */
@@ -98,6 +104,10 @@ public:
 		     (y - c.y) * (y - c.y) +
 		     (z - c.z) * (z - c.z));
   }
+
+  /** return the xml attributes corresponding to the current coordinates, using \p prefix as prefix */
+  std::string toXMLAttributes(const std::string & prefix = "") const;
+
 };
 
 template <typename T, typename S>
@@ -157,6 +167,9 @@ public:
 	    ((c.getY() == corner1.getY()) || (c.getY() == corner2.getY())) &&
 	    ((c.getZ() == corner1.getZ()) || (c.getZ() == corner2.getZ())));
   }
+
+  /** return a string that contains xml attributes describing this box */
+  std::string toXMLAttributes(const std::string & prefix = "") const;
 };
 
 #endif

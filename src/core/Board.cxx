@@ -1,4 +1,6 @@
 #include <algorithm>
+#include <sstream>
+#include <fstream>
 
 #include "Board.hxx"
 
@@ -178,4 +180,34 @@ bool Board::hasPathBetweenWindows() const {
   }
 
   return false;
+}
+
+std::string Board::toXML() const {
+  std::ostringstream str;
+  str << "<board " << Box::toXMLAttributes() << " " << toXMLAttributes() << ">" << std::endl;
+  for(const_iterator p = begin(); p != end(); ++p)
+    str << " " << (*p).toXML() << std::endl;
+  str << "</board>" << std::endl;
+
+  return str.str();
+}
+
+
+std::string Board::toXMLAttributes() const {
+  std::ostringstream str;
+  str << "allow_intersections=\"" << (allowIntersections ? "true" : "false") << "\" ";
+  str << "allow_outside=\"" << (allowOutside ? "true" : "false") << "\"";
+  return str.str();
+}
+
+bool Board::save(const std::string & filename) const {
+  std::ofstream outfile(filename.c_str(), std::ios::out);
+  if (!outfile.is_open())
+    return false;
+
+  outfile << toXML();
+
+  outfile.close();
+
+  return true;
 }

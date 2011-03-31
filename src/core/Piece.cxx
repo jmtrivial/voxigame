@@ -1,3 +1,5 @@
+#include<sstream>
+
 #include "Piece.hxx"
 #include "Exception.hxx"
 
@@ -90,4 +92,24 @@ Piece & Piece::rotate(Direction d) {
   }
 
   return *this;
+}
+
+
+std::string StraightPiece::toXML() const {
+  std::ostringstream str;
+  str << "<piece shape=\"straight\" " << toXMLAttributes() << " />";
+  return str.str();
+}
+
+std::string StraightPiece::toXMLAttributes() const {
+  std::ostringstream str;
+  str << "length=\"" << length << "\" " << Piece::toXMLAttributes();
+  return str.str();
+}
+
+std::string Piece::toXMLAttributes() const {
+  std::ostringstream str;
+  str << location.toXMLAttributes() << " direction=\"" << toXMLAttributesDirection(direction) << "\" angle=\"" << toXMLAttributesAngle(angle) << "\"";
+
+  return str.str();
 }

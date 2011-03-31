@@ -42,5 +42,11 @@ int main(int, char **) {
   if (b.hasPathBetweenWindows())
     std::cout << "The board contain a path between the two windows" << std::endl;
 
+  std::cout << "Save board" << std::endl;
+  if (!b.save("/tmp/board.xml")) {
+    std::cerr << "Error when saving file" << std::endl;
+    return 1;
+  }
+
   return 0;
 }

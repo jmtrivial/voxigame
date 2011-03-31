@@ -11,6 +11,9 @@
 #include "Piece.hxx"
 
 class Board : public Box {
+protected:
+  /** build a string containing xml attributes that corresponds to the properties of the board */
+  virtual std::string toXMLAttributes() const;
 private:
   /** the list of pieces in the board */
   std::vector<Piece *> bricks;
@@ -159,7 +162,7 @@ public:
   }
 
   /** destructor */
-  ~Board() {
+  virtual ~Board() {
     for(std::vector<Piece *>::iterator b = bricks.begin();
 	b != bricks.end(); ++b)
       delete *b;
@@ -219,6 +222,11 @@ public:
       return 0;
   }
 
+  /** return an xml description of the current board */
+  std::string toXML() const;
+
+  /** save the current board in the given file */
+  bool save(const std::string & filename) const;
 };
 
 #endif
