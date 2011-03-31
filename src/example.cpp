@@ -6,7 +6,9 @@
 
 int main(int, char **) {
 
-  Board b(4, 4, 4, true);
+  Coord w1(0, 0, 0);
+  Coord w2(3, 3, 3);
+  Board b(4, 4, 4, w1, w2, true);
   Coord i(1, 1, 1);
   StraightPiece p(2, i, Xminus);
 

@@ -1,6 +1,7 @@
 #ifndef BOARD
 #define BOARD
 
+#include<iostream>
 #include<string>
 #include<vector>
 #include<assert.h>
@@ -19,6 +20,11 @@ private:
 
   bool allowIntersections;
   bool allowOutside;
+
+  /** location of the input window */
+  Coord window1;
+  /** location of the output window */
+  Coord window2;
 
   inline std::vector<Piece *> & getCell(unsigned int px, unsigned int py, unsigned int pz) {
     return getCell(Coord(px, py, pz));
@@ -133,14 +139,23 @@ public:
       @param x Size in x direction
       @param y Size in y direction
       @param z Size in z direction
+      @param w1 The input cell
+      @param w2 The output cell
       @param aI Allow intersection between brick
       @param aO Allow bricks outside of the board */
   Board(unsigned int x, unsigned int y, unsigned int z,
+	const Coord & w1, const Coord & w2,
 	bool aI = false, bool aO = false) : Box(x, y, z),
 					    allowIntersections(aI),
-					    allowOutside(aO) {
+					    allowOutside(aO),
+					    window1(w1), window2(w2) {
     assert((x > 0) && (y > 0) && (z > 0));
     cells = new std::vector<Piece *>[x * y * z];
+    if (!inBorder(w1))
+      std::cout << "Warning: the input window is not in the border of the board" << std::endl;
+    if (!inBorder(w2))
+      std::cout << "Warning: the output window is not in the border of the board" << std::endl;
+
   }
 
   /** destructor */
@@ -150,6 +165,7 @@ public:
       delete *b;
     delete[] cells;
   }
+
 
   /** add a new piece in the board. This function throws an exception if the configuration is not valid according to
       the requirements of the board. */
@@ -178,6 +194,11 @@ public:
   /** return true if the current board is without intersections
       and pieces outside of the board */
   bool isValid() const;
+
+  /** return true if the two windows are in the border of the board */
+  inline bool validWindows() const {
+    return inBorder(window1) && inBorder(window2);
+  }
 
   /** return true if the given piece can be moved in the given direction */
   void isAvailableLocationForMove(const const_iterator & i, Direction d) const;
