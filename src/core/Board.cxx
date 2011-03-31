@@ -26,9 +26,8 @@ void Board::isAvailableLocationForMove(const const_iterator & i, Direction d) co
     throw ExceptionOutside();
   }
   if (!allowIntersections) {
-    const_iterator e(bricks.end());
-    for(const_iterator it = begin(); it != e; ++it)
-      if ((it != i) && (*it).intersect((*newp))) {
+    for(Piece::const_iterator c = (*newp).begin(); c != (*newp).end(); ++c)
+      if (isEmpty(*c, i)) {
 	delete newp;
 	throw ExceptionIntersection();
       }
@@ -53,9 +52,8 @@ bool Board::isInsidePiece(const const_iterator & i) const {
 }
 
 bool Board::hasIntersectionPiece(const const_iterator & i) const {
-  const_iterator e(bricks.end());
-  for(const_iterator it = begin(); it != e; ++it)
-    if ((it != i) && (*it).intersect(*i))
+  for(Piece::const_iterator c = (*i).begin(); c != (*i).end(); ++c)
+    if (isEmpty(*c, i) != 0)
       return true;
   return false;
 }
@@ -134,3 +132,17 @@ void Board::addInCells(Piece * p) {
   }
 }
 
+
+bool Board::isEmpty(const Coord & c, const const_iterator & i) const {
+  const std::vector<Piece *> & cc = getCell(c);
+  const unsigned int nb = cc.size();
+  if (nb == 0)
+    return true;
+  else {
+    if (nb != 1)
+      return false;
+    else {
+      return (cc.front() == *(i.it));
+    }
+  }
+}

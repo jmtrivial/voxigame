@@ -43,6 +43,7 @@ private:
 
   /** add the given piece in the corresponding cells */
   void addInCells(Piece * p);
+
 public:
 
   class iterator {
@@ -122,6 +123,10 @@ public:
   const_iterator end(unsigned int x, unsigned int y, unsigned int z) const { return const_iterator(getCell(x, y, z).end()); }
   /** return an interator on the cell at coordinates (x, y, z) */
   iterator end(unsigned int x, unsigned int y, unsigned int z) { return iterator(getCell(x, y, z).end()); }
+
+private:
+  /** return true if the cell at location \p c is empty, except the piece described by i */
+  bool isEmpty(const Coord & c, const const_iterator & i) const;
 
 public:
   /** default constructor:
