@@ -19,13 +19,15 @@
 
  *****************************************************************************/
 
-#include <iostream>
+#include <QString>
+#include <QTextStream>
 
 #include "Board.hxx"
 #include "Coord.hxx"
 #include "Piece.hxx"
 
 int main(int, char **) {
+  QTextStream cout(stdout);
 
   Coord w1(0, 0, 0);
   Coord w2(3, 3, 3);
@@ -34,39 +36,38 @@ int main(int, char **) {
   StraightPiece p(2, i, Xminus);
 
   try {
-    std::cout << "Add a piece in the board" << std::endl;
+    cout << "Add a piece in the board" << endl;
     b.addPiece(p);
-    std::cout << "Move in the Y direction" << std::endl;
+    cout << "Move in the Y direction" << endl;
     b.movePiece(b.begin(), Yplus);
-    std::cout << "Move in the Y direction" << std::endl;
+    cout << "Move in the Y direction" << endl;
     b.movePiece(b.begin(), Yplus);
-    std::cout << "Move in the Y direction" << std::endl;
+    cout << "Move in the Y direction" << endl;
     b.movePiece(b.begin(), Yplus);
-    std::cout << "Move in the Y direction" << std::endl;
+    cout << "Move in the Y direction" << endl;
     b.movePiece(b.begin(), Yplus);
-    std::cout << "Move in the Y direction" << std::endl;
+    cout << "Move in the Y direction" << endl;
     b.movePiece(b.begin(), Yplus);
   }
   catch (ExceptionOutside e) {
-    std::cout << "Piece outside of the board" << std::endl;
+    cout << "Piece outside of the board" << endl;
   }
   catch (ExceptionIntersection e) {
-    std::cout << "Intersection with another piece" << std::endl;
+    cout << "Intersection with another piece" << endl;
   }
 
   if (b.isValid())
-    std::cout << "The board is valid" << std::endl;
+    cout << "The board is valid" << endl;
 
   if (b.isStaticAndValid())
-    std::cout << "The board is static and valid" << std::endl;
+    cout << "The board is static and valid" << endl;
 
   if (b.hasPathBetweenWindows())
-    std::cout << "The board contain a path between the two windows" << std::endl;
+    cout << "The board contain a path between the two windows" << endl;
 
-  std::cout << "Save board" << std::endl;
+  cout << "Save board" << endl;
   if (!b.save("/tmp/board.xml")) {
-    std::cerr << "Error when saving file" << std::endl;
-    return 1;
+    qFatal("Error when saving file");
   }
 
   return 0;
