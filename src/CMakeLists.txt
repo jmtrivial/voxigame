@@ -19,12 +19,32 @@
 #
 
 # add the files of the current library
-INCLUDE_DIRECTORIES(. core/)
+INCLUDE_DIRECTORIES(. core/ frontend/ tests/)
 SET(CPP_LIST core/Coord.cxx core/Piece.cxx core/Board.cxx)
 
 ADD_LIBRARY(libvoxigame STATIC ${CPP_LIST})
 
 
 # create the binaries
-ADD_EXECUTABLE(example example.cpp)
+ADD_EXECUTABLE(example tests/example.cpp)
 TARGET_LINK_LIBRARIES(example libvoxigame)
+
+
+# GUI
+FIND_PACKAGE(Qt4)
+
+IF(QT4_FOUND AND QT_QTOPENGL_FOUND)
+  SET(QT_USE_QTXML 1)
+  SET(QT_USE_QTOPENGL 1)
+  INCLUDE(${QT_USE_FILE})
+
+  INCLUDE_DIRECTORIES(${QT_INCLUDES} ${CMAKE_CURRENT_BINARY_DIR})
+  SET(VOXIGAME_UIS frontend/mainwindow.ui)
+  SET(VOXIGAME_SRC frontend/voxigame.cxx frontend/main.cxx)
+
+  QT4_WRAP_UI(UIHeaders ${VOXIGAME_UIS})
+  QT4_AUTOMOC(${VOXIGAME_SRC})
+  QT4_WRAP_CPP(${VOXIGAME_SRC})
+  ADD_EXECUTABLE(voxigame ${VOXIGAME_SRC} ${UIHeaders})
+  TARGET_LINK_LIBRARIES(voxigame ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} ${QT_QTOPENGL_LIBRARY} qglviewer-qt4)
+ENDIF(QT4_FOUND AND QT_QTOPENGL_FOUND)
