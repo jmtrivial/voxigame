@@ -30,7 +30,7 @@ Board::Board(unsigned int x, unsigned int y, unsigned int z,
 				 allowIntersections(aI),
 				 allowOutside(aO),
 				 window1(w1), window2(w2) {
-  assert((x > 0) && (y > 0) && (z > 0));
+  Q_ASSERT((x > 0) && (y > 0) && (z > 0));
   cells = new QVector<QSharedPointer<Piece> >[x * y * z];
   if (!inBorder(w1)) {
     qWarning("Warning: the input window is not in the border of the board");

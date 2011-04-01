@@ -19,7 +19,6 @@
 
  *****************************************************************************/
 
-#include <assert.h>
 
 #include "Coord.hxx"
 
@@ -71,9 +70,9 @@ bool opposite(Direction d1, Direction d2) {
 }
 
 Box::Box(int x, int y, int z) : corner1(0, 0, 0), corner2(x - 1, y - 1, z - 1) {
-  assert(x > 0);
-  assert(y > 0);
-  assert(z > 0);
+  Q_ASSERT(x > 0);
+  Q_ASSERT(y > 0);
+  Q_ASSERT(z > 0);
 }
 
 

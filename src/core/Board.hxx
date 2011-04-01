@@ -22,7 +22,6 @@
 #ifndef BOARD
 #define BOARD
 
-#include<assert.h>
 
 #include <QVector>
 #include <QSharedPointer>
@@ -59,12 +58,12 @@ private:
   }
 
   inline const QVector<QSharedPointer<Piece> > & getCell(const Coord & p) const {
-    assert(contains(p));
+    Q_ASSERT(contains(p));
     return cells[((p.getX() * getSizeY()) + p.getY()) * getSizeZ() + p.getZ()];
   }
 
   inline QVector<QSharedPointer<Piece> > & getCell(const Coord & p) {
-    assert(contains(p));
+    Q_ASSERT(contains(p));
     return cells[((p.getX() * getSizeY()) + p.getY()) * getSizeZ() + p.getZ()];
   }
 
