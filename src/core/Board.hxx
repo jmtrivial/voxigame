@@ -25,6 +25,7 @@
 #include<assert.h>
 
 #include <QVector>
+#include <QSharedPointer>
 
 #include "Exception.hxx"
 #include "Coord.hxx"
@@ -36,10 +37,10 @@ protected:
   virtual QString toXMLAttributes() const;
 private:
   /** the list of pieces in the board */
-  QVector<Piece *> bricks;
+  QVector<QSharedPointer<Piece> > bricks;
 
   /** list of pieces in each cell of the board */
-  QVector<Piece *> * cells;
+  QVector<QSharedPointer<Piece> > * cells;
 
   bool allowIntersections;
   bool allowOutside;
@@ -49,40 +50,40 @@ private:
   /** location of the output window */
   Coord window2;
 
-  inline QVector<Piece *> & getCell(unsigned int px, unsigned int py, unsigned int pz) {
+  inline QVector<QSharedPointer<Piece> > & getCell(unsigned int px, unsigned int py, unsigned int pz) {
     return getCell(Coord(px, py, pz));
   }
 
-  inline const QVector<Piece *> & getCell(unsigned int px, unsigned int py, unsigned int pz) const {
+  inline const QVector<QSharedPointer<Piece> > & getCell(unsigned int px, unsigned int py, unsigned int pz) const {
     return getCell(Coord(px, py, pz));
   }
 
-  inline const QVector<Piece *> & getCell(const Coord & p) const {
+  inline const QVector<QSharedPointer<Piece> > & getCell(const Coord & p) const {
     assert(contains(p));
     return cells[((p.getX() * getSizeY()) + p.getY()) * getSizeZ() + p.getZ()];
   }
 
-  inline QVector<Piece *> & getCell(const Coord & p) {
+  inline QVector<QSharedPointer<Piece> > & getCell(const Coord & p) {
     assert(contains(p));
     return cells[((p.getX() * getSizeY()) + p.getY()) * getSizeZ() + p.getZ()];
   }
 
   /** remove the given piece from the corresponding cells */
-  void removeFromCells(Piece * p);
+  void removeFromCells(QSharedPointer<Piece> & p);
 
   /** add the given piece in the corresponding cells */
-  void addInCells(Piece * p);
+  void addInCells(QSharedPointer<Piece> & p);
 
 public:
 
   class iterator {
   private:
-    QVector<Piece *>::iterator it;
+    QVector<QSharedPointer<Piece> >::iterator it;
 
     friend class Board;
   public:
     /** default constructor */
-    iterator(const QVector<Piece *>::iterator & i) :it(i) {
+    iterator(const QVector<QSharedPointer<Piece> >::iterator & i) :it(i) {
     }
 
     /** copy constructor */
@@ -101,20 +102,20 @@ public:
       return it != i.it;
     }
 
-    const QVector<Piece *>::iterator & getIt() const { return it; }
+    const QVector<QSharedPointer<Piece> >::iterator & getIt() const { return it; }
   };
 
   class const_iterator {
   private:
-    QVector<Piece *>::const_iterator it;
+    QVector<QSharedPointer<Piece> >::const_iterator it;
 
     friend class Board;
   public:
     /** default constructor */
-    const_iterator(const QVector<Piece *>::const_iterator & i) :it(i) {
+    const_iterator(const QVector<QSharedPointer<Piece> >::const_iterator & i) : it(i) {
     }
     /** default constructor */
-    const_iterator(const QVector<Piece *>::iterator & i) :it(i) {
+    const_iterator(const QVector<QSharedPointer<Piece> >::iterator & i) :it(i) {
     }
 
     /** copy constructor */
@@ -172,10 +173,6 @@ public:
 
   /** destructor */
   virtual ~Board() {
-    for(QVector<Piece *>::iterator b = bricks.begin();
-	b != bricks.end(); ++b)
-      delete *b;
-    delete[] cells;
   }
 
 

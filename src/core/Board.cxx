@@ -31,7 +31,7 @@ Board::Board(unsigned int x, unsigned int y, unsigned int z,
 				 allowOutside(aO),
 				 window1(w1), window2(w2) {
   assert((x > 0) && (y > 0) && (z > 0));
-  cells = new QVector<Piece *>[x * y * z];
+  cells = new QVector<QSharedPointer<Piece> >[x * y * z];
   if (!inBorder(w1)) {
     qWarning("Warning: the input window is not in the border of the board");
   }
@@ -49,7 +49,7 @@ Board & Board::addPiece(const Piece & b) {
       if (getNbPiece(*c) != 0)
 	throw ExceptionIntersection();
   }
-  bricks.push_back(b.clone());
+  bricks.push_back(QSharedPointer<Piece>(b.clone()));
   addInCells(bricks.back());
 
   return *this;
@@ -57,17 +57,15 @@ Board & Board::addPiece(const Piece & b) {
 
 
 void Board::isAvailableLocationForMove(const const_iterator & i, Direction d) const {
-  Piece * newp = (*i).clone();
+  QSharedPointer<Piece> newp((*i).clone());
   (*newp).move(d);
 
   if (!allowOutside && !contains((*newp).getBoundedBox())) {
-    delete newp;
     throw ExceptionOutside();
   }
   if (!allowIntersections) {
     for(Piece::const_iterator c = (*newp).begin(); c != (*newp).end(); ++c)
       if (!isEmpty(*c, i)) {
-	delete newp;
 	throw ExceptionIntersection();
       }
   }
@@ -141,19 +139,18 @@ bool Board::isValid() const {
 Board & Board::removePiece(const iterator & i) {
   // remove from cells
   removeFromCells(*(i.it));
-  // remove the piece
-  delete *(i.it);
+
   // remove it from the list
   bricks.erase(i.it);
 
   return *this;
 }
 
-void Board::removeFromCells(Piece * p) {
+void Board::removeFromCells(QSharedPointer<Piece> & p) {
   for(Piece::const_iterator c = (*p).begin(); c != (*p).end(); ++c) {
     Coord cc = *c;
     if (contains(cc)) {
-      QVector<Piece *> cList = getCell(cc);
+      QVector<QSharedPointer<Piece> > cList = getCell(cc);
       int cListPos = cList.indexOf(p);
       if (cListPos == -1)
 	throw ExceptionInternalError();
@@ -162,7 +159,7 @@ void Board::removeFromCells(Piece * p) {
   }
 }
 
-void Board::addInCells(Piece * p) {
+void Board::addInCells(QSharedPointer<Piece> & p) {
   for(Piece::const_iterator c = (*p).begin(); c != (*p).end(); ++c) {
     Coord cc = *c;
     if (contains(cc)) {
@@ -173,7 +170,7 @@ void Board::addInCells(Piece * p) {
 
 
 bool Board::isEmpty(const Coord & c, const const_iterator & i) const {
-  const QVector<Piece *> & cc = getCell(c);
+  const QVector<QSharedPointer<Piece> > & cc = getCell(c);
   const unsigned int nb = cc.size();
   if (nb == 0)
     return true;
