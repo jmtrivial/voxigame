@@ -19,11 +19,29 @@
 
  *****************************************************************************/
 
-#include <algorithm>
-#include <sstream>
-#include <fstream>
+#include<QFile>
+#include<QTextStream>
 
 #include "Board.hxx"
+
+Board::Board(unsigned int x, unsigned int y, unsigned int z,
+	     const Coord & w1, const Coord & w2,
+	     bool aI, bool aO) : Box(x, y, z),
+				 allowIntersections(aI),
+				 allowOutside(aO),
+				 window1(w1), window2(w2) {
+  assert((x > 0) && (y > 0) && (z > 0));
+  cells = new QVector<Piece *>[x * y * z];
+  if (!inBorder(w1)) {
+    QTextStream out(stdout);
+    out << "Warning: the input window is not in the border of the board" << endl;
+  }
+  if (!inBorder(w2)) {
+    QTextStream out(stdout);
+    out << "Warning: the output window is not in the border of the board" << endl;
+  }
+}
+
 
 Board & Board::addPiece(const Piece & b) {
   if (!allowOutside && !contains(b.getBoundedBox()))
@@ -137,11 +155,11 @@ void Board::removeFromCells(Piece * p) {
   for(Piece::const_iterator c = (*p).begin(); c != (*p).end(); ++c) {
     Coord cc = *c;
     if (contains(cc)) {
-      std::vector<Piece *> cList = getCell(cc);
-      std::vector<Piece *>::iterator cListPos = std::find(cList.begin(), cList.end(), p);
-      if (cListPos == cList.end())
+      QVector<Piece *> cList = getCell(cc);
+      int cListPos = cList.indexOf(p);
+      if (cListPos == -1)
 	throw ExceptionInternalError();
-      cList.erase(cListPos);
+      cList.erase(cList.begin() + cListPos);
     }
   }
 }
@@ -157,7 +175,7 @@ void Board::addInCells(Piece * p) {
 
 
 bool Board::isEmpty(const Coord & c, const const_iterator & i) const {
-  const std::vector<Piece *> & cc = getCell(c);
+  const QVector<Piece *> & cc = getCell(c);
   const unsigned int nb = cc.size();
   if (nb == 0)
     return true;
@@ -174,7 +192,7 @@ bool Board::hasPathBetweenWindows() const {
   if ((getNbPiece(window1) != 0) || (getNbPiece(window2) != 0))
     return false;
 
-  std::vector<Coord> open;
+  QVector<Coord> open;
   bool seen[getSizeX()][getSizeY()][getSizeZ()];
   for(unsigned int x = 0; x != getSizeX(); ++x)
     for(unsigned int y = 0; y != getSizeY(); ++y)
@@ -203,32 +221,32 @@ bool Board::hasPathBetweenWindows() const {
   return false;
 }
 
-std::string Board::toXML() const {
-  std::ostringstream str;
-  str << "<board " << Box::toXMLAttributes() << " " << toXMLAttributes() << ">" << std::endl;
+QString Board::toXML() const {
+  QString str;
+  str.append("<board ").append(Box::toXMLAttributes()).append(" ").append(toXMLAttributes()).append(">");
   for(const_iterator p = begin(); p != end(); ++p)
-    str << " " << (*p).toXML() << std::endl;
-  str << "</board>" << std::endl;
+    str.append(" ").append((*p).toXML());
+  str.append("</board>");
 
-  return str.str();
+  return str;
 }
 
 
-std::string Board::toXMLAttributes() const {
-  std::ostringstream str;
-  str << "allow_intersections=\"" << (allowIntersections ? "true" : "false") << "\" ";
-  str << "allow_outside=\"" << (allowOutside ? "true" : "false") << "\"";
-  return str.str();
+QString Board::toXMLAttributes() const {
+  QString str;
+  str.append("allow_intersections=\"").append((allowIntersections ? "true" : "false")).append("\" ");
+  str.append("allow_outside=\"").append((allowOutside ? "true" : "false")).append("\"");
+  return str;
 }
 
-bool Board::save(const std::string & filename) const {
-  std::ofstream outfile(filename.c_str(), std::ios::out);
-  if (!outfile.is_open())
+bool Board::save(const QString & filename) const {
+  QFile f(filename);
+  if (!f.open(QIODevice::WriteOnly))
     return false;
+  QTextStream outfile(&f);
 
   outfile << toXML();
 
-  outfile.close();
 
   return true;
 }

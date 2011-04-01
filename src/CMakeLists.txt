@@ -25,13 +25,15 @@ SET(CPP_LIST core/Coord.cxx core/Piece.cxx core/Board.cxx)
 ADD_LIBRARY(libvoxigame STATIC ${CPP_LIST})
 
 
-# create the binaries
-ADD_EXECUTABLE(example tests/example.cpp)
-TARGET_LINK_LIBRARIES(example libvoxigame)
+FIND_PACKAGE(Qt4)
 
+# create the binaries
+IF(QT4_FOUND)
+  ADD_EXECUTABLE(example tests/example.cpp)
+  TARGET_LINK_LIBRARIES(example libvoxigame ${QT_QTCORE_LIBRARY})
+ENDIF(QT4_FOUND)
 
 # GUI
-FIND_PACKAGE(Qt4)
 
 IF(QT4_FOUND AND QT_QTOPENGL_FOUND)
   SET(QT_USE_QTXML 1)

@@ -19,7 +19,6 @@
 
  *****************************************************************************/
 
-#include<sstream>
 
 #include "Piece.hxx"
 #include "Exception.hxx"
@@ -116,21 +115,22 @@ Piece & Piece::rotate(Direction d) {
 }
 
 
-std::string StraightPiece::toXML() const {
-  std::ostringstream str;
-  str << "<piece shape=\"straight\" " << toXMLAttributes() << " />";
-  return str.str();
+QString StraightPiece::toXML() const {
+  QString str;
+  str.append("<piece shape=\"straight\" ").append(toXMLAttributes()).append(" />");
+  return str;
 }
 
-std::string StraightPiece::toXMLAttributes() const {
-  std::ostringstream str;
-  str << "length=\"" << length << "\" " << Piece::toXMLAttributes();
-  return str.str();
+QString StraightPiece::toXMLAttributes() const {
+  QString str;
+  str.append("length=\"").append(length).append("\" ").append(Piece::toXMLAttributes());
+  return str;
 }
 
-std::string Piece::toXMLAttributes() const {
-  std::ostringstream str;
-  str << location.toXMLAttributes() << " direction=\"" << toXMLAttributesDirection(direction) << "\" angle=\"" << toXMLAttributesAngle(angle) << "\"";
+QString Piece::toXMLAttributes() const {
+  QString str;
+  str.append(location.toXMLAttributes()).append(" direction=\"").append(toXMLAttributesDirection(direction));
+  str.append("\" angle=\"").append(toXMLAttributesAngle(angle)).append("\"");
 
-  return str.str();
+  return str;
 }

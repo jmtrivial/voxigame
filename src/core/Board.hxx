@@ -22,10 +22,9 @@
 #ifndef BOARD
 #define BOARD
 
-#include<iostream>
-#include<string>
-#include<vector>
 #include<assert.h>
+
+#include <QVector>
 
 #include "Exception.hxx"
 #include "Coord.hxx"
@@ -34,13 +33,13 @@
 class Board : public Box {
 protected:
   /** build a string containing xml attributes that corresponds to the properties of the board */
-  virtual std::string toXMLAttributes() const;
+  virtual QString toXMLAttributes() const;
 private:
   /** the list of pieces in the board */
-  std::vector<Piece *> bricks;
+  QVector<Piece *> bricks;
 
   /** list of pieces in each cell of the board */
-  std::vector<Piece *> * cells;
+  QVector<Piece *> * cells;
 
   bool allowIntersections;
   bool allowOutside;
@@ -50,20 +49,20 @@ private:
   /** location of the output window */
   Coord window2;
 
-  inline std::vector<Piece *> & getCell(unsigned int px, unsigned int py, unsigned int pz) {
+  inline QVector<Piece *> & getCell(unsigned int px, unsigned int py, unsigned int pz) {
     return getCell(Coord(px, py, pz));
   }
 
-  inline const std::vector<Piece *> & getCell(unsigned int px, unsigned int py, unsigned int pz) const {
+  inline const QVector<Piece *> & getCell(unsigned int px, unsigned int py, unsigned int pz) const {
     return getCell(Coord(px, py, pz));
   }
 
-  inline const std::vector<Piece *> & getCell(const Coord & p) const {
+  inline const QVector<Piece *> & getCell(const Coord & p) const {
     assert(contains(p));
     return cells[((p.getX() * getSizeY()) + p.getY()) * getSizeZ() + p.getZ()];
   }
 
-  inline std::vector<Piece *> & getCell(const Coord & p) {
+  inline QVector<Piece *> & getCell(const Coord & p) {
     assert(contains(p));
     return cells[((p.getX() * getSizeY()) + p.getY()) * getSizeZ() + p.getZ()];
   }
@@ -78,12 +77,12 @@ public:
 
   class iterator {
   private:
-    std::vector<Piece *>::iterator it;
+    QVector<Piece *>::iterator it;
 
     friend class Board;
   public:
     /** default constructor */
-    iterator(const std::vector<Piece *>::iterator & i) :it(i) {
+    iterator(const QVector<Piece *>::iterator & i) :it(i) {
     }
 
     /** copy constructor */
@@ -102,20 +101,20 @@ public:
       return it != i.it;
     }
 
-    const std::vector<Piece *>::iterator getIt() const { return it; }
+    const QVector<Piece *>::iterator & getIt() const { return it; }
   };
 
   class const_iterator {
   private:
-    std::vector<Piece *>::const_iterator it;
+    QVector<Piece *>::const_iterator it;
 
     friend class Board;
   public:
     /** default constructor */
-    const_iterator(const std::vector<Piece *>::const_iterator & i) :it(i) {
+    const_iterator(const QVector<Piece *>::const_iterator & i) :it(i) {
     }
     /** default constructor */
-    const_iterator(const std::vector<Piece *>::iterator & i) :it(i) {
+    const_iterator(const QVector<Piece *>::iterator & i) :it(i) {
     }
 
     /** copy constructor */
@@ -169,22 +168,10 @@ public:
       @param aO Allow bricks outside of the board */
   Board(unsigned int x, unsigned int y, unsigned int z,
 	const Coord & w1, const Coord & w2,
-	bool aI = false, bool aO = false) : Box(x, y, z),
-					    allowIntersections(aI),
-					    allowOutside(aO),
-					    window1(w1), window2(w2) {
-    assert((x > 0) && (y > 0) && (z > 0));
-    cells = new std::vector<Piece *>[x * y * z];
-    if (!inBorder(w1))
-      std::cout << "Warning: the input window is not in the border of the board" << std::endl;
-    if (!inBorder(w2))
-      std::cout << "Warning: the output window is not in the border of the board" << std::endl;
-
-  }
-
+	bool aI = false, bool aO = false);
   /** destructor */
   virtual ~Board() {
-    for(std::vector<Piece *>::iterator b = bricks.begin();
+    for(QVector<Piece *>::iterator b = bricks.begin();
 	b != bricks.end(); ++b)
       delete *b;
     delete[] cells;
@@ -244,10 +231,10 @@ public:
   }
 
   /** return an xml description of the current board */
-  std::string toXML() const;
+  QString toXML() const;
 
   /** save the current board in the given file */
-  bool save(const std::string & filename) const;
+  bool save(const QString & filename) const;
 };
 
 #endif

@@ -23,7 +23,8 @@
 #define COORD
 
 #include <cmath>
-#include <iostream>
+#include <QString>
+#include <QTextStream>
 
 /** main direction in 3D space */
 typedef enum Direction { Xplus, Xminus, Yplus, Yminus, Zplus, Zminus, Static } Direction;
@@ -44,10 +45,10 @@ Angle & operator++(Angle & a);
 Angle & operator--(Angle & a);
 
 /** return a string corresponding to the xml attributes that describe the given direction, using the given prefix */
-std::string toXMLAttributesDirection(Direction d, const std::string & prefix = "");
+QString toXMLAttributesDirection(Direction d, const QString & prefix = "");
 
 /** return a string corresponding to the xml attributes that describe the given direction, using the given prefix */
-std::string toXMLAttributesAngle(Angle a, const std::string & prefix = "");
+QString toXMLAttributesAngle(Angle a, const QString & prefix = "");
 
 /**
    A class to describe discrete 3D coordinates
@@ -121,22 +122,17 @@ public:
 
   /** compute the distance between two discrete points */
   double distance(const Coord & c) const {
-    return std::sqrt((x - c.x) * (x - c.x) +
-		     (y - c.y) * (y - c.y) +
-		     (z - c.z) * (z - c.z));
+    return sqrt((x - c.x) * (x - c.x) +
+		(y - c.y) * (y - c.y) +
+		(z - c.z) * (z - c.z));
   }
 
   /** return the xml attributes corresponding to the current coordinates, using \p prefix as prefix */
-  std::string toXMLAttributes(const std::string & prefix = "") const;
+  QString toXMLAttributes(const QString & prefix = "") const;
 
 };
 
-template <typename T, typename S>
-std::basic_ostream<T, S> & operator<<(std::basic_ostream<T, S> & f, const Coord & p) {
-  f << "(" << p.getX() << ", " << p.getY() << ", " << p.getZ() << ")";
-  return f;
-}
-
+QTextStream & operator<<(QTextStream & f, const Coord & p);
 
 /** a box is a 3D area parallel to the axes */
 class Box {
@@ -196,7 +192,7 @@ public:
   }
 
   /** return a string that contains xml attributes describing this box */
-  std::string toXMLAttributes(const std::string & prefix = "") const;
+  QString toXMLAttributes(const QString & prefix = "") const;
 };
 
 #endif

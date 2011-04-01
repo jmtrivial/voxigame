@@ -19,7 +19,6 @@
 
  *****************************************************************************/
 
-#include <sstream>
 #include <assert.h>
 
 #include "Coord.hxx"
@@ -86,47 +85,54 @@ Box::Box(const Coord & c1, const Coord & c2) : corner1(c1.getX() < c2.getX() ? c
 						       c1.getZ() > c2.getZ() ? c1.getZ() : c2.getZ()) {
 }
 
-std::string Coord::toXMLAttributes(const std::string & prefix) const {
-  std::ostringstream str;
-  str << prefix << "x=\"" << getX() << "\" " << prefix << "y=\"" << getY() << "\" " << prefix << "z=\"" << getZ() << "\"";
+QTextStream & operator<<(QTextStream & f, const Coord & p) {
+  f << "(" << p.getX() << ", " << p.getY() << ", " << p.getZ() << ")";
+  return f;
+}
 
-  return str.str();
+QString Coord::toXMLAttributes(const QString & prefix) const {
+  QString str;
+  str.append(prefix).append("x=\"");
+  str.append(getX()).append("\" ").append(prefix).append("y=\"").append(getY());
+  str.append("\" ").append(prefix).append("z=\"").append(getZ()).append("\"");
+
+  return str;
 }
 
 
-std::string toXMLAttributesDirection(Direction d, const std::string & prefix) {
-  std::ostringstream str;
-  str << prefix << "direction=\"";
+QString toXMLAttributesDirection(Direction d, const QString & prefix) {
+  QString str;
+  str.append(prefix).append("direction=\"");
   switch(d) {
-  case Xplus: str << "x"; break;
-  case Xminus: str << "-x"; break;
-  case Yplus: str << "y"; break;
-  case Yminus: str << "-y"; break;
-  case Zplus: str << "z"; break;
-  case Zminus: str << "-z"; break;
+  case Xplus: str.append("x"); break;
+  case Xminus: str.append("-x"); break;
+  case Yplus: str.append("y"); break;
+  case Yminus: str.append("-y"); break;
+  case Zplus: str.append("z"); break;
+  case Zminus: str.append("-z"); break;
   default: break;
   }
-  str << "\"";
-  return str.str();
+  str.append("\"");
+  return str;
 }
 
-std::string toXMLAttributesAngle(Angle a, const std::string & prefix) {
-  std::ostringstream str;
-  str << prefix << "angle=\"";
+QString toXMLAttributesAngle(Angle a, const QString & prefix) {
+  QString str;
+  str.append(prefix).append("angle=\"");
   switch(a) {
-  case A0: str << "0"; break;
-  case A90: str << "90"; break;
-  case A180: str << "180"; break;
-  case A270: str << "270"; break;
+  case A0: str.append("0"); break;
+  case A90: str.append("90"); break;
+  case A180: str.append("180"); break;
+  case A270: str.append("270"); break;
   default: break;
   }
-  str << "\"";
-  return str.str();
+  str.append("\"");
+  return str;
 }
 
-std::string Box::toXMLAttributes(const std::string & prefix) const {
-  std::ostringstream str;
-  str << corner1.toXMLAttributes(prefix + "c1") << " ";
-  str << corner2.toXMLAttributes(prefix + "c2");
-  return str.str();
+QString Box::toXMLAttributes(const QString & prefix) const {
+  QString str;
+  str.append(corner1.toXMLAttributes(prefix + "c1")).append(" ");
+  str.append(corner2.toXMLAttributes(prefix + "c2"));
+  return str;
 }

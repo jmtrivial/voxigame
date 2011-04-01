@@ -22,6 +22,8 @@
 #ifndef PIECE
 #define PIECE
 
+#include<QString>
+
 #include "Coord.hxx"
 
 /** abstract class to describe pieces */
@@ -39,7 +41,7 @@ protected:
   Angle angle;
 
   /** return the xml attributes corresponding to the parameters of the current class */
-  virtual std::string toXMLAttributes() const;
+  virtual QString toXMLAttributes() const;
 
 public:
   /** iterator along pieces */
@@ -144,7 +146,7 @@ public:
   Piece & rotate(Direction d);
 
   /** generate an xml version of the piece */
-  virtual std::string toXML() const = 0;
+  virtual QString toXML() const = 0;
 };
 
 
@@ -154,7 +156,7 @@ private:
   unsigned int length;
 
   /** return the xml attributes corresponding to the parameters of the current class */
-  virtual std::string toXMLAttributes() const;
+  virtual QString toXMLAttributes() const;
 
 public:
   /** construtor */
@@ -185,7 +187,7 @@ public:
   }
 
   /** generate an xml version of the piece */
-  std::string toXML() const;
+  QString toXML() const;
 };
 
 #endif
