@@ -33,12 +33,10 @@ Board::Board(unsigned int x, unsigned int y, unsigned int z,
   assert((x > 0) && (y > 0) && (z > 0));
   cells = new QVector<Piece *>[x * y * z];
   if (!inBorder(w1)) {
-    QTextStream out(stdout);
-    out << "Warning: the input window is not in the border of the board" << endl;
+    qWarning("Warning: the input window is not in the border of the board");
   }
   if (!inBorder(w2)) {
-    QTextStream out(stdout);
-    out << "Warning: the output window is not in the border of the board" << endl;
+    qWarning("Warning: the output window is not in the border of the board");
   }
 }
 

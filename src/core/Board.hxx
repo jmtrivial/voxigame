@@ -169,6 +169,7 @@ public:
   Board(unsigned int x, unsigned int y, unsigned int z,
 	const Coord & w1, const Coord & w2,
 	bool aI = false, bool aO = false);
+
   /** destructor */
   virtual ~Board() {
     for(QVector<Piece *>::iterator b = bricks.begin();
