@@ -40,9 +40,6 @@ protected:
   /** rotation according to the main axis */
   Angle angle;
 
-  /** return the xml attributes corresponding to the parameters of the current class */
-  virtual QString toXMLAttributes() const;
-
 public:
   /** iterator along pieces */
   class const_iterator;
@@ -146,7 +143,7 @@ public:
   Piece & rotate(Direction d);
 
   /** generate an xml version of the piece */
-  virtual QString toXML() const = 0;
+  virtual QDomElement toXML(QDomDocument & doc) const;
 };
 
 
@@ -154,9 +151,6 @@ public:
 class StraightPiece : public Piece {
 private:
   unsigned int length;
-
-  /** return the xml attributes corresponding to the parameters of the current class */
-  virtual QString toXMLAttributes() const;
 
 public:
   /** construtor */
@@ -187,7 +181,7 @@ public:
   }
 
   /** generate an xml version of the piece */
-  QString toXML() const;
+  virtual QDomElement toXML(QDomDocument & doc) const;
 };
 
 #endif

@@ -114,23 +114,26 @@ Piece & Piece::rotate(Direction d) {
   return *this;
 }
 
+QDomElement Piece::toXML(QDomDocument & doc) const {
+  QDomElement b = doc.createElement("piece");
+  b.setAttribute("direction", toStringDirection(direction));
+  b.setAttribute("angle", toStringAngle(angle));
 
-QString StraightPiece::toXML() const {
-  QString str;
-  str.append("<piece shape=\"straight\" ").append(toXMLAttributes()).append(" />");
-  return str;
+  QDomElement l = location.toXML(doc, "location");
+  b.appendChild(l);
+
+
+  return b;
 }
 
-QString StraightPiece::toXMLAttributes() const {
-  QString str;
-  str.append("length=\"").append(length).append("\" ").append(Piece::toXMLAttributes());
-  return str;
+
+QDomElement StraightPiece::toXML(QDomDocument & doc) const {
+  QDomElement piece = Piece::toXML(doc);
+
+  piece.setAttribute("type", "straight");
+
+  piece.setAttribute("length", length);
+
+  return piece;
 }
 
-QString Piece::toXMLAttributes() const {
-  QString str;
-  str.append(location.toXMLAttributes()).append(" direction=\"").append(toXMLAttributesDirection(direction));
-  str.append("\" angle=\"").append(toXMLAttributesAngle(angle)).append("\"");
-
-  return str;
-}

@@ -216,23 +216,34 @@ bool Board::hasPathBetweenWindows() const {
   return false;
 }
 
-QString Board::toXML() const {
-  QString str;
-  str.append("<board ").append(Box::toXMLAttributes()).append(" ").append(toXMLAttributes()).append(">");
+
+QDomElement Board::toXML(QDomDocument & doc, const QString & name) const {
+
+  QDomElement b = doc.createElement(name);
+  b.setAttribute("allow_intersections", (allowIntersections ? "true" : "false"));
+  b.setAttribute("allow_outside", (allowOutside ? "true" : "false"));
+
+  QDomElement g = Box::toXML(doc, "geometry");
+  b.appendChild(g);
+
+  QDomElement ps = doc.createElement("pieces");
+  b.appendChild(ps);
+
   for(const_iterator p = begin(); p != end(); ++p)
-    str.append(" ").append((*p).toXML());
-  str.append("</board>");
+    ps.appendChild((*p).toXML(doc));
 
-  return str;
+  return b;
 }
 
 
-QString Board::toXMLAttributes() const {
-  QString str;
-  str.append("allow_intersections=\"").append((allowIntersections ? "true" : "false")).append("\" ");
-  str.append("allow_outside=\"").append((allowOutside ? "true" : "false")).append("\"");
-  return str;
+QString Board::toXMLString() const {
+  QDomDocument doc("VoxigameBoard");
+  QDomElement b = toXML(doc);
+  doc.appendChild(b);
+  return doc.toString();
 }
+
+
 
 bool Board::save(const QString & filename) const {
   QFile f(filename);
@@ -240,7 +251,7 @@ bool Board::save(const QString & filename) const {
     return false;
   QTextStream outfile(&f);
 
-  outfile << toXML();
+  outfile << toXMLString();
 
 
   return true;

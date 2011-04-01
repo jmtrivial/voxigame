@@ -89,49 +89,46 @@ QTextStream & operator<<(QTextStream & f, const Coord & p) {
   return f;
 }
 
-QString Coord::toXMLAttributes(const QString & prefix) const {
-  QString str;
-  str.append(prefix).append("x=\"");
-  str.append(getX()).append("\" ").append(prefix).append("y=\"").append(getY());
-  str.append("\" ").append(prefix).append("z=\"").append(getZ()).append("\"");
-
-  return str;
+QDomElement Coord::toXML(QDomDocument & doc, const QString & name) const {
+  QDomElement b = doc.createElement(name);
+  b.setAttribute("x", QString().setNum(getX()));
+  b.setAttribute("y", QString().setNum(getY()));
+  b.setAttribute("z", QString().setNum(getZ()));
+  return b;
 }
 
 
-QString toXMLAttributesDirection(Direction d, const QString & prefix) {
-  QString str;
-  str.append(prefix).append("direction=\"");
+QString toStringDirection(Direction d) {
+
   switch(d) {
-  case Xplus: str.append("x"); break;
-  case Xminus: str.append("-x"); break;
-  case Yplus: str.append("y"); break;
-  case Yminus: str.append("-y"); break;
-  case Zplus: str.append("z"); break;
-  case Zminus: str.append("-z"); break;
+  case Xplus: return "x";
+  case Xminus: return "-x";
+  case Yplus: return "y";
+  case Yminus: return "-y";
+  case Zplus: return "z";
+  case Zminus: return "-z";
   default: break;
   }
-  str.append("\"");
-  return str;
+  return "";
 }
 
-QString toXMLAttributesAngle(Angle a, const QString & prefix) {
-  QString str;
-  str.append(prefix).append("angle=\"");
+QString toStringAngle(Angle a) {
   switch(a) {
-  case A0: str.append("0"); break;
-  case A90: str.append("90"); break;
-  case A180: str.append("180"); break;
-  case A270: str.append("270"); break;
+  case A0: return "0";
+  case A90: return "90";
+  case A180: return "180";
+  case A270: return "270";
   default: break;
   }
-  str.append("\"");
-  return str;
+  return "";
 }
 
-QString Box::toXMLAttributes(const QString & prefix) const {
-  QString str;
-  str.append(corner1.toXMLAttributes(prefix + "c1")).append(" ");
-  str.append(corner2.toXMLAttributes(prefix + "c2"));
-  return str;
+QDomElement Box::toXML(QDomDocument & doc, const QString & name) const {
+  QDomElement b = doc.createElement(name);
+  QDomElement c1 = corner1.toXML(doc, "corner1");
+  b.appendChild(c1);
+  QDomElement c2 = corner2.toXML(doc, "corner2");
+  b.appendChild(c2);
+  return b;
 }
+

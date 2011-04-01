@@ -25,6 +25,8 @@
 #include <cmath>
 #include <QString>
 #include <QTextStream>
+#include <QDomDocument>
+#include <QDomElement>
 
 /** main direction in 3D space */
 typedef enum Direction { Xplus, Xminus, Yplus, Yminus, Zplus, Zminus, Static } Direction;
@@ -45,10 +47,10 @@ Angle & operator++(Angle & a);
 Angle & operator--(Angle & a);
 
 /** return a string corresponding to the xml attributes that describe the given direction, using the given prefix */
-QString toXMLAttributesDirection(Direction d, const QString & prefix = "");
+QString toStringDirection(Direction d);
 
 /** return a string corresponding to the xml attributes that describe the given direction, using the given prefix */
-QString toXMLAttributesAngle(Angle a, const QString & prefix = "");
+QString toStringAngle(Angle a);
 
 /**
    A class to describe discrete 3D coordinates
@@ -127,8 +129,8 @@ public:
 		(z - c.z) * (z - c.z));
   }
 
-  /** return the xml attributes corresponding to the current coordinates, using \p prefix as prefix */
-  QString toXMLAttributes(const QString & prefix = "") const;
+  /** create an xml document describing the current piece */
+  QDomElement toXML(QDomDocument & doc, const QString & name = "coord") const;
 
 };
 
@@ -151,6 +153,9 @@ public:
   Box(const Box & b) : corner1(b.corner1), corner2(b.corner2) {
 
   }
+
+  /** destructor */
+  virtual ~Box() {}
 
   inline Box & operator=(const Box & b) {
     corner1 = b.corner1;
@@ -191,8 +196,9 @@ public:
 	    ((c.getZ() == corner1.getZ()) || (c.getZ() == corner2.getZ())));
   }
 
-  /** return a string that contains xml attributes describing this box */
-  QString toXMLAttributes(const QString & prefix = "") const;
+  /** create an xml document describing the current piece */
+  virtual QDomElement toXML(QDomDocument & doc, const QString & name = "box") const;
+
 };
 
 #endif

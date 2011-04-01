@@ -25,15 +25,14 @@
 
 #include <QVector>
 #include <QSharedPointer>
+#include <QDomDocument>
+#include <QDomElement>
 
 #include "Exception.hxx"
 #include "Coord.hxx"
 #include "Piece.hxx"
 
 class Board : public Box {
-protected:
-  /** build a string containing xml attributes that corresponds to the properties of the board */
-  virtual QString toXMLAttributes() const;
 private:
   /** the list of pieces in the board */
   QVector<QSharedPointer<Piece> > bricks;
@@ -72,6 +71,7 @@ private:
 
   /** add the given piece in the corresponding cells */
   void addInCells(QSharedPointer<Piece> & p);
+
 
 public:
 
@@ -227,8 +227,11 @@ public:
       return 0;
   }
 
+  /** add an XML description of the current object as a child of the given element */
+  virtual QDomElement toXML(QDomDocument & elem, const QString & name = "board") const;
+
   /** return an xml description of the current board */
-  QString toXML() const;
+  QString toXMLString() const;
 
   /** save the current board in the given file */
   bool save(const QString & filename) const;
