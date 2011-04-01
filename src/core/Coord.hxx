@@ -156,6 +156,12 @@ public:
 
   }
 
+  inline Box & operator=(const Box & b) {
+    corner1 = b.corner1;
+    corner2 = b.corner2;
+    return *this;
+  }
+
   /** return true if the current box contains \p b */
   inline bool contains(const Box & b) const {
     return contains(b.corner1) && contains(b.corner2);
