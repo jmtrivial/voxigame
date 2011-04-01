@@ -11,4 +11,4 @@ This software is under GPL (v3 or later).
 
 Authors
 -------
-* Jean-Marie Favreau (Université d'Auvergne), J-Marie.Favreau@u-clermont1.fr
+* [Jean-Marie Favreau](mailto:J-Marie.Favreau@u-clermont1.fr) ([Université d'Auvergne]((http://u-clermont1.fr)))
