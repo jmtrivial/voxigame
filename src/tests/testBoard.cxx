@@ -19,7 +19,7 @@
 
  *****************************************************************************/
 
-#include "test_classes.hxx"
+#include "testBoard.hxx"
 
 QTEST_MAIN(testBoard)
 

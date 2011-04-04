@@ -23,76 +23,7 @@
 #include <QtTest>
 #include <QtCore>
 
-#include "Coord.hxx"
-#include "Piece.hxx"
 #include "Board.hxx"
-
-class testCoord : public QObject {
-  Q_OBJECT
-private slots:
-  void testTranslate(void) {
-    Coord c1(0, 0, 0);
-    c1.translate(Xplus);
-    Coord c2(1, 0, 0);
-    QVERIFY(c1 == c2);
-  }
-
-  void testCoordAndBox(void) {
-    Coord c(0, 0, 0);
-    Box b(3, 4, 5);
-    QVERIFY(b.contains(c));
-    QVERIFY(b.inBorder(c));
-  }
-
-  void testIteratorOnBoundedBox(void) {
-    Box b(Coord(5, 2, 3), Coord(25, 0, 4));
-    for(Box::const_iterator c = b.begin(); c != b.end(); ++c)
-      QVERIFY(b.contains(*c));
-  }
-
-  void testOnBorder(void) {
-    Box b(Coord(5, 2, 3), Coord(25, 0, 4));
-    QVERIFY(b.inBorder(Coord(15, 0, 3)));
-  }
-
-};
-
-class testPiece : public QObject {
-  Q_OBJECT
-private slots:
-  void testUsingVoxels(void) {
-    StraightPiece p(4, Coord(0, 0, 0), Xplus);
-    QVERIFY(p.isUsing(Coord(0, 0, 0)));
-    QVERIFY(p.isUsing(Coord(1, 0, 0)));
-    QVERIFY(p.isUsing(Coord(2, 0, 0)));
-    QVERIFY(p.isUsing(Coord(3, 0, 0)));
-    QVERIFY(!p.isUsing(Coord(4, 0, 0)));
-  }
-
-  void testTranslate(void) {
-    StraightPiece p1(4, Coord(0, 0, 0), Xplus);
-    StraightPiece p2(4, Coord(0, 1, 0), Xplus);
-    p1.move(Yplus);
-    QVERIFY(p1 == p2);
-  }
-
-
-  void testRotate(void) {
-    StraightPiece p1(4, Coord(0, 0, 0), Xplus);
-    StraightPiece p2(4, Coord(0, 0, 0), Yplus);
-    p1.rotate(Zplus);
-    QVERIFY(p1 == p2);
-  }
-
-
-  void testIteratorOnBoundedBox(void) {
-    StraightPiece p(4, Coord(0, 0, 0), Xplus);
-    Box b(p.getBoundedBox());
-    for(StraightPiece::const_iterator c = p.begin(); c != p.end(); ++c)
-      QVERIFY(b.contains(*c));
-  }
-};
-
 
 class testBoard : public QObject {
   Q_OBJECT

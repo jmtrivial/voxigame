@@ -54,7 +54,9 @@ IF(QT4_FOUND)
   SET(TEST_LIBRARIES ${QT_QTTEST_LIBRARY} ${QT_LIBRARIES})
   INCLUDE(${QT_USE_FILE})
 
-  QT4_WRAP_CPP(TEST_MOC_SRCS tests/test_classes.hxx)
+  SET(TEST_MOC_HDRS tests/testBoard.hxx tests/testPiece.hxx tests/testCoord.hxx)
+
+  QT4_WRAP_CPP(TEST_MOC_SRCS ${TEST_MOC_HDRS})
 
   ADD_EXECUTABLE(testCoord tests/testCoord.cxx ${TEST_MOC_SRCS})
   TARGET_LINK_LIBRARIES(testCoord libvoxigame ${QT_LIBRARIES} ${QT_QTTEST_LIBRARY})

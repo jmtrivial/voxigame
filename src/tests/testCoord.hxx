@@ -19,7 +19,41 @@
 
  *****************************************************************************/
 
-#include "testPiece.hxx"
+#include <QObject>
+#include <QtTest>
+#include <QtCore>
 
-QTEST_MAIN(testPiece)
+#include "Coord.hxx"
+
+class testCoord : public QObject {
+  Q_OBJECT
+private slots:
+  void testTranslate(void) {
+    Coord c1(0, 0, 0);
+    c1.translate(Xplus);
+    Coord c2(1, 0, 0);
+    QVERIFY(c1 == c2);
+  }
+
+  void testCoordAndBox(void) {
+    Coord c(0, 0, 0);
+    Box b(3, 4, 5);
+    QVERIFY(b.contains(c));
+    QVERIFY(b.inBorder(c));
+  }
+
+  void testIteratorOnBoundedBox(void) {
+    Box b(Coord(5, 2, 3), Coord(25, 0, 4));
+    for(Box::const_iterator c = b.begin(); c != b.end(); ++c)
+      QVERIFY(b.contains(*c));
+  }
+
+  void testOnBorder(void) {
+    Box b(Coord(5, 2, 3), Coord(25, 0, 4));
+    QVERIFY(b.inBorder(Coord(15, 0, 3)));
+  }
+
+};
+
+
 

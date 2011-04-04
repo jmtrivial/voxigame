@@ -19,7 +19,7 @@
 
  *****************************************************************************/
 
-#include "test_classes.hxx"
+#include "testCoord.hxx"
 
 QTEST_MAIN(testCoord)
 
