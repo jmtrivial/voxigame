@@ -32,8 +32,11 @@
 #include "Coord.hxx"
 #include "Piece.hxx"
 
-class Board : public Box {
+class Board {
 private:
+  /** area */
+  Box box;
+
   /** the list of pieces in the board */
   QVector<QSharedPointer<Piece> > bricks;
 
@@ -57,13 +60,13 @@ private:
   }
 
   inline const QVector<QSharedPointer<Piece> > & getCell(const Coord & p) const {
-    Q_ASSERT(contains(p));
-    return cells[((p.getX() * getSizeY()) + p.getY()) * getSizeZ() + p.getZ()];
+    Q_ASSERT(box.contains(p));
+    return cells[((p.getX() * box.getSizeY()) + p.getY()) * box.getSizeZ() + p.getZ()];
   }
 
   inline QVector<QSharedPointer<Piece> > & getCell(const Coord & p) {
-    Q_ASSERT(contains(p));
-    return cells[((p.getX() * getSizeY()) + p.getY()) * getSizeZ() + p.getZ()];
+    Q_ASSERT(box.contains(p));
+    return cells[((p.getX() * box.getSizeY()) + p.getY()) * box.getSizeZ() + p.getZ()];
   }
 
   /** remove the given piece from the corresponding cells */
@@ -205,7 +208,7 @@ public:
 
   /** return true if the two windows are in the border of the board */
   inline bool validWindows() const {
-    return inBorder(window1) && inBorder(window2);
+    return box.inBorder(window1) && box.inBorder(window2);
   }
 
   /** return true if a path exists between the two windows that do not cross any piece */
@@ -214,6 +217,11 @@ public:
   /** return true if the given piece can be moved in the given direction */
   void isAvailableLocationForMove(const const_iterator & i, Direction d) const;
 
+  /** return the number of pieces contained by this board */
+  inline unsigned int getNbPiece() const {
+    return bricks.size();
+  }
+
   /** return the number of pieces at the given coordinates (inside the board) */
   inline unsigned int getNbPiece(unsigned int x, unsigned int y, unsigned int z) const {
     return getNbPiece(x, y, z);
@@ -221,7 +229,7 @@ public:
 
   /** return the number of pieces at the given coordinates (inside the board) */
   inline unsigned int getNbPiece(const Coord & p) const {
-    if (contains(p))
+    if (box.contains(p))
       return getCell(p).size();
     else
       return 0;
@@ -235,6 +243,17 @@ public:
 
   /** save the current board in the given file */
   bool save(const QString & filename) const;
+
+  /** return true if the current board and the given one are equal */
+  virtual bool operator==(const Board & board) const;
+
+  /** return true if the given piece is contained in the current board (exact location, ...) */
+  inline bool hasPiece(const Piece & piece) const {
+    for(const_iterator p = bricks.begin(); p != bricks.end(); ++p)
+      if (piece == *p)
+	return true;
+    return false;
+  }
 };
 
 #endif

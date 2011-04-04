@@ -147,6 +147,9 @@ public:
 
   /** generate an xml version of the piece */
   virtual QDomElement toXML(QDomDocument & doc) const;
+
+  /** return true if the objects are similar (same kind, location, orientation, etc. */
+  virtual bool operator==(const Piece & piece) const;
 };
 
 
@@ -186,6 +189,9 @@ public:
 
   /** generate an xml version of the piece */
   virtual QDomElement toXML(QDomDocument & doc) const;
+
+
+  virtual bool operator==(const Piece & piece) const;
 };
 
 #endif

@@ -26,23 +26,23 @@
 
 Board::Board(unsigned int x, unsigned int y, unsigned int z,
 	     const Coord & w1, const Coord & w2,
-	     bool aI, bool aO) : Box(x, y, z),
+	     bool aI, bool aO) : box(x, y, z),
 				 allowIntersections(aI),
 				 allowOutside(aO),
 				 window1(w1), window2(w2) {
   Q_ASSERT((x > 0) && (y > 0) && (z > 0));
   cells = new QVector<QSharedPointer<Piece> >[x * y * z];
-  if (!inBorder(w1)) {
+  if (!box.inBorder(w1)) {
     qWarning("Warning: the input window is not in the border of the board");
   }
-  if (!inBorder(w2)) {
+  if (!box.inBorder(w2)) {
     qWarning("Warning: the output window is not in the border of the board");
   }
 }
 
 
 Board & Board::addPiece(const Piece & b) {
-  if (!allowOutside && !contains(b.getBoundedBox()))
+  if (!allowOutside && !box.contains(b.getBoundedBox()))
     throw ExceptionOutside();
   if (!allowIntersections) {
     for(Piece::const_iterator c = b.begin(); c != b.end(); ++c)
@@ -60,7 +60,7 @@ void Board::isAvailableLocationForMove(const const_iterator & i, Direction d) co
   QSharedPointer<Piece> newp((*i).clone());
   (*newp).move(d);
 
-  if (!allowOutside && !contains((*newp).getBoundedBox())) {
+  if (!allowOutside && !box.contains((*newp).getBoundedBox())) {
     throw ExceptionOutside();
   }
   if (!allowIntersections) {
@@ -85,7 +85,7 @@ Board & Board::movePiece(const iterator & i, Direction d) {
 
 
 bool Board::isInsidePiece(const const_iterator & i) const {
-  return contains((*i).getBoundedBox());
+  return box.contains((*i).getBoundedBox());
 }
 
 bool Board::hasIntersectionPiece(const const_iterator & i) const {
@@ -149,7 +149,7 @@ Board & Board::removePiece(const iterator & i) {
 void Board::removeFromCells(QSharedPointer<Piece> & p) {
   for(Piece::const_iterator c = (*p).begin(); c != (*p).end(); ++c) {
     Coord cc = *c;
-    if (contains(cc)) {
+    if (box.contains(cc)) {
       QVector<QSharedPointer<Piece> > cList = getCell(cc);
       int cListPos = cList.indexOf(p);
       if (cListPos == -1)
@@ -162,7 +162,7 @@ void Board::removeFromCells(QSharedPointer<Piece> & p) {
 void Board::addInCells(QSharedPointer<Piece> & p) {
   for(Piece::const_iterator c = (*p).begin(); c != (*p).end(); ++c) {
     Coord cc = *c;
-    if (contains(cc)) {
+    if (box.contains(cc)) {
       getCell(cc).push_back(p);
     }
   }
@@ -188,10 +188,10 @@ bool Board::hasPathBetweenWindows() const {
     return false;
 
   QVector<Coord> open;
-  bool seen[getSizeX()][getSizeY()][getSizeZ()];
-  for(unsigned int x = 0; x != getSizeX(); ++x)
-    for(unsigned int y = 0; y != getSizeY(); ++y)
-      for(unsigned int z = 0; z != getSizeZ(); ++z)
+  bool seen[box.getSizeX()][box.getSizeY()][box.getSizeZ()];
+  for(unsigned int x = 0; x != box.getSizeX(); ++x)
+    for(unsigned int y = 0; y != box.getSizeY(); ++y)
+      for(unsigned int z = 0; z != box.getSizeZ(); ++z)
 	seen[x][y][z] = false;
 
   open.push_back(window1);
@@ -205,7 +205,7 @@ bool Board::hasPathBetweenWindows() const {
     else {
       for(Direction d = Xplus; d != Static; ++d) {
 	Coord cc = c + d;
-	if (contains(cc) && !seen[cc.getX()][cc.getY()][cc.getZ()] && (getNbPiece(cc) == 0)) {
+	if (box.contains(cc) && !seen[cc.getX()][cc.getY()][cc.getZ()] && (getNbPiece(cc) == 0)) {
 	  seen[cc.getX()][cc.getY()][cc.getZ()] = true;
 	  open.push_back(cc);
 	}
@@ -223,7 +223,7 @@ QDomElement Board::toXML(QDomDocument & doc, const QString & name) const {
   b.setAttribute("allow_intersections", (allowIntersections ? "true" : "false"));
   b.setAttribute("allow_outside", (allowOutside ? "true" : "false"));
 
-  QDomElement g = Box::toXML(doc, "geometry");
+  QDomElement g = box.toXML(doc, "geometry");
   b.appendChild(g);
 
   QDomElement ps = doc.createElement("pieces");
@@ -255,4 +255,18 @@ bool Board::save(const QString & filename) const {
 
 
   return true;
+}
+
+bool Board::operator==(const Board & board) const {
+  if (!(box == board.box) || !(allowOutside == board.allowOutside) || !allowIntersections == board.allowIntersections ||
+      !(window1 == board.window1) || !(window2 == board.window2) || (getNbPiece() != board.getNbPiece()))
+    return false;
+  for(const_iterator p = bricks.begin(); p != bricks.end(); ++p)
+    if (board.hasPiece(*p))
+      return true;
+  // double check to handle duplicated pieces
+  for(const_iterator p = board.bricks.begin(); p != board.bricks.end(); ++p)
+    if (hasPiece(*p))
+      return true;
+  return false;
 }

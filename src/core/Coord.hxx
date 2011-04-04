@@ -199,6 +199,10 @@ public:
   /** create an xml document describing the current piece */
   virtual QDomElement toXML(QDomDocument & doc, const QString & name = "box") const;
 
+  /** return true if the current box is equal to the given one */
+  virtual bool operator==(const Box & b) const {
+    return b.corner1 == corner1 && b.corner2 == corner2;
+  }
 };
 
 #endif

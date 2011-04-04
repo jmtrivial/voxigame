@@ -137,3 +137,19 @@ QDomElement StraightPiece::toXML(QDomDocument & doc) const {
   return piece;
 }
 
+
+bool Piece::operator==(const Piece & piece) const {
+  return (piece.location == location) && (piece.direction == direction) && (piece.angle == angle);
+}
+
+bool StraightPiece::operator==(const Piece & piece) const {
+  try {
+    const StraightPiece & p = dynamic_cast<const StraightPiece &>(piece);
+    return Piece::operator==(piece) && (length == p.length);
+  }
+  catch (...) {
+    return false;
+  }
+
+}
+
