@@ -132,3 +132,19 @@ QDomElement Box::toXML(QDomDocument & doc, const QString & name) const {
   return b;
 }
 
+
+Coord Box::getNextPosition(const Coord & c) const {
+  if (!contains(c))
+    return c;
+  Coord result(c);
+  result.translate(Xplus);
+  if (!contains(result)) {
+    result.setX(corner1.getX());
+    result.translate(Yplus);
+    if (!contains(result)) {
+      result.setY(corner2.getY());
+      result.translate(Zplus);
+    }
+  }
+  return result;
+}

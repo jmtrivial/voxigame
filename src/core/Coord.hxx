@@ -74,6 +74,14 @@ public:
   /** accessor */
   inline int getZ() const { return z; }
 
+  /** modifier */
+  inline Coord & setX(int v) { x = v; return *this; }
+  /** modifier */
+  inline Coord & setY(int v) { y = v; return *this; }
+  /** modifier */
+  inline Coord & setZ(int v) { z = v; return *this; }
+
+
   /** affectation */
   Coord & operator=(const Coord & c) {
     x = c.x;
@@ -116,6 +124,12 @@ public:
     return *this;
   }
 
+  /** create a new object by translation */
+  inline Coord getTanslate(const Direction & direction, unsigned int t = 1) const {
+    Coord result(*this);
+    return result.translate(direction, t);
+  }
+
   /** translation by 1 in the given direction */
   inline Coord operator+(const Direction & direction) {
     Coord r(*this);
@@ -144,6 +158,46 @@ private:
   /** last corner */
   Coord corner2;
 public:
+
+  class const_iterator {
+  private:
+    Coord position;
+    const Box & box;
+  public:
+    /** default constructor */
+    const_iterator(const Box & b) : position(b.getCorner1()), box(b) { }
+
+    const_iterator(const Box & b, const Coord & c) : position(c), box(b) { }
+
+    /** iteration */
+    inline const_iterator & operator++() {
+      position = box.getNextPosition(position);
+      return *this;
+    }
+
+    /** get the corresponding location */
+    inline const Coord & operator*() const {
+      return position;
+    }
+
+    /** comparison */
+    inline bool operator!=(const const_iterator & it) const {
+      return position != it.position;
+    }
+
+  };
+
+  /** begin for iterations */
+  inline const_iterator begin() const {
+    return const_iterator(*this);
+  }
+
+  /** end for iterations */
+  inline const_iterator end() const {
+    return const_iterator(*this, Coord(corner1.getX(), corner2.getY(), corner2.getZ()));
+  }
+
+
   /** constructor */
   Box(const Coord & c1, const Coord & c2);
 
@@ -203,6 +257,9 @@ public:
   virtual bool operator==(const Box & b) const {
     return b.corner1 == corner1 && b.corner2 == corner2;
   }
+
+  /** get the next position for iteration */
+  Coord getNextPosition(const Coord & c) const;
 };
 
 #endif

@@ -291,17 +291,15 @@ bool Board::checkInternalMemoryState() const {
 	return false;
 
   // check if all the cells have valid objects
-  for(unsigned int x = 0; x != box.getSizeX(); ++x)
-    for(unsigned int y = 0; y != box.getSizeX(); ++y)
-      for(unsigned int z = 0; z != box.getSizeX(); ++z) {
-	const Coord cc(x, y, z);
-	const QVector<QSharedPointer<Piece> > & cell = getCell(cc);
-	for(QVector<QSharedPointer<Piece> >::const_iterator p = cell.begin(); p != cell.end(); ++p) {
-	  if (!pieces.contains(*p))
-	    return false;
-	  if (!(**p).isUsing(cc))
-	    return false;
-	}
-      }
+  Box::const_iterator e = box.end();
+  for(Box::const_iterator cc = box.begin(); cc != e; ++cc) {
+    const QVector<QSharedPointer<Piece> > & cell = getCell(*cc);
+    for(QVector<QSharedPointer<Piece> >::const_iterator p = cell.begin(); p != cell.end(); ++p) {
+      if (!pieces.contains(*p))
+	return false;
+      if (!(**p).isUsing(*cc))
+	return false;
+    }
+  }
   return true;
 }
