@@ -245,9 +245,9 @@ public:
   inline unsigned int getSizeZ() const { return corner2.getZ() - corner1.getZ() + 1; }
 
   inline bool inBorder(const Coord & c) const {
-    return (((c.getX() == corner1.getX()) || (c.getX() == corner2.getX())) &&
-	    ((c.getY() == corner1.getY()) || (c.getY() == corner2.getY())) &&
-	    ((c.getZ() == corner1.getZ()) || (c.getZ() == corner2.getZ())));
+    return contains(c) && ((c.getX() == corner1.getX()) || (c.getX() == corner2.getX()) ||
+			   (c.getY() == corner1.getY()) || (c.getY() == corner2.getY()) ||
+			   (c.getZ() == corner1.getZ()) || (c.getZ() == corner2.getZ()));
   }
 
   /** create an xml document describing the current piece */
