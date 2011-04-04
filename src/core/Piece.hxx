@@ -40,6 +40,9 @@ protected:
   /** rotation according to the main axis */
   Angle angle;
 
+  /** name of the object */
+  virtual const QString getName() const = 0;
+
 public:
   /** iterator along pieces */
   class const_iterator;
@@ -152,6 +155,7 @@ class StraightPiece : public Piece {
 private:
   unsigned int length;
 
+  virtual const QString getName() const { return "straight"; }
 public:
   /** construtor */
   StraightPiece(unsigned int l, const Coord & c, const Direction & d) : Piece(c, d),

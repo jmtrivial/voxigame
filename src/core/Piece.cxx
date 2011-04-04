@@ -23,6 +23,7 @@
 #include "Piece.hxx"
 #include "Exception.hxx"
 
+
 Box StraightPiece::getBoundedBox() const {
   const_iterator last = begin() + (length - 1);
   return Box(location, *last);
@@ -118,6 +119,7 @@ QDomElement Piece::toXML(QDomDocument & doc) const {
   QDomElement b = doc.createElement("piece");
   b.setAttribute("direction", toStringDirection(direction));
   b.setAttribute("angle", toStringAngle(angle));
+  b.setAttribute("type", getName());
 
   QDomElement l = location.toXML(doc, "location");
   b.appendChild(l);
@@ -129,8 +131,6 @@ QDomElement Piece::toXML(QDomDocument & doc) const {
 
 QDomElement StraightPiece::toXML(QDomDocument & doc) const {
   QDomElement piece = Piece::toXML(doc);
-
-  piece.setAttribute("type", "straight");
 
   piece.setAttribute("length", length);
 
