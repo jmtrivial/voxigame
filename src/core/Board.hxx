@@ -137,6 +137,8 @@ public:
     inline bool operator!=(const const_iterator & i) const {
       return it != i.it;
     }
+
+    const QVector<QSharedPointer<Piece> >::const_iterator & getIt() const { return it; }
   };
 
 
@@ -254,6 +256,9 @@ public:
 	return true;
     return false;
   }
+
+  /** return true if the internal description of the board is valid */
+  bool checkInternalMemoryState() const;
 };
 
 #endif

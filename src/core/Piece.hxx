@@ -150,6 +150,14 @@ public:
 
   /** return true if the objects are similar (same kind, location, orientation, etc. */
   virtual bool operator==(const Piece & piece) const;
+
+  /** return true if the current piece is using the given location */
+  inline bool isUsing(const Coord & c) const {
+    for(const_iterator p = begin(); p != end(); ++p)
+      if ((*p) == c)
+	return true;
+    return false;
+  }
 };
 
 
@@ -190,8 +198,9 @@ public:
   /** generate an xml version of the piece */
   virtual QDomElement toXML(QDomDocument & doc) const;
 
-
+  /** comparison operator */
   virtual bool operator==(const Piece & piece) const;
+
 };
 
 #endif

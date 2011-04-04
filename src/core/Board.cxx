@@ -150,7 +150,7 @@ void Board::removeFromCells(QSharedPointer<Piece> & p) {
   for(Piece::const_iterator c = (*p).begin(); c != (*p).end(); ++c) {
     Coord cc = *c;
     if (box.contains(cc)) {
-      QVector<QSharedPointer<Piece> > cList = getCell(cc);
+      QVector<QSharedPointer<Piece> > & cList = getCell(cc);
       int cListPos = cList.indexOf(p);
       if (cListPos == -1)
 	throw ExceptionInternalError();
@@ -271,4 +271,37 @@ bool Board::operator==(const Board & board) const {
     if (hasPiece(*p))
       return true;
   return false;
+}
+
+
+bool Board::checkInternalMemoryState() const {
+  // check validity
+  if (!allowIntersections || !allowOutside)
+    for(const_iterator it = begin(); it != end(); ++it) {
+      if (!allowOutside && !isInsidePiece(it))
+	return false;
+      if (!allowIntersections && hasIntersectionPiece(it))
+	return false;
+    }
+
+  // check if all the pieces are correctly referenced in the data structure
+  for(const_iterator p = pieces.begin(); p != pieces.end(); ++p)
+    for(Piece::const_iterator c = (*p).begin(); c != (*p).end(); ++c)
+      if (!getCell(*c).contains(*(p.getIt())))
+	return false;
+
+  // check if all the cells have valid objects
+  for(unsigned int x = 0; x != box.getSizeX(); ++x)
+    for(unsigned int y = 0; y != box.getSizeX(); ++y)
+      for(unsigned int z = 0; z != box.getSizeX(); ++z) {
+	const Coord cc(x, y, z);
+	const QVector<QSharedPointer<Piece> > & cell = getCell(cc);
+	for(QVector<QSharedPointer<Piece> >::const_iterator p = cell.begin(); p != cell.end(); ++p) {
+	  if (!pieces.contains(*p))
+	    return false;
+	  if (!(**p).isUsing(cc))
+	    return false;
+	}
+      }
+  return true;
 }

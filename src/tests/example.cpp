@@ -38,8 +38,14 @@ int main(int, char **) {
   try {
     cout << "Add a piece in the board" << endl;
     b.addPiece(p);
+    if (!b.checkInternalMemoryState())
+      qFatal("Bad internal state.");
+
     cout << "Move in the Y direction" << endl;
     b.movePiece(b.begin(), Yplus);
+    if (!b.checkInternalMemoryState())
+      qFatal("Bad internal state.");
+
     cout << "Move in the Y direction" << endl;
     b.movePiece(b.begin(), Yplus);
     cout << "Move in the Y direction" << endl;
@@ -64,6 +70,9 @@ int main(int, char **) {
 
   if (b.hasPathBetweenWindows())
     cout << "The board contain a path between the two windows" << endl;
+
+  if (!b.checkInternalMemoryState())
+    qFatal("Bad internal state.");
 
   cout << "Save board" << endl;
   if (!b.save("/tmp/board.xml")) {
