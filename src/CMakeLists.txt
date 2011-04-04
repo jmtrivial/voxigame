@@ -64,4 +64,8 @@ IF(QT4_FOUND)
   TARGET_LINK_LIBRARIES(testPiece libvoxigame ${QT_LIBRARIES} ${QT_QTTEST_LIBRARY})
   ADD_TEST(testPiece testPiece)
 
+  ADD_EXECUTABLE(testBoard tests/testBoard.cxx ${TEST_MOC_SRCS})
+  TARGET_LINK_LIBRARIES(testBoard libvoxigame ${QT_LIBRARIES} ${QT_QTTEST_LIBRARY})
+  ADD_TEST(testBoard testBoard)
+
 ENDIF(QT4_FOUND)

@@ -25,9 +25,9 @@
 
 #include "Coord.hxx"
 #include "Piece.hxx"
+#include "Board.hxx"
 
-class testCoord : public QObject
-{
+class testCoord : public QObject {
   Q_OBJECT
 private slots:
   void testTranslate(void) {
@@ -52,8 +52,7 @@ private slots:
 
 };
 
-class testPiece : public QObject
-{
+class testPiece : public QObject {
   Q_OBJECT
 private slots:
   void testUsingVoxels(void) {
@@ -87,4 +86,43 @@ private slots:
     for(StraightPiece::const_iterator c = p.begin(); c != p.end(); ++c)
       QVERIFY(b.contains(*c));
   }
+};
+
+
+class testBoard : public QObject {
+  Q_OBJECT
+
+private slots:
+
+  void testMove(void) {
+    int x = 10;
+    Board board1(x, x, x, Coord(0, 0, 0), Coord(x - 1, x - 1, x - 1));
+    StraightPiece p1(4, Coord(0, 0, 0), Xplus);
+    board1.addPiece(p1);
+    board1.movePiece(board1.begin(), Yplus);
+    board1.movePiece(board1.begin(), Yplus);
+
+    Board board2(x, x, x, Coord(0, 0, 0), Coord(x - 1, x - 1, x - 1));
+    StraightPiece p2(4, Coord(0, 2, 0), Xplus);
+    board2.addPiece(p2);
+
+    QVERIFY(board1 == board2);
+    QVERIFY(board1.checkInternalMemoryState());
+    QVERIFY(board2.checkInternalMemoryState());
+  }
+
+
+  void testValidNumberOfPieces(void) {
+    int x = 10;
+    Board board(x, x, x, Coord(0, 0, 0), Coord(x - 1, x - 1, x - 1));
+    StraightPiece p1(4, Coord(0, 0, 0), Xplus);
+    StraightPiece p2(4, Coord(0, 1, 0), Xplus);
+    board.addPiece(p1);
+    board.addPiece(p2);
+    QVERIFY(board.hasPiece(p1));
+    QVERIFY(board.hasPiece(p2));
+    QVERIFY(board.getNbPiece() == 2);
+    QVERIFY(board.checkInternalMemoryState());
+  }
+
 };
