@@ -38,7 +38,7 @@ private:
   Box box;
 
   /** the list of pieces in the board */
-  QVector<QSharedPointer<Piece> > bricks;
+  QVector<QSharedPointer<Piece> > pieces;
 
   /** list of pieces in each cell of the board */
   QVector<QSharedPointer<Piece> > * cells;
@@ -140,10 +140,10 @@ public:
   };
 
 
-  iterator begin() { return iterator(bricks.begin()); }
-  const_iterator begin() const { return const_iterator(bricks.begin()); }
-  iterator end() { return iterator(bricks.end()); }
-  const_iterator end() const { return const_iterator(bricks.end()); }
+  iterator begin() { return iterator(pieces.begin()); }
+  const_iterator begin() const { return const_iterator(pieces.begin()); }
+  iterator end() { return iterator(pieces.end()); }
+  const_iterator end() const { return const_iterator(pieces.end()); }
 
 
   /** return an interator on the cell at coordinates (x, y, z) */
@@ -167,8 +167,8 @@ public:
       @param z Size in z direction
       @param w1 The input cell
       @param w2 The output cell
-      @param aI Allow intersection between brick
-      @param aO Allow bricks outside of the board */
+      @param aI Allow intersection between pieces
+      @param aO Allow pieces outside of the board */
   Board(unsigned int x, unsigned int y, unsigned int z,
 	const Coord & w1, const Coord & w2,
 	bool aI = false, bool aO = false);
@@ -219,7 +219,7 @@ public:
 
   /** return the number of pieces contained by this board */
   inline unsigned int getNbPiece() const {
-    return bricks.size();
+    return pieces.size();
   }
 
   /** return the number of pieces at the given coordinates (inside the board) */
@@ -249,7 +249,7 @@ public:
 
   /** return true if the given piece is contained in the current board (exact location, ...) */
   inline bool hasPiece(const Piece & piece) const {
-    for(const_iterator p = bricks.begin(); p != bricks.end(); ++p)
+    for(const_iterator p = pieces.begin(); p != pieces.end(); ++p)
       if (piece == *p)
 	return true;
     return false;

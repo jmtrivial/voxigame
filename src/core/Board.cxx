@@ -49,8 +49,8 @@ Board & Board::addPiece(const Piece & b) {
       if (getNbPiece(*c) != 0)
 	throw ExceptionIntersection();
   }
-  bricks.push_back(QSharedPointer<Piece>(b.clone()));
-  addInCells(bricks.back());
+  pieces.push_back(QSharedPointer<Piece>(b.clone()));
+  addInCells(pieces.back());
 
   return *this;
 }
@@ -111,7 +111,7 @@ bool Board::isMovablePiece(const const_iterator & i) const {
 
 
 bool Board::isStaticAndValid() const {
-  const_iterator e(bricks.end());
+  const_iterator e(pieces.end());
   for(const_iterator it = begin(); it != e; ++it) {
     if (!isInsidePiece(it))
       return false;
@@ -125,7 +125,7 @@ bool Board::isStaticAndValid() const {
 }
 
 bool Board::isValid() const {
-  const_iterator e(bricks.end());
+  const_iterator e(pieces.end());
   for(const_iterator it = begin(); it != e; ++it) {
     if (!isInsidePiece(it))
       return false;
@@ -141,7 +141,7 @@ Board & Board::removePiece(const iterator & i) {
   removeFromCells(*(i.it));
 
   // remove it from the list
-  bricks.erase(i.it);
+  pieces.erase(i.it);
 
   return *this;
 }
@@ -263,11 +263,11 @@ bool Board::operator==(const Board & board) const {
       !(window1 == board.window1) || !(window2 == board.window2) || (getNbPiece() != board.getNbPiece()))
     return false;
   // check pieces
-  for(const_iterator p = bricks.begin(); p != bricks.end(); ++p)
+  for(const_iterator p = pieces.begin(); p != pieces.end(); ++p)
     if (board.hasPiece(*p))
       return true;
   // double check to handle duplicated pieces
-  for(const_iterator p = board.bricks.begin(); p != board.bricks.end(); ++p)
+  for(const_iterator p = board.pieces.begin(); p != board.pieces.end(); ++p)
     if (hasPiece(*p))
       return true;
   return false;
