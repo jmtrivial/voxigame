@@ -47,27 +47,25 @@ ENDIF(QT_QTOPENGL_FOUND)
 
 
 # testing
-IF(QT4_FOUND)
-  ENABLE_TESTING()
-  SET(QT_USE_QTXML true)
-  SET(QT_USE_QTTEST true)
-  SET(TEST_LIBRARIES ${QT_QTTEST_LIBRARY} ${QT_LIBRARIES})
-  INCLUDE(${QT_USE_FILE})
+ENABLE_TESTING()
+SET(QT_USE_QTXML true)
+SET(QT_USE_QTTEST true)
+SET(TEST_LIBRARIES ${QT_QTTEST_LIBRARY} ${QT_LIBRARIES})
+INCLUDE(${QT_USE_FILE})
 
-  SET(TEST_MOC_HDRS tests/testBoard.hxx tests/testPiece.hxx tests/testCoord.hxx)
+SET(TEST_MOC_HDRS tests/testBoard.hxx tests/testPiece.hxx tests/testCoord.hxx)
 
-  QT4_WRAP_CPP(TEST_MOC_SRCS ${TEST_MOC_HDRS})
+QT4_WRAP_CPP(TEST_MOC_SRCS ${TEST_MOC_HDRS})
 
-  ADD_EXECUTABLE(testCoord tests/testCoord.cxx ${TEST_MOC_SRCS})
-  TARGET_LINK_LIBRARIES(testCoord libvoxigame ${QT_LIBRARIES} ${QT_QTTEST_LIBRARY})
-  ADD_TEST(testCoord testCoord)
+ADD_EXECUTABLE(testCoord tests/testCoord.cxx ${TEST_MOC_SRCS})
+TARGET_LINK_LIBRARIES(testCoord libvoxigame ${QT_LIBRARIES} ${QT_QTTEST_LIBRARY})
+ADD_TEST(testCoord testCoord)
 
-  ADD_EXECUTABLE(testPiece tests/testPiece.cxx ${TEST_MOC_SRCS})
-  TARGET_LINK_LIBRARIES(testPiece libvoxigame ${QT_LIBRARIES} ${QT_QTTEST_LIBRARY})
-  ADD_TEST(testPiece testPiece)
+ADD_EXECUTABLE(testPiece tests/testPiece.cxx ${TEST_MOC_SRCS})
+TARGET_LINK_LIBRARIES(testPiece libvoxigame ${QT_LIBRARIES} ${QT_QTTEST_LIBRARY})
+ADD_TEST(testPiece testPiece)
 
-  ADD_EXECUTABLE(testBoard tests/testBoard.cxx ${TEST_MOC_SRCS})
-  TARGET_LINK_LIBRARIES(testBoard libvoxigame ${QT_LIBRARIES} ${QT_QTTEST_LIBRARY})
-  ADD_TEST(testBoard testBoard)
+ADD_EXECUTABLE(testBoard tests/testBoard.cxx ${TEST_MOC_SRCS})
+TARGET_LINK_LIBRARIES(testBoard libvoxigame ${QT_LIBRARIES} ${QT_QTTEST_LIBRARY})
+ADD_TEST(testBoard testBoard)
 
-ENDIF(QT4_FOUND)
