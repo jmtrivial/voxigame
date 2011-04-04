@@ -19,14 +19,33 @@
 
  *****************************************************************************/
 
+#include <QObject>
+#include <QtTest>
+#include <QtCore>
 
-#include "voxigame.h"
+#include "Coord.hxx"
+#include "Piece.hxx"
 
-Voxigame::Voxigame() {
-  ui.setupUi(this);
-}
+class testCoord : public QObject
+{
+  Q_OBJECT
+private slots:
+  void testTranslate(void) {
+    Coord c1(0, 0, 0);
+    c1.translate(Xplus);
+    Coord c2(1, 0, 0);
+    QVERIFY(c1 == c2);
+  }
+};
 
-Voxigame::~Voxigame() {
-
-}
-
+class testPiece : public QObject
+{
+  Q_OBJECT
+private slots:
+  void testTranslate(void) {
+    StraightPiece p1(4, Coord(0, 0, 0), Xplus);
+    StraightPiece p2(4, Coord(0, 1, 0), Xplus);
+    p1.move(Yplus);
+    QVERIFY(p1 == p2);
+  }
+};

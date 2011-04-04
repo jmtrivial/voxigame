@@ -20,35 +20,48 @@
 
 # add the files of the current library
 INCLUDE_DIRECTORIES(. core/ frontend/ tests/)
-SET(CPP_LIST core/Coord.cxx core/Piece.cxx core/Board.cxx)
+SET(CORE_CPP_LIST core/Coord.cxx core/Piece.cxx core/Board.cxx)
 
-ADD_LIBRARY(libvoxigame STATIC ${CPP_LIST})
+ADD_LIBRARY(libvoxigame STATIC ${CORE_CPP_LIST})
 
 
-FIND_PACKAGE(Qt4)
+FIND_PACKAGE(Qt4 REQUIRED)
 
-# create the binaries
-IF(QT4_FOUND)
-  SET(QT_USE_QTXML 1)
-  INCLUDE(${QT_USE_FILE})
-
-  ADD_EXECUTABLE(example tests/example.cpp)
-  TARGET_LINK_LIBRARIES(example libvoxigame ${QT_QTCORE_LIBRARY} ${QT_QTXML_LIBRARY})
-ENDIF(QT4_FOUND)
 
 # GUI
-
-IF(QT4_FOUND AND QT_QTOPENGL_FOUND)
+IF(QT_QTOPENGL_FOUND)
   SET(QT_USE_QTOPENGL 1)
+  SET(QT_USE_QTXML 1)
   INCLUDE(${QT_USE_FILE})
 
   INCLUDE_DIRECTORIES(${QT_INCLUDES} ${CMAKE_CURRENT_BINARY_DIR})
   SET(VOXIGAME_UIS frontend/mainwindow.ui)
   SET(VOXIGAME_SRC frontend/voxigame.cxx frontend/main.cxx)
+  SET(VOXIGAME_MOC_HDRS frontend/voxigame.h)
 
   QT4_WRAP_UI(UIHeaders ${VOXIGAME_UIS})
-  QT4_AUTOMOC(${VOXIGAME_SRC})
-  QT4_WRAP_CPP(${VOXIGAME_SRC})
-  ADD_EXECUTABLE(voxigame ${VOXIGAME_SRC} ${UIHeaders})
+  QT4_WRAP_CPP(VOXIGAME_MOC_SRCS ${VOXIGAME_MOC_HDRS})
+  ADD_EXECUTABLE(voxigame ${VOXIGAME_SRC} ${UIHeaders} ${VOXIGAME_MOC_SRCS})
   TARGET_LINK_LIBRARIES(voxigame ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} ${QT_QTOPENGL_LIBRARY} qglviewer-qt4)
-ENDIF(QT4_FOUND AND QT_QTOPENGL_FOUND)
+ENDIF(QT_QTOPENGL_FOUND)
+
+
+# testing
+IF(QT4_FOUND)
+  ENABLE_TESTING()
+  SET(QT_USE_QTXML true)
+  SET(QT_USE_QTTEST true)
+  SET(TEST_LIBRARIES ${QT_QTTEST_LIBRARY} ${QT_LIBRARIES})
+  INCLUDE(${QT_USE_FILE})
+
+  QT4_WRAP_CPP(TEST_MOC_SRCS tests/test_classes.hxx)
+
+  ADD_EXECUTABLE(testCoord tests/testCoord.cxx ${TEST_MOC_SRCS})
+  TARGET_LINK_LIBRARIES(testCoord libvoxigame ${QT_LIBRARIES} ${QT_QTTEST_LIBRARY})
+  ADD_TEST(testCoord testCoord)
+
+  ADD_EXECUTABLE(testPiece tests/testPiece.cxx ${TEST_MOC_SRCS})
+  TARGET_LINK_LIBRARIES(testPiece libvoxigame ${QT_LIBRARIES} ${QT_QTTEST_LIBRARY})
+  ADD_TEST(testPiece testPiece)
+
+ENDIF(QT4_FOUND)

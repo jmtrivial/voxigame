@@ -19,14 +19,7 @@
 
  *****************************************************************************/
 
+#include "test_classes.hxx"
 
-#include "voxigame.h"
-
-Voxigame::Voxigame() {
-  ui.setupUi(this);
-}
-
-Voxigame::~Voxigame() {
-
-}
+QTEST_MAIN(testCoord)
 
