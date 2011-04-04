@@ -258,9 +258,11 @@ bool Board::save(const QString & filename) const {
 }
 
 bool Board::operator==(const Board & board) const {
+  // check general properties
   if (!(box == board.box) || !(allowOutside == board.allowOutside) || !allowIntersections == board.allowIntersections ||
       !(window1 == board.window1) || !(window2 == board.window2) || (getNbPiece() != board.getNbPiece()))
     return false;
+  // check pieces
   for(const_iterator p = bricks.begin(); p != bricks.end(); ++p)
     if (board.hasPiece(*p))
       return true;
