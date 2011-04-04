@@ -50,6 +50,11 @@ private slots:
       QVERIFY(b.contains(*c));
   }
 
+  void testOnBorder(void) {
+    Box b(Coord(5, 2, 3), Coord(25, 0, 4));
+    QVERIFY(b.inBorder(Coord(15, 0, 3)));
+  }
+
 };
 
 class testPiece : public QObject {
@@ -93,6 +98,48 @@ class testBoard : public QObject {
   Q_OBJECT
 
 private slots:
+  void testValidStructure(void) {
+    int x = 10;
+    Board board(x, x, x, Coord(0, 0, 0), Coord(x - 1, x - 1, x - 1));
+    StraightPiece p1(4, Coord(0, 0, 0), Xplus);
+    board.addPiece(p1);
+    QVERIFY(board.isValid());
+    QVERIFY(board.validWindows());
+    QVERIFY(!board.hasPathBetweenWindows());
+
+    board.movePiece(board.begin(), Xplus);
+    QVERIFY(board.hasPathBetweenWindows());
+
+    QVERIFY(board.checkInternalMemoryState());
+  }
+
+
+  void testValidNumberOfPieces(void) {
+    int x = 10;
+    Board board(x, x, x, Coord(0, 0, 0), Coord(x - 1, x - 1, x - 1));
+    StraightPiece p1(4, Coord(0, 0, 0), Xplus);
+    StraightPiece p2(4, Coord(0, 1, 0), Xplus);
+    board.addPiece(p1);
+    board.addPiece(p2);
+    QVERIFY(board.hasPiece(p1));
+    QVERIFY(board.hasPiece(p2));
+    QVERIFY(board.getNbPiece() == 2);
+    QVERIFY(board.checkInternalMemoryState());
+  }
+
+  void testAddRemove(void) {
+    int x = 10;
+    Board board(x, x, x, Coord(0, 0, 0), Coord(x - 1, x - 1, x - 1));
+    StraightPiece p1(4, Coord(0, 0, 0), Xplus);
+    StraightPiece p2(4, Coord(0, 1, 0), Xplus);
+    board.addPiece(p1);
+    board.addPiece(p2);
+    board.removePiece(board.begin());
+    QVERIFY(board.hasPiece(p2));
+    QVERIFY(board.getNbPiece() == 1);
+    QVERIFY(board.checkInternalMemoryState());
+  }
+
 
   void testMove(void) {
     int x = 10;
@@ -112,16 +159,21 @@ private slots:
   }
 
 
-  void testValidNumberOfPieces(void) {
-    int x = 10;
-    Board board(x, x, x, Coord(0, 0, 0), Coord(x - 1, x - 1, x - 1));
-    StraightPiece p1(4, Coord(0, 0, 0), Xplus);
-    StraightPiece p2(4, Coord(0, 1, 0), Xplus);
-    board.addPiece(p1);
-    board.addPiece(p2);
-    QVERIFY(board.hasPiece(p1));
-    QVERIFY(board.hasPiece(p2));
-    QVERIFY(board.getNbPiece() == 2);
+  void testStaticStructure(void) {
+    Board board(3, 3, 2, Coord(1, 1, 0), Coord(1, 1, 1));
+    for(unsigned int i = 0; i != 2; ++i) {
+      StraightPiece p1(2, Coord(0, 0, i), Xplus);
+      StraightPiece p2(2, Coord(2, 0, i), Yplus);
+      StraightPiece p3(2, Coord(2, 2, i), Xminus);
+      StraightPiece p4(2, Coord(0, 2, i), Yminus);
+      board.addPiece(p1);
+      board.addPiece(p2);
+      board.addPiece(p3);
+      board.addPiece(p4);
+    }
+    QVERIFY(board.validWindows());
+    QVERIFY(board.isStaticAndValid());
+    QVERIFY(board.hasPathBetweenWindows());
     QVERIFY(board.checkInternalMemoryState());
   }
 
