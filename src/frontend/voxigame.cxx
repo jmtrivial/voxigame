@@ -20,7 +20,7 @@
  *****************************************************************************/
 
 
-#include "voxigame.h"
+#include "voxigame.hxx"
 
 Voxigame::Voxigame() {
   ui.setupUi(this);

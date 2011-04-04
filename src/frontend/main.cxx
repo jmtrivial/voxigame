@@ -20,7 +20,7 @@
  *****************************************************************************/
 
 #include <QtGui/QApplication>
-#include "voxigame.h"
+#include "voxigame.hxx"
 
 
 int main(int argc, char** argv)

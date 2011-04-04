@@ -37,7 +37,7 @@ IF(QT_QTOPENGL_FOUND)
   INCLUDE_DIRECTORIES(${QT_INCLUDES} ${CMAKE_CURRENT_BINARY_DIR})
   SET(VOXIGAME_UIS frontend/mainwindow.ui)
   SET(VOXIGAME_SRC frontend/voxigame.cxx frontend/main.cxx)
-  SET(VOXIGAME_MOC_HDRS frontend/voxigame.h)
+  SET(VOXIGAME_MOC_HDRS frontend/voxigame.hxx)
 
   QT4_WRAP_UI(UIHeaders ${VOXIGAME_UIS})
   QT4_WRAP_CPP(VOXIGAME_MOC_SRCS ${VOXIGAME_MOC_HDRS})
