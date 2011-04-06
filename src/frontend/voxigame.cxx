@@ -73,17 +73,19 @@ void Voxigame::loadBoard() {
 
   QString fname = QFileDialog::getOpenFileName(this, "Load board", "", "Voxigame files (*.xml)");
 
-  QApplication::setOverrideCursor(Qt::WaitCursor);
-  if(board.load(fname)) {
-    filename = fname;
-    modified = false;
-    QApplication::restoreOverrideCursor();
-    statusBar()->showMessage("File loaded", 2000);
-  }
-  else {
-    QApplication::restoreOverrideCursor();
-    QMessageBox::warning(this, "Recent Files", QString("Cannot load file %1").arg(fname));
-    statusBar()->showMessage("Abort loading", 2000);
+  if (!fname.isEmpty()) {
+    QApplication::setOverrideCursor(Qt::WaitCursor);
+    if(board.load(fname)) {
+      filename = fname;
+      modified = false;
+      QApplication::restoreOverrideCursor();
+      statusBar()->showMessage("File loaded", 2000);
+    }
+    else {
+      QApplication::restoreOverrideCursor();
+      QMessageBox::warning(this, "Recent Files", QString("Cannot load file %1").arg(fname));
+      statusBar()->showMessage("Abort loading", 2000);
+    }
   }
 }
 
