@@ -25,6 +25,7 @@
 
 #include <QMainWindow>
 #include "ui_mainwindow.h"
+#include "Board.hxx"
 
 class Voxigame : public QMainWindow
 {
@@ -37,10 +38,38 @@ public:
   void changeEvent(QEvent *e);
 
 private:
+  /** main interface */
   Ui::MainWindow ui;
 
+  /** the manipulated board */
+  Board board;
+
+  /** filename of the currently modified board */
+  QString filename;
+
+  /** true if the board as been modified since the creation */
+  bool modified;
+
+  bool saveFile(const QString & file);
+
 private slots:
+  /** display the about message */
   void aboutMessage();
+
+  /** load a board */
+  void loadBoard();
+
+  /** save the current board */
+  bool saveBoard();
+
+  /** save the current board in a new file */
+  bool saveAsBoard();
+
+  /** quit the application */
+  void quit();
+
+  /** close the current manipulated board */
+  void closeBoard();
 };
 
 #endif

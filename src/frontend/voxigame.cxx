@@ -19,13 +19,22 @@
 
  *****************************************************************************/
 
-
+#include <QFileDialog>
+#include <QMessageBox>
 #include "voxigame.hxx"
 #include "ui_about.h"
 
-Voxigame::Voxigame() {
+
+// See: http://doc.qt.nokia.com/4.7-snapshot/mainwindows-recentfiles-mainwindow-cpp.html
+Voxigame::Voxigame() : filename(), modified(false) {
+  // TODO: load default board from preferences
   ui.setupUi(this);
   connect(ui.actionAbout_Voxigame, SIGNAL(triggered()), SLOT(aboutMessage()));
+  connect(ui.actionOpen, SIGNAL(triggered()), SLOT(loadBoard()));
+  connect(ui.actionSave, SIGNAL(triggered()), SLOT(saveBoard()));
+  connect(ui.actionSave_as, SIGNAL(triggered()), SLOT(saveAsBoard()));
+  connect(ui.actionQuit, SIGNAL(triggered()), SLOT(quit()));
+  connect(ui.actionClose, SIGNAL(triggered()), SLOT(closeBoard()));
 }
 
 Voxigame::~Voxigame() {
@@ -50,5 +59,90 @@ void Voxigame::aboutMessage() {
 
   about.setupUi(&dialog);
   dialog.exec();
+
+}
+
+
+void Voxigame::loadBoard() {
+  if (modified) {
+    // TODO: message...
+  }
+
+  QString fname = QFileDialog::getOpenFileName(this, "Load board", "", "Voxigame files (*.xml)");
+
+  QApplication::setOverrideCursor(Qt::WaitCursor);
+  if(board.load(fname)) {
+    filename = fname;
+    modified = false;
+    QApplication::restoreOverrideCursor();
+    statusBar()->showMessage("File loaded", 2000);
+  }
+  else {
+    QApplication::restoreOverrideCursor();
+    QMessageBox::warning(this, "Recent Files", QString("Cannot load file %1").arg(fname));
+    statusBar()->showMessage("Abort loading", 2000);
+  }
+}
+
+bool Voxigame::saveBoard() {
+  if (filename.isEmpty())
+    return saveAsBoard();
+  else {
+    return saveFile(filename);
+  }
+}
+
+bool Voxigame::saveAsBoard() {
+  QString fname = QFileDialog::getOpenFileName(this, "Save board", "", "Voxigame files (*.xml)");
+  if (fname.isEmpty())
+    return false;
+
+  return saveFile(fname);
+}
+
+void Voxigame::quit() {
+  if (modified) {
+    QMessageBox::StandardButton reply;
+    reply = QMessageBox::question(this, "The board has been modified. Save before exit?", "",
+				  QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel);
+    if (reply == QMessageBox::Yes) {
+      saveBoard();
+      close();
+    }
+    else if (reply == QMessageBox::No)
+      close();
+  }
+  else
+    close();
+}
+
+void Voxigame::closeBoard() {
+  if (modified) {
+    QMessageBox::StandardButton reply;
+    reply = QMessageBox::question(this, "The board has been modified. Close anyway?", "",
+				  QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel);
+    if ((reply == QMessageBox::No) || (reply == QMessageBox::Cancel))
+      return;
+  }
+
+  // TODO: create a new board using the default parameters
+}
+
+bool Voxigame::saveFile(const QString & fileName) {
+
+  QApplication::setOverrideCursor(Qt::WaitCursor);
+  if(board.save(fileName)) {
+    filename = fileName;
+    modified = false;
+    QApplication::restoreOverrideCursor();
+    statusBar()->showMessage("File saved", 2000);
+    return true;
+  }
+  else {
+    QApplication::restoreOverrideCursor();
+    QMessageBox::warning(this, "Recent Files", QString("Cannot write file %1").arg(fileName));
+    statusBar()->showMessage("Abort saving", 2000);
+    return false;
+  }
 
 }
