@@ -22,6 +22,7 @@
 #include <QObject>
 #include <QtTest>
 #include <QtCore>
+#include <QTemporaryFile>
 
 #include "Board.hxx"
 
@@ -106,6 +107,22 @@ private slots:
     QVERIFY(board.isStaticAndValid());
     QVERIFY(board.hasPathBetweenWindows());
     QVERIFY(board.checkInternalMemoryState());
+  }
+
+  void testSaveLoad(void) {
+    int x = 10;
+    Board board1(x, x, x, Coord(0, 0, 0), Coord(x - 1, x - 1, x - 1));
+    StraightPiece p1(4, Coord(0, 0, 0), Xplus);
+    StraightPiece p2(4, Coord(0, 1, 0), Xplus);
+    board1.addPiece(p1);
+    board1.addPiece(p2);
+
+    QTemporaryFile tmp;
+    board1.save(tmp);
+
+    Board board2(tmp);
+
+    QVERIFY(board1 == board2);
   }
 
 };

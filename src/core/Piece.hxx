@@ -92,6 +92,8 @@ public:
   };
 
 
+  Piece(const QDomElement & elem, const QString & name = "piece");
+
   /** constructor */
   Piece(const Coord & c,
 	const Direction & d = Xplus,
@@ -168,7 +170,10 @@ private:
 
   virtual const QString getName() const { return "straight"; }
 public:
-  /** construtor */
+  /** constructor */
+  StraightPiece(const QDomElement & elem, const QString & name = "piece");
+
+  /** constructor */
   StraightPiece(unsigned int l, const Coord & c, const Direction & d) : Piece(c, d),
 									length(l) {
   }
@@ -200,6 +205,15 @@ public:
 
   /** comparison operator */
   virtual bool operator==(const Piece & piece) const;
+
+};
+
+
+/** a class to build pieces */
+class PieceFactory {
+public:
+  /** build the piece described by the xml fragment given in parameter */
+  static Piece * build(const QDomElement & elem, const QString & name = "piece");
 
 };
 

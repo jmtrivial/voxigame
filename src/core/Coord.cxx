@@ -21,6 +21,7 @@
 
 
 #include "Coord.hxx"
+#include "Exception.hxx"
 
 Direction & operator++(Direction & d) {
   switch(d) {
@@ -99,7 +100,6 @@ QDomElement Coord::toXML(QDomDocument & doc, const QString & name) const {
 
 
 QString toStringDirection(Direction d) {
-
   switch(d) {
   case Xplus: return "x";
   case Xminus: return "-x";
@@ -121,6 +121,24 @@ QString toStringAngle(Angle a) {
   default: break;
   }
   return "";
+}
+
+Direction toDirectionString(const QString & s) {
+  if (s == "x") return Xplus;
+  if (s == "-x") return Xminus;
+  if (s == "y") return Yplus;
+  if (s == "-y") return Yminus;
+  if (s == "z") return Zplus;
+  if (s == "-z") return Zminus;
+  throw Exception("Wrong direction description");
+}
+
+Angle toAngleString(const QString & s) {
+  if (s == "0") return A0;
+  if (s == "90") return A90;
+  if (s == "180") return A180;
+  if (s == "270") return A270;
+  throw Exception("Wrong angle description");
 }
 
 QDomElement Box::toXML(QDomDocument & doc, const QString & name) const {
@@ -147,4 +165,51 @@ Coord Box::getNextPosition(const Coord & c) const {
     }
   }
   return result;
+}
+
+
+Coord & Coord::fromXML(const QDomElement & elem, const QString & name) {
+  if (elem.isNull())
+    throw Exception("NULL Dom element");
+  if (elem.tagName() != name)
+    throw Exception("Bad name");
+
+  bool ok;
+  QString sx = elem.attribute("x");
+  int cx = sx.toUInt(&ok);
+  if (!ok) throw Exception("Bad coordinate description");
+  QString sy = elem.attribute("y");
+  int cy = sy.toUInt(&ok);
+  if (!ok) throw Exception("Bad coordinate description");
+  QString sz = elem.attribute("z");
+  int cz = sz.toUInt(&ok);
+  if (!ok) throw Exception("Bad coordinate description");
+
+  return setX(cx).setY(cy).setZ(cz);
+}
+
+Box & Box::fromXML(const QDomElement & elem, const QString & name) {
+  if (elem.isNull())
+    throw Exception("NULL Dom element");
+  if (elem.tagName() != name)
+    throw Exception("Bad name");
+
+  Coord c1, c2;
+  QDomNode n = elem.firstChild();
+  while(!n.isNull()) {
+    QDomElement ee = n.toElement();
+    if(!ee.isNull()) {
+      if (ee.tagName() == "corner1")
+	c1.fromXML(ee, "corner1");
+      else if (ee.tagName() == "corner2")
+	c2.fromXML(ee, "corner2");
+      else
+	throw Exception("Bad box description");
+    }
+    n = n.nextSibling();
+  }
+
+  *this = Box(c1, c2);
+
+  return *this;
 }

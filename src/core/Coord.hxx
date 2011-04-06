@@ -46,11 +46,18 @@ Angle & operator++(Angle & a);
 /** increment the angle using the reverse of enum ordering */
 Angle & operator--(Angle & a);
 
-/** return a string corresponding to the xml attributes that describe the given direction, using the given prefix */
+/** return a string corresponding to the given direction */
 QString toStringDirection(Direction d);
 
-/** return a string corresponding to the xml attributes that describe the given direction, using the given prefix */
+/** return a string corresponding to the given angle */
 QString toStringAngle(Angle a);
+
+
+/** build a direction given the corresponding string */
+Direction toDirectionString(const QString & s);
+
+/** build an angle given the corresponding string */
+Angle toAngleString(const QString & s);
 
 /**
    A class to describe discrete 3D coordinates
@@ -146,6 +153,13 @@ public:
   /** create an xml document describing the current piece */
   QDomElement toXML(QDomDocument & doc, const QString & name = "coord") const;
 
+  /** set coord values using an XML element */
+  inline Coord & operator=(const QDomElement & elem) {
+    return fromXML(elem);
+  }
+
+  /** set coord values using an XML element */
+  Coord & fromXML(const QDomElement & elem, const QString & name = "coord");
 };
 
 QTextStream & operator<<(QTextStream & f, const Coord & p);
@@ -201,7 +215,7 @@ public:
   /** constructor */
   Box(const Coord & c1, const Coord & c2);
 
-  Box(int x, int y, int z);
+  Box(int x = 1, int y = 1, int z = 1);
 
   /** copy constructor */
   Box(const Box & b) : corner1(b.corner1), corner2(b.corner2) {
@@ -260,6 +274,14 @@ public:
 
   /** get the next position for iteration */
   Coord getNextPosition(const Coord & c) const;
+
+  /** set box value using an XML element */
+  inline Box & operator=(const QDomElement & elem) {
+    return fromXML(elem);
+  }
+
+  /** set box value using an XML element */
+  Box & fromXML(const QDomElement & elem, const QString & name = "box");
 };
 
 #endif

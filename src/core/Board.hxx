@@ -1,3 +1,4 @@
+
 /*****************************************************************************
     This file is part of Voxigame.
 
@@ -27,6 +28,7 @@
 #include <QSharedPointer>
 #include <QDomDocument>
 #include <QDomElement>
+#include <QFile>
 
 #include "Exception.hxx"
 #include "Coord.hxx"
@@ -171,12 +173,25 @@ public:
       @param w2 The output cell
       @param aI Allow intersection between pieces
       @param aO Allow pieces outside of the board */
-  Board(unsigned int x, unsigned int y, unsigned int z,
-	const Coord & w1, const Coord & w2,
+  Board(unsigned int x = 1, unsigned int y = 1, unsigned int z = 1,
+	const Coord & w1 = Coord(0, 0, 0), const Coord & w2 = Coord(0, 0, 0),
 	bool aI = false, bool aO = false);
+
+  /** open the current board loading it from a file */
+  Board(const QString & filename) {
+    cells = NULL;
+    load(filename);
+  }
+
+  /** open the current board loading it from a file */
+  Board(QFile & f) {
+    cells = NULL;
+    load(f);
+  }
 
   /** destructor */
   virtual ~Board() {
+    delete[] cells;
   }
 
 
@@ -244,7 +259,25 @@ public:
   QString toXMLString() const;
 
   /** save the current board in the given file */
-  bool save(const QString & filename) const;
+  inline bool save(const QString & filename) const {
+    QFile f(filename);
+    return save(f);
+  }
+
+  /** save the current board in the given file */
+  bool save(QFile & f) const;
+
+  /** load the current board from the given file */
+  inline bool load(const QString & filename) {
+    QFile f(filename);
+    return load(f);
+  }
+
+  /** load the current board from the given file */
+  bool load(QFile & filename);
+
+  /** load the current board from the given XML document */
+  bool load(QDomDocument & elem, const QString & name = "board");
 
   /** return true if the current board and the given one are equal */
   virtual bool operator==(const Board & board) const;

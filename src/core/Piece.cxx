@@ -153,3 +153,68 @@ bool StraightPiece::operator==(const Piece & piece) const {
 
 }
 
+
+Piece * PieceFactory::build(const QDomElement & elem, const QString & name) {
+  if (elem.isNull())
+    throw Exception("NULL Dom element");
+  if (elem.tagName() != name)
+    throw Exception("Bad name");
+
+  QString attr = elem.attribute("type");
+  Piece * result;
+  if (attr == "straight") {
+    result = new StraightPiece(elem, name);
+  }
+  else {
+    throw Exception("Bad piece type");
+  }
+
+  return result;
+}
+
+StraightPiece::StraightPiece(const QDomElement & elem, const QString & name) : Piece(elem, name) {
+  if (elem.isNull())
+    throw Exception("NULL Dom element");
+  if (elem.tagName() != name)
+    throw Exception("Bad name");
+
+  QString t = elem.attribute("type");
+  if (t != getName())
+    throw Exception("Bad piece type");
+
+  QString l = elem.attribute("length");
+  bool ok;
+  length = l.toUInt(&ok);
+  if (!ok)
+    throw Exception("Bad length description");
+}
+
+Piece::Piece(const QDomElement & elem, const QString & name) {
+  if (elem.isNull())
+    throw Exception("NULL Dom element");
+  if (elem.tagName() != name)
+    throw Exception("Bad name");
+
+  QString d = elem.attribute("direction");
+  QString a = elem.attribute("angle");
+
+
+  QDomNode n = elem.firstChild();
+  bool l = false;
+  while(!n.isNull()) {
+    QDomElement e = n.toElement();
+    if(!e.isNull()) {
+      if (e.tagName() == "location") {
+	location.fromXML(e, "location");
+	l = true;
+      }
+    }
+    n = n.nextSibling();
+  }
+  if (!l)
+    throw Exception("Location not found");
+
+
+  direction = toDirectionString(d);
+  angle = toAngleString(a);
+}

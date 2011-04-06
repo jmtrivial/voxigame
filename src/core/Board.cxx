@@ -223,6 +223,11 @@ QDomElement Board::toXML(QDomDocument & doc, const QString & name) const {
   b.setAttribute("allow_intersections", (allowIntersections ? "true" : "false"));
   b.setAttribute("allow_outside", (allowOutside ? "true" : "false"));
 
+  QDomElement ws = doc.createElement("windows");
+  b.appendChild(ws);
+  ws.appendChild(window1.toXML(doc, "window1"));
+  ws.appendChild(window2.toXML(doc, "window2"));
+
   QDomElement g = box.toXML(doc, "geometry");
   b.appendChild(g);
 
@@ -245,32 +250,32 @@ QString Board::toXMLString() const {
 
 
 
-bool Board::save(const QString & filename) const {
-  QFile f(filename);
+bool Board::save(QFile & f) const {
   if (!f.open(QIODevice::WriteOnly))
     return false;
+
   QTextStream outfile(&f);
 
   outfile << toXMLString();
 
-
+  f.close();
   return true;
 }
 
 bool Board::operator==(const Board & board) const {
   // check general properties
-  if (!(box == board.box) || !(allowOutside == board.allowOutside) || !allowIntersections == board.allowIntersections ||
+  if (!(box == board.box) || (allowOutside != board.allowOutside) || (allowIntersections != board.allowIntersections) ||
       !(window1 == board.window1) || !(window2 == board.window2) || (getNbPiece() != board.getNbPiece()))
     return false;
   // check pieces
   for(const_iterator p = pieces.begin(); p != pieces.end(); ++p)
-    if (board.hasPiece(*p))
-      return true;
+    if (!board.hasPiece(*p))
+      return false;
   // double check to handle duplicated pieces
   for(const_iterator p = board.pieces.begin(); p != board.pieces.end(); ++p)
-    if (hasPiece(*p))
-      return true;
-  return false;
+    if (!hasPiece(*p))
+      return false;
+  return true;
 }
 
 
@@ -301,5 +306,108 @@ bool Board::checkInternalMemoryState() const {
 	return false;
     }
   }
+  return true;
+}
+
+bool Board::load(QFile & f) {
+  QDomDocument doc("VoxigameBoard");
+
+  if (!f.open(QIODevice::ReadOnly))
+    return false;
+  if (!doc.setContent(&f)) {
+     f.close();
+     return false;
+  }
+  f.close();
+
+  return load(doc);
+}
+
+bool Board::load(QDomDocument & elem, const QString & name) {
+  QDomElement docElem = elem.documentElement();
+  Box newBox;
+  Coord w1, w2;
+  QVector<QSharedPointer<Piece> > newPieces;
+
+  if (docElem.tagName() != name)
+    return false;
+
+  // get properties
+  QString ai = docElem.attribute("allow_intersections");
+  if ((ai != "true") && (ai != "false"))
+    return false;
+  QString ao = docElem.attribute("allow_outside");
+  if ((ao != "true") && (ao != "false"))
+    return false;
+
+
+  // get geometry and pieces
+  QDomNode n = docElem.firstChild();
+  while(!n.isNull()) {
+    QDomElement e = n.toElement();
+    if(!e.isNull()) {
+      if (e.tagName() == "geometry") {
+	try {
+	  newBox.fromXML(e, "geometry");
+	}
+	catch (...) {
+	  return false;
+	}
+      }
+      else if (e.tagName() == "pieces") {
+	QDomNode n2 = e.firstChild();
+	while(!n2.isNull()) {
+	  QDomElement e2 = n2.toElement();
+	  if(!e2.isNull()) {
+	    try {
+	      newPieces.push_back(QSharedPointer<Piece>(PieceFactory::build(e2)));
+	    }
+	    catch(...) {
+	      return false;
+	    }
+	  }
+	  n2 = n2.nextSibling();
+	}
+      }
+      else if (e.tagName() == "windows") {
+	QDomNode n2 = e.firstChild();
+	while(!n2.isNull()) {
+	  QDomElement e2 = n2.toElement();
+	  if(!e2.isNull()) {
+	    try {
+	      if (e2.tagName() == "window1")
+		w1.fromXML(e2, "window1");
+	      else if (e2.tagName() == "window2")
+		w2.fromXML(e2, "window2");
+	      else
+		return false;
+	    }
+	    catch(...) {
+	      return false;
+	    }
+	  }
+	  n2 = n2.nextSibling();
+	}
+      }
+    }
+    n = n.nextSibling();
+  }
+
+  // update the structure
+  box = newBox;
+  allowIntersections = (ai == "true");
+  allowOutside = (ao == "true");
+  window1 = w1;
+  window2 = w2;
+
+  if (cells != NULL)
+    delete [] cells;
+  cells = new QVector<QSharedPointer<Piece> >[box.getSizeX() * box.getSizeY() * box.getSizeZ()];
+
+  pieces.clear();
+  for(QVector<QSharedPointer<Piece> >::const_iterator p = newPieces.begin(); p != newPieces.end(); ++p)
+    pieces.push_back(*p);
+
+
   return true;
 }
