@@ -191,7 +191,8 @@ public:
 
   /** destructor */
   virtual ~Board() {
-    delete[] cells;
+    if (cells != NULL)
+      delete[] cells;
   }
 
 
