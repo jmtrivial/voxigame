@@ -52,6 +52,8 @@ private:
 
   bool saveFile(const QString & file);
 
+  Board getBoardFromSettings();
+
 private slots:
   /** display the about message */
   void aboutMessage();

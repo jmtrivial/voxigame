@@ -26,8 +26,7 @@
 
 
 // See: http://doc.qt.nokia.com/4.7-snapshot/mainwindows-recentfiles-mainwindow-cpp.html
-Voxigame::Voxigame() : filename(), modified(false) {
-  // TODO: load default board from preferences
+Voxigame::Voxigame() : board(getBoardFromSettings()), filename(), modified(false) {
   ui.setupUi(this);
   connect(ui.actionAbout_Voxigame, SIGNAL(triggered()), SLOT(aboutMessage()));
   connect(ui.actionOpen, SIGNAL(triggered()), SLOT(loadBoard()));
@@ -129,7 +128,7 @@ void Voxigame::closeBoard() {
       return;
   }
 
-  // TODO: create a new board using the default parameters
+  board = getBoardFromSettings();
 }
 
 bool Voxigame::saveFile(const QString & fileName) {
@@ -149,4 +148,11 @@ bool Voxigame::saveFile(const QString & fileName) {
     return false;
   }
 
+}
+
+Board Voxigame::getBoardFromSettings() {
+  Board b;
+  // TODO
+
+  return b;
 }
