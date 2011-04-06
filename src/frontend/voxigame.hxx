@@ -33,8 +33,14 @@ public:
   Voxigame();
 
   virtual ~Voxigame();
+
+  void changeEvent(QEvent *e);
+
 private:
   Ui::MainWindow ui;
+
+private slots:
+  void aboutMessage();
 };
 
 #endif

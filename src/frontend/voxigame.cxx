@@ -21,12 +21,34 @@
 
 
 #include "voxigame.hxx"
+#include "ui_about.h"
 
 Voxigame::Voxigame() {
   ui.setupUi(this);
+  connect(ui.actionAbout_Voxigame, SIGNAL(triggered()), SLOT(aboutMessage()));
 }
 
 Voxigame::~Voxigame() {
 
 }
 
+
+void Voxigame::changeEvent(QEvent *e) {
+  QWidget::changeEvent(e);
+  switch (e->type()) {
+  case QEvent::LanguageChange:
+    ui.retranslateUi(this);
+    break;
+  default:
+    break;
+  }
+ }
+
+void Voxigame::aboutMessage() {
+  QDialog dialog;
+  Ui::About about;
+
+  about.setupUi(&dialog);
+  dialog.exec();
+
+}
