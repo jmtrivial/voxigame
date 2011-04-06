@@ -65,7 +65,11 @@ void Voxigame::aboutMessage() {
 
 void Voxigame::loadBoard() {
   if (modified) {
-    // TODO: message...
+    QMessageBox::StandardButton reply;
+    reply = QMessageBox::question(this, "The current board has been modified. All the modification will be lost by opening a new one. Open anyway?", "",
+				  QMessageBox::Yes | QMessageBox::No);
+    if (reply == QMessageBox::No)
+      return;
   }
 
   QString fname = QFileDialog::getOpenFileName(this, "Load board", "", "Voxigame files (*.xml)");
@@ -120,8 +124,8 @@ void Voxigame::closeBoard() {
   if (modified) {
     QMessageBox::StandardButton reply;
     reply = QMessageBox::question(this, "The board has been modified. Close anyway?", "",
-				  QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel);
-    if ((reply == QMessageBox::No) || (reply == QMessageBox::Cancel))
+				  QMessageBox::Yes | QMessageBox::No);
+    if (reply == QMessageBox::No)
       return;
   }
 
