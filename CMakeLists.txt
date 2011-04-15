@@ -25,5 +25,7 @@ cmake_minimum_required(VERSION 2.8)
 
 SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wunused -Wno-long-long -Wno-deprecated -Wnon-virtual-dtor -Wcast-align -Wchar-subscripts -Wall -Wextra -Wpointer-arith -Wformat-security -Wunused-parameter -Woverloaded-virtual -Wshadow")
 
+list(APPEND CMAKE_MODULE_PATH "${Voxigame_SOURCE_DIR}")
+
 # recursive call
 ADD_SUBDIRECTORY(src)
