@@ -143,6 +143,17 @@ public:
     return result.translate(direction, t);
   }
 
+  /** transform the point using first a rotation arround axis Xplus with angle \p angle,
+      then reorient the coordinate system along the main given direction, then apply a translation */
+  Coord & transform(const Angle & angle, const Direction & direction = Xplus, const Coord & translation = Coord(0., 0., 0.));
+
+  /** create a new point from the current one using first a rotation arround axis Xplus with angle \p angle,
+      then reorient the coordinate system along the main given direction, then apply a translation */
+  inline Coord getTransform(const Angle & angle, const Direction & direction = Xplus, const Coord & translation = Coord(0., 0., 0.)) const {
+    Coord r(*this);
+    return r.transform(angle, direction, translation);
+  }
+
   /** translation by 1 in the given direction */
   inline Coord operator+(const Direction & direction) const {
     Coord r(*this);
@@ -173,6 +184,7 @@ public:
 
   /** set coord values using an XML element */
   Coord & fromXML(const QDomElement & elem, const QString & name = "coord");
+
 };
 
 QTextStream & operator<<(QTextStream & f, const Coord & p);
@@ -256,6 +268,22 @@ public:
     if (corner2.getY() < c.getY()) corner2.setY(c.getY());
     if (corner2.getZ() < c.getZ()) corner2.setZ(c.getZ());
     return *this;
+  }
+
+  /** transform the box using first a rotation arround axis Xplus with angle \p angle,
+      then reorient the coordinate system along the main given direction, then apply a translation */
+  Box & transform(const Angle & angle, const Direction & direction = Xplus, const Coord & translation = Coord(0., 0., 0.)) {
+    corner1.transform(angle, direction, translation);
+    corner2.transform(angle, direction, translation);
+    return *this;
+  }
+
+  /** create a new box from the current one using first a rotation arround axis Xplus with angle \p angle,
+      then reorient the coordinate system along the main given direction, then apply a translation */
+  inline Box getTransform(const Angle & angle, const Direction & direction = Xplus,
+			  const Coord & translation = Coord(0., 0., 0.)) const {
+    Box result(*this);
+    return result.transform(angle, direction, translation);
   }
 
   inline Box & operator=(const Box & b) {

@@ -51,59 +51,6 @@ Coord LPiece::getLocalCoordById(unsigned int t) const {
 }
 
 
-Coord & Piece::local2Global(Coord & coord) const {
-  // first apply rotation (counterclockwise)
-  {
-    const double y = coord.getY();
-    const double z = coord.getZ();
-    switch(angle)  {
-    case A90:
-      coord.setY(-z).setZ(y);
-      break;
-    case A180:
-      coord.setY(-z).setZ(-y);
-      break;
-    case A270:
-      coord.setY(z).setZ(-y);
-      break;
-    case A0:
-    default:
-      break;
-    }
-  }
-
-  // then apply direction
-  {
-    const double x = coord.getX();
-    const double y = coord.getY();
-    const double z = coord.getZ();
-    switch(direction)  {
-    case Yplus:
-      coord.setX(z).setY(x).setZ(y);
-      break;
-    case Yminus:
-      coord.setX(z).setY(-x).setZ(-y);
-      break;
-    case Zplus:
-      coord.setX(y).setY(z).setZ(x);
-      break;
-    case Zminus:
-      coord.setX(-y).setY(z).setZ(-x);
-      break;
-    case Xminus:
-      coord.setX(-x).setY(-y).setZ(z);
-      break;
-    case Xplus:
-    default:
-      break;
-    }
-  }
-
-  // finally, translation
-  coord += location;
-  return coord;
-}
-
 Piece & Piece::rotate(Direction d) {
   if (d == direction) {
     ++angle;

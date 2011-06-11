@@ -215,3 +215,57 @@ Box & Box::fromXML(const QDomElement & elem, const QString & name) {
 
   return *this;
 }
+
+Coord & Coord::transform(const Angle & angle, const Direction & direction, const Coord & translation) {
+  // first apply rotation (counterclockwise)
+  {
+    const double y_ = getY();
+    const double z_ = getZ();
+    switch(angle)  {
+    case A90:
+      setY(-z_).setZ(y_);
+      break;
+    case A180:
+      setY(-z_).setZ(-y_);
+      break;
+    case A270:
+      setY(z_).setZ(-y_);
+      break;
+    case A0:
+    default:
+      break;
+    }
+  }
+
+  // then apply direction
+  {
+    const double x_ = getX();
+    const double y_ = getY();
+    const double z_ = getZ();
+    switch(direction)  {
+    case Yplus:
+      setX(z_).setY(x_).setZ(y_);
+      break;
+    case Yminus:
+      setX(z_).setY(-x_).setZ(-y_);
+      break;
+    case Zplus:
+      setX(y_).setY(z).setZ(x_);
+      break;
+    case Zminus:
+      setX(-y_).setY(z).setZ(-x_);
+      break;
+    case Xminus:
+      setX(-x_).setY(-y).setZ(z_);
+      break;
+    case Xplus:
+    default:
+      break;
+    }
+  }
+
+  // finally, translation
+  (*this) += translation;
+
+  return *this;
+}
