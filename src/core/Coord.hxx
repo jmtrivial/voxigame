@@ -107,6 +107,11 @@ public:
     return x != c.x || y != c.y || z != c.z;
   }
 
+  /** translation */
+  inline Coord & operator +=(const Coord & coord) {
+    return addX(coord.x).addY(coord.y).addZ(coord.z);
+  }
+
   /** translation along x */
   inline Coord & addX(int v) { x += v; return *this; }
   /** translation along y */
