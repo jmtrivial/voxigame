@@ -40,7 +40,8 @@ Angle & operator++(Angle & a) {
   case A0: a = A90; return a;
   case A90: a = A180; return a;
   case A180: a = A270; return a;
-  case A270: a = A0; return a;
+  case A270:
+  default: a = A0; return a;
   }
 }
 
@@ -49,7 +50,8 @@ Angle & operator--(Angle & a) {
   case A0: a = A270; return a;
   case A90: a = A0; return a;
   case A180: a = A90; return a;
-  case A270: a = A180; return a;
+  case A270:
+  default: a = A180; return a;
   }
 }
 
