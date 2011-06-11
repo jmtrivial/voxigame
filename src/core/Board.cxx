@@ -55,6 +55,33 @@ Board & Board::addPiece(const Piece & b) {
   return *this;
 }
 
+Board & Board::addPattern(const Pattern & p) {
+  if (!allowOutside && !box.contains(p.getBoundedBox()))
+    throw ExceptionOutside();
+
+  if ((!allowIntersections) && p.hasIntersection())
+    throw ExceptionIntersection();
+
+  QVector<QSharedPointer<Piece> > newPieces = p.getPieces();
+
+  if (!allowIntersections) {
+    for(QVector<QSharedPointer<Piece> >::const_iterator piece = newPieces.begin();
+	piece != newPieces.end(); ++piece)
+      for(Piece::const_iterator c = (**piece).begin(); c != (**piece).end(); ++c)
+	if (getNbPiece(*c) != 0)
+	  throw ExceptionIntersection();
+  }
+
+  for(QVector<QSharedPointer<Piece> >::const_iterator piece = newPieces.begin();
+      piece != newPieces.end(); ++piece) {
+    pieces.push_back(QSharedPointer<Piece>((**piece).clone()));
+    addInCells(pieces.back());
+  }
+
+  return *this;
+
+}
+
 
 void Board::isAvailableLocationForMove(const const_iterator & i, Direction d) const {
   QSharedPointer<Piece> newp((*i).clone());

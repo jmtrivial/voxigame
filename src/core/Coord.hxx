@@ -44,6 +44,15 @@ bool opposite(Direction d1, Direction d2);
 /** increment the angle using the enum ordering */
 Angle & operator++(Angle & a);
 
+/** sum of two angles modulo 2PI */
+Angle operator+(const Angle & a, const Angle & b);
+
+/** return the opposite direction */
+Direction operator-(const Direction & d);
+
+/** reorien the first direction using the new one as "Xplus" axis */
+Direction reorient(const Direction & d1, const Direction & d2);
+
 /** increment the angle using the reverse of enum ordering */
 Angle & operator--(Angle & a);
 

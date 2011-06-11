@@ -174,6 +174,9 @@ public:
   /** rotate the current piece according to the given direction */
   Piece & rotate(Direction d);
 
+  /** apply the given transformation */
+  Piece & transform(const Angle & a, const Direction & d, const Coord & t);
+
   /** generate an xml version of the piece */
   virtual QDomElement toXML(QDomDocument & doc) const;
 

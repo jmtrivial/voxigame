@@ -360,3 +360,13 @@ Piece::Piece(const QDomElement & elem, const QString & name) {
   direction = toDirectionString(d);
   angle = toAngleString(a);
 }
+
+Piece & Piece::transform(const Angle & a, const Direction & d,
+			 const Coord & t) {
+  location.transform(a, d, t);
+
+  direction = reorient(direction, d);
+  angle = angle + a;
+
+  return *this;
+}

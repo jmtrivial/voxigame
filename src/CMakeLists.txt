@@ -20,7 +20,7 @@
 
 # add the files of the current library
 INCLUDE_DIRECTORIES(. core/ frontend/ tests/)
-SET(CORE_CPP_LIST core/Coord.cxx core/Piece.cxx core/Board.cxx)
+SET(CORE_CPP_LIST core/Coord.cxx core/Piece.cxx core/Board.cxx core/Pattern.cxx)
 
 ADD_LIBRARY(libvoxigame STATIC ${CORE_CPP_LIST})
 

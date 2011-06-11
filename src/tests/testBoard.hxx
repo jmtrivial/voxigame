@@ -93,21 +93,58 @@ private slots:
 
   void testStaticStructure(void) {
     {
-      Board board(3, 3, 2, Coord(1, 1, 0), Coord(1, 1, 1));
-      for(unsigned int i = 0; i != 2; ++i) {
-	StraightPiece p1(2, Coord(0, 0, i), Xplus);
-	StraightPiece p2(2, Coord(2, 0, i), Yplus);
-	StraightPiece p3(2, Coord(2, 2, i), Xminus);
-	StraightPiece p4(2, Coord(0, 2, i), Yminus);
-	board.addPiece(p1);
-	board.addPiece(p2);
-	board.addPiece(p3);
-	board.addPiece(p4);
+      Board board(3, 3, 3, Coord(0, 1, 1), Coord(2, 1, 1));
+      for(unsigned int i = 0; i != 3; ++i) {
+	board.addPattern(Pattern::tunnel(2, Coord(i, 0, 0)));
       }
       QVERIFY(board.validWindows());
       QVERIFY(board.isStaticAndValid());
       QVERIFY(board.hasPathBetweenWindows());
       QVERIFY(board.checkInternalMemoryState());
+    }
+
+    {
+      Board board(3, 3, 3, Coord(1, 1, 2), Coord(2, 1, 1));
+
+      board.addPattern(Pattern::armchair(3, 2, 3, Coord(0, 0, 0)));
+      board.addPattern(Pattern::tunnel(2, Coord(0, 0, 2), Zplus));
+
+      QVERIFY(board.validWindows());
+      QVERIFY(board.isStaticAndValid());
+      QVERIFY(board.hasPathBetweenWindows());
+      QVERIFY(board.checkInternalMemoryState());
+
+    }
+
+    {
+      Board board(3, 3, 3, Coord(2, 1, 1), Coord(1, 2, 1));
+
+      board.addPattern(Pattern::corner(3, Coord(0, 0, 0)));
+
+      QVERIFY(board.validWindows());
+      QVERIFY(board.isStaticAndValid());
+      QVERIFY(board.hasPathBetweenWindows());
+      QVERIFY(board.checkInternalMemoryState());
+    }
+
+    {
+      Board board(4, 3, 3, Coord(3, 0, 2), Coord(1, 2, 0));
+
+      board.addPattern(Pattern::diagonal(Coord(0, 0, 0)));
+
+      QVERIFY(board.validWindows());
+      QVERIFY(board.isStaticAndValid());
+      QVERIFY(board.hasPathBetweenWindows());
+      QVERIFY(board.checkInternalMemoryState());
+
+      board.addPiece(StraightPiece(2, Coord(2, 0, 2), Yplus));
+      board.addPiece(StraightPiece(2, Coord(3, 0, 2), Yplus));
+
+      QVERIFY(board.validWindows());
+      QVERIFY(board.isStaticAndValid());
+      QVERIFY(!board.hasPathBetweenWindows());
+      QVERIFY(board.checkInternalMemoryState());
+
     }
 
     {

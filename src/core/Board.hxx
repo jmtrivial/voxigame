@@ -33,6 +33,7 @@
 #include "Exception.hxx"
 #include "Coord.hxx"
 #include "Piece.hxx"
+#include "Pattern.hxx"
 
 class Board {
 private:
@@ -199,6 +200,10 @@ public:
   /** add a new piece in the board. This function throws an exception if the configuration is not valid according to
       the requirements of the board. */
   Board & addPiece(const Piece & b);
+
+  /** add a new set of pieces in the board. This function throws an exception if the configuration is not valid according to
+      the requirements of the board. */
+  Board & addPattern(const Pattern & p);
 
   /** move piece in the board. This function throws an exception if the configuration is not valid according to
       the requirements of the board. */

@@ -55,6 +55,68 @@ Angle & operator--(Angle & a) {
   }
 }
 
+Angle operator+(const Angle & a, const Angle & b) {
+  Angle result = a;
+
+  switch(b) {
+  case A270: --result; break;
+  case A180: ++result; // 2 ++a: this line, and the next one
+  case A90: ++result; break;
+  case A0:
+  default: break;
+  }
+
+  return result;
+}
+
+Direction operator-(const Direction & d) {
+  switch(d) {
+  case Xminus: return Xplus;
+  case Xplus: return Xminus;
+  case Yminus: return Yplus;
+  case Yplus: return Yminus;
+  case Zminus: return Zplus;
+  case Zplus: return Zminus;
+  default:
+    return d;
+  }
+}
+
+Direction reorient(const Direction & d1, const Direction & d2) {
+  switch(d2) {
+  case Zplus:
+    switch(d1) {
+    case Xplus: return Zplus;
+    case Xminus: return Zminus;
+    case Yplus: return Xplus;
+    case Yminus: return Xminus;
+    case Zplus: return Yplus;
+    case Zminus: return Yminus;
+    default:
+      return d1;
+    }
+  case Yplus:
+    switch(d1) {
+    case Xplus: return Yplus;
+    case Xminus: return Yminus;
+    case Yplus: return Zplus;
+    case Yminus: return Zminus;
+    case Zplus: return Xplus;
+    case Zminus: return Yplus;
+    default:
+      return d1;
+    }
+  case Zminus:
+  case Yminus:
+    return -reorient(d1, -d2);
+  case Xminus:
+    return -d1;
+  case Xplus:
+  default:
+    return d1;
+  }
+}
+
 bool opposite(Direction d1, Direction d2) {
   if ((d1 == Xplus) || (d1 == Yplus) ||
       (d1 == Zplus)) {
