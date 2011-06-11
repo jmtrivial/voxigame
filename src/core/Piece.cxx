@@ -52,19 +52,19 @@ Coord LPiece::getLocalCoordById(unsigned int t) const {
 
 
 Coord & Piece::local2Global(Coord & coord) const {
-  // first apply rotation
+  // first apply rotation (counterclockwise)
   {
-    const double x = coord.getX();
     const double y = coord.getY();
+    const double z = coord.getZ();
     switch(angle)  {
     case A90:
-      coord.setX(y).setY(-x);
+      coord.setY(-z).setZ(y);
       break;
     case A180:
-      coord.setX(-x).setY(-y);
+      coord.setY(-z).setZ(-y);
       break;
     case A270:
-      coord.setX(-y).setY(x);
+      coord.setY(z).setZ(-y);
       break;
     case A0:
     default:
@@ -118,60 +118,60 @@ Piece & Piece::rotate(Direction d) {
   switch(d) {
   case Xplus: // y -> z
     switch(direction) {
-    case Yplus: direction = Zplus; break;
-    case Zplus: direction = Yminus; break;
-    case Yminus: direction = Zminus; break;
-    case Zminus: direction = Yplus; break;
+    case Yplus: direction = Zplus; --angle; break;
+    case Zplus: direction = Yminus; ++angle; break;
+    case Yminus: direction = Zminus; ++angle; break;
+    case Zminus: direction = Yplus; --angle; break;
     default:
       throw Exception();
     }
     break;
   case Xminus: // z -> y
     switch(direction) {
-    case Yplus: direction = Zminus; break;
-    case Zplus: direction = Yplus; break;
-    case Yminus: direction = Zplus; break;
-    case Zminus: direction = Yminus; break;
+    case Yplus: direction = Zminus; ++angle; break;
+    case Zplus: direction = Yplus; ++angle; break;
+    case Yminus: direction = Zplus; --angle; break;
+    case Zminus: direction = Yminus; --angle; break;
     default:
       throw Exception();
     }
     break;
   case Yplus: // z -> x
     switch(direction) {
-    case Xplus: direction = Zminus; break;
-    case Zplus: direction = Xplus; break;
-    case Xminus: direction = Zplus; break;
-    case Zminus: direction = Xminus; break;
+    case Xplus: direction = Zminus; ++angle; break;
+    case Zplus: direction = Xplus; --angle; break;
+    case Xminus: direction = Zplus; --angle; break;
+    case Zminus: direction = Xminus; ++angle; break;
     default:
       throw Exception();
     }
     break;
   case Yminus: // x -> z
     switch(direction) {
-    case Xplus: direction = Zplus; break;
-    case Zplus: direction = Xminus; break;
-    case Xminus: direction = Zminus; break;
-    case Zminus: direction = Xplus; break;
+    case Xplus: direction = Zplus; ++angle; break;
+    case Zplus: direction = Xminus; ++angle; break;
+    case Xminus: direction = Zminus; --angle; break;
+    case Zminus: direction = Xplus; --angle; break;
     default:
       throw Exception();
     }
     break;
   case Zplus: // x -> y
     switch(direction) {
-    case Xplus: direction = Yplus; break;
-    case Yplus: direction = Xminus; break;
-    case Xminus: direction = Yminus; break;
-    case Yminus: direction = Xplus; break;
+    case Xplus: direction = Yplus; --angle; break;
+    case Yplus: direction = Xminus; ++angle; break;
+    case Xminus: direction = Yminus; ++angle; break;
+    case Yminus: direction = Xplus; --angle; break;
     default:
       throw Exception();
     }
     break;
   case Zminus: // y -> x
     switch(direction) {
-    case Xplus: direction = Yminus; break;
-    case Yplus: direction = Xplus; break;
-    case Xminus: direction = Yplus; break;
-    case Yminus: direction = Xminus; break;
+    case Xplus: direction = Yminus; ++angle; break;
+    case Yplus: direction = Xplus; ++angle; break;
+    case Xminus: direction = Yplus; --angle; break;
+    case Yminus: direction = Xminus; --angle; break;
     default:
       throw Exception();
     }

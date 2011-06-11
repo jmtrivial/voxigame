@@ -105,24 +105,23 @@ private slots:
 
   void testRotate(void) {
     {
-      StraightPiece p1(4, Coord(0, 0, 0), Xplus);
-      StraightPiece p2(4, Coord(0, 0, 0), Yplus);
+      StraightPiece p1(4, Coord(0, 0, 0), Xplus, A0);
+      StraightPiece p2(4, Coord(0, 0, 0), Yplus, A270);
       p1.rotate(Zplus);
       QVERIFY(p1 == p2);
     }
 
     {
-      LPiece p1(4, 3, Coord(0, 0, 0), Xplus, A0);
-      LPiece p2(4, 3, Coord(0, 0, 0), Yplus, A0);
-      p1.rotate(Zplus);
-      QVERIFY(p1 == p2);
-    }
-
-    {
-      LPiece p1(4, 3, Coord(0, 0, 0), Xplus, A0);
-      LPiece p2(4, 3, Coord(0, 0, 0), Xplus, A90);
-      p1.rotate(Xplus);
-      QVERIFY(p1 == p2);
+      LPiece p(2, 2, Coord(0, 0, 0), Xplus, A0);
+      QVERIFY(p.isUsing(Coord(0, 0, 0)));
+      QVERIFY(p.isUsing(Coord(1, 0, 0)));
+      QVERIFY(p.isUsing(Coord(1, 1, 0)));
+      p.rotate(Zplus);
+      QVERIFY(p.isUsing(Coord(0, 0, 0)));
+      QVERIFY(p.isUsing(Coord(0, 1, 0)));
+      QVERIFY(p.isUsing(Coord(-1, 1, 0)));
+      LPiece pv(2, 2, Coord(0, 0, 0), Yplus, A270);
+      QVERIFY(pv == p);
     }
   }
 

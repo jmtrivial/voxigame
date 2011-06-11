@@ -203,7 +203,7 @@ public:
   /** constructor */
   StraightPiece(unsigned int l, const Coord & c,
 		const Direction & d = Xplus,
-		const Angle & = A0) : Piece(c, d),
+		const Angle & a = A0) : Piece(c, d, a),
 				      length(l) {
     Q_ASSERT(l > 0);
   }
