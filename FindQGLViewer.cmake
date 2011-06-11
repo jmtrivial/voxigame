@@ -1,6 +1,6 @@
 # - Find libQGLViewer
 # libQGLViewer is a C++ library based on Qt that eases
-# the creation of OpenGL 3D viewers. 
+# the creation of OpenGL 3D viewers.
 # http://www.libqglviewer.com/
 #
 # This module defines the following variables
