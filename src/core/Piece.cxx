@@ -25,16 +25,30 @@
 
 
 Box StraightPiece::getLocalBoundedBox() const {
-  return Box(Coord(0., 0., 0), getLocalCoordById(length - 1));
+  return Box(Coord(0., 0., 0), getLocalCoordById(nbVoxels() - 1));
 }
+
+Box LPiece::getLocalBoundedBox() const {
+  return Box(Coord(0., 0., 0), getLocalCoordById(nbVoxels() - 1));
+}
+
 
 Coord StraightPiece::getLocalCoordById(unsigned int t) const {
   // the straight pieces do not care about rotation
-  Coord c(0., 0., 0.);
   if (t < length)
     return Coord(t, 0., 0.);
   else
     return Coord(-1., 0., 0.);
+}
+
+Coord LPiece::getLocalCoordById(unsigned int t) const {
+  // the straight pieces do not care about rotation
+  if (t < length1)
+    return Coord(t, 0., 0.);
+  else if (t < nbVoxels())
+    return Coord(length1 - 1, t - length1 + 1, 0.);
+  else
+    return Coord(-1, 0., 0.);
 }
 
 
@@ -92,10 +106,14 @@ Coord & Piece::local2Global(Coord & coord) const {
 }
 
 Piece & Piece::rotate(Direction d) {
-  if (d == direction)
+  if (d == direction) {
     ++angle;
-  if (opposite(d, direction))
+    return *this;
+  }
+  if (opposite(d, direction)) {
     --angle;
+    return *this;
+  }
 
   // (x, y, z) is a direct coordinate system
   switch(d) {
@@ -188,6 +206,15 @@ QDomElement StraightPiece::toXML(QDomDocument & doc) const {
   return piece;
 }
 
+QDomElement LPiece::toXML(QDomDocument & doc) const {
+  QDomElement piece = Piece::toXML(doc);
+
+  piece.setAttribute("length1", length1);
+  piece.setAttribute("length2", length2);
+
+  return piece;
+}
+
 
 bool Piece::operator==(const Piece & piece) const {
   return (piece.location == location) && (piece.direction == direction) && (piece.angle == angle);
@@ -197,6 +224,17 @@ bool StraightPiece::operator==(const Piece & piece) const {
   try {
     const StraightPiece & p = dynamic_cast<const StraightPiece &>(piece);
     return Piece::operator==(piece) && (length == p.length);
+  }
+  catch (...) {
+    return false;
+  }
+
+}
+
+bool LPiece::operator==(const Piece & piece) const {
+  try {
+    const LPiece & p = dynamic_cast<const LPiece &>(piece);
+    return Piece::operator==(piece) && (length1 == p.length1) && (length2 == p.length2);
   }
   catch (...) {
     return false;
@@ -215,6 +253,9 @@ Piece * PieceFactory::build(const QDomElement & elem, const QString & name) {
   Piece * result;
   if (attr == "straight") {
     result = new StraightPiece(elem, name);
+  }
+  else if (attr == "L") {
+    result = new LPiece(elem, name);
   }
   else {
     throw Exception("Bad piece type");
@@ -238,6 +279,28 @@ StraightPiece::StraightPiece(const QDomElement & elem, const QString & name) : P
   length = l.toUInt(&ok);
   if (!ok)
     throw Exception("Bad length description");
+}
+
+LPiece::LPiece(const QDomElement & elem, const QString & name) : Piece(elem, name) {
+  if (elem.isNull())
+    throw Exception("NULL Dom element");
+  if (elem.tagName() != name)
+    throw Exception("Bad name");
+
+  QString t = elem.attribute("type");
+  if (t != getName())
+    throw Exception("Bad piece type");
+
+  QString l1 = elem.attribute("length1");
+  bool ok;
+  length1 = l1.toUInt(&ok);
+  if (!ok)
+    throw Exception("Bad length description (1)");
+
+  QString l2 = elem.attribute("length2");
+  length2 = l2.toUInt(&ok);
+  if (!ok)
+    throw Exception("Bad length description (2)");
 }
 
 Piece::Piece(const QDomElement & elem, const QString & name) {

@@ -120,7 +120,7 @@ public:
   /** get the bounded box of the current piece */
   Box getBoundedBox() const {
     Box local(getLocalBoundedBox());
-    return local.setCorner1(getLocal2Global(local.getCorner1())).setCorner2(getLocal2Global(local.getCorner2()));
+    return Box(getLocal2Global(local.getCorner1()), getLocal2Global(local.getCorner2()));
   }
 
   /** get the bounded box of the current piece */
@@ -202,6 +202,7 @@ public:
   /** constructor */
   StraightPiece(unsigned int l, const Coord & c, const Direction & d) : Piece(c, d),
 									length(l) {
+    Q_ASSERT(l > 0);
   }
   /** copy constructor */
   StraightPiece(const StraightPiece & p) : Piece(p), length(p.length) { }
@@ -224,6 +225,54 @@ public:
   /** return the number of voxels of the object */
   inline unsigned int nbVoxels() const {
     return length;
+  }
+
+  /** generate an xml version of the piece */
+  virtual QDomElement toXML(QDomDocument & doc) const;
+
+  /** comparison operator */
+  virtual bool operator==(const Piece & piece) const;
+
+};
+
+/** a L-piece */
+class LPiece : public Piece {
+private:
+  unsigned int length1;
+  unsigned int length2;
+
+  virtual const QString getName() const { return "L"; }
+public:
+  /** constructor */
+  LPiece(const QDomElement & elem, const QString & name = "piece");
+
+  /** constructor */
+  LPiece(unsigned int l1, unsigned int l2,
+	 const Coord & c, const Direction & d, const Angle & a) : Piece(c, d, a),
+								  length1(l1), length2(l2) {
+    Q_ASSERT(l1 > 0);
+  }
+  /** copy constructor */
+  LPiece(const LPiece & p) : Piece(p), length1(p.length1), length2(p.length2) { }
+
+  /** destructor */
+  virtual ~LPiece() {
+  }
+
+  /** a clone tool */
+  Piece * clone() const {
+    return new LPiece(*this);
+  }
+
+  /** return the bounded box of the current piece */
+  Box getLocalBoundedBox() const;
+
+  /** return the i-st voxel of the structure */
+  Coord getLocalCoordById(unsigned int t) const;
+
+  /** return the number of voxels of the object */
+  inline unsigned int nbVoxels() const {
+    return length1 + length2 - 1;
   }
 
   /** generate an xml version of the piece */
