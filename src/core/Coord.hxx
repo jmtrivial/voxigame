@@ -254,6 +254,12 @@ public:
   /** return corner2 */
   inline const Coord & getCorner2() const { return corner2; }
 
+  /** modifier */
+  inline Box & setCorner1(const Coord & c) { corner1 = c; return *this; }
+
+  /** modifier */
+  inline Box & setCorner2(const Coord & c) { corner2 = c; return *this; }
+
   /** accessor */
   inline unsigned int getSizeX() const { return corner2.getX() - corner1.getX() + 1; }
 

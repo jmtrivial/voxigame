@@ -24,9 +24,8 @@
 #include "Exception.hxx"
 
 
-Box StraightPiece::getBoundedBox() const {
-  const_iterator last = begin() + (length - 1);
-  return Box(location, *last);
+Box StraightPiece::getLocalBoundedBox() const {
+  return Box(Coord(0., 0., 0), getLocalCoordById(length - 1));
 }
 
 Coord StraightPiece::getLocalCoordById(unsigned int t) const {

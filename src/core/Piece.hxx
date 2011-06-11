@@ -118,7 +118,13 @@ public:
   virtual Piece * clone() const = 0;
 
   /** get the bounded box of the current piece */
-  virtual Box getBoundedBox() const = 0;
+  Box getBoundedBox() const {
+    Box local(getLocalBoundedBox());
+    return local.setCorner1(getLocal2Global(local.getCorner1())).setCorner2(getLocal2Global(local.getCorner2()));
+  }
+
+  /** get the bounded box of the current piece */
+  virtual Box getLocalBoundedBox() const = 0;
 
   /** return true if the current piece and the given one are using
       a common voxel */
@@ -133,6 +139,13 @@ public:
   /** tranformation of the given coordinate using the translation and
       rotations that describe the piece's location. */
   Coord & local2Global(Coord & coord) const;
+
+  /** tranformation of the given coordinate using the translation and
+      rotations that describe the piece's location. */
+  inline Coord getLocal2Global(const Coord & coord) const {
+    Coord result(coord);
+    return local2Global(result);
+  }
 
   /** return the coordinates of the voxel at the t-st location.
       if the end of the piece is reached, the location is a fake one, outside
@@ -203,7 +216,7 @@ public:
   }
 
   /** return the bounded box of the current piece */
-  Box getBoundedBox() const;
+  Box getLocalBoundedBox() const;
 
   /** return the i-st voxel of the structure */
   Coord getLocalCoordById(unsigned int t) const;
