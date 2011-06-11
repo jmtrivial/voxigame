@@ -166,8 +166,8 @@ public:
   virtual unsigned int nbVoxels() const = 0;
 
   /** move the piece according to the given direction */
-  inline Piece & move(Direction d) {
-    location.translate(d);
+  inline Piece & move(Direction d, unsigned int step = 1) {
+    location.translate(d, step);
     return *this;
   }
 
