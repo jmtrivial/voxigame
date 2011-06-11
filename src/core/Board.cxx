@@ -58,11 +58,14 @@ Board & Board::addPiece(const Piece & b) {
 
 void Board::isAvailableLocationForMove(const const_iterator & i, Direction d) const {
   QSharedPointer<Piece> newp((*i).clone());
+
   (*newp).move(d);
+  Q_ASSERT((*newp).nbVoxels() == (*i).nbVoxels());
 
   if (!allowOutside && !box.contains((*newp).getBoundedBox())) {
     throw ExceptionOutside();
   }
+
   if (!allowIntersections) {
     for(Piece::const_iterator c = (*newp).begin(); c != (*newp).end(); ++c)
       if (!isEmpty(*c, i)) {
@@ -170,6 +173,8 @@ void Board::addInCells(QSharedPointer<Piece> & p) {
 
 
 bool Board::isEmpty(const Coord & c, const const_iterator & i) const {
+  if (!box.contains(c))
+    return true;
   const QVector<QSharedPointer<Piece> > & cc = getCell(c);
   const unsigned int nb = cc.size();
   if (nb == 0)
@@ -291,9 +296,11 @@ bool Board::checkInternalMemoryState() const {
 
   // check if all the pieces are correctly referenced in the data structure
   for(const_iterator p = pieces.begin(); p != pieces.end(); ++p)
-    for(Piece::const_iterator c = (*p).begin(); c != (*p).end(); ++c)
+    for(Piece::const_iterator c = (*p).begin(); c != (*p).end(); ++c) {
+      Q_ASSERT(box.contains(*c));
       if (!getCell(*c).contains(*(p.getIt())))
 	return false;
+    }
 
   // check if all the cells have valid objects
   Box::const_iterator e = box.end();

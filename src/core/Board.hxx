@@ -232,7 +232,7 @@ public:
   /** return true if a path exists between the two windows that do not cross any piece */
   bool hasPathBetweenWindows() const;
 
-  /** return true if the given piece can be moved in the given direction */
+  /** do not throws an exception if the given piece can be moved in the given direction */
   void isAvailableLocationForMove(const const_iterator & i, Direction d) const;
 
   /** return the number of pieces contained by this board */

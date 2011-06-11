@@ -23,6 +23,7 @@
 #define PIECE
 
 #include<QString>
+#include<QVector>
 
 #include "Coord.hxx"
 
@@ -200,10 +201,13 @@ public:
   StraightPiece(const QDomElement & elem, const QString & name = "piece");
 
   /** constructor */
-  StraightPiece(unsigned int l, const Coord & c, const Direction & d) : Piece(c, d),
-									length(l) {
+  StraightPiece(unsigned int l, const Coord & c,
+		const Direction & d = Xplus,
+		const Angle & = A0) : Piece(c, d),
+				      length(l) {
     Q_ASSERT(l > 0);
   }
+
   /** copy constructor */
   StraightPiece(const StraightPiece & p) : Piece(p), length(p.length) { }
 
@@ -248,8 +252,9 @@ public:
 
   /** constructor */
   LPiece(unsigned int l1, unsigned int l2,
-	 const Coord & c, const Direction & d, const Angle & a) : Piece(c, d, a),
-								  length1(l1), length2(l2) {
+	 const Coord & c,
+	 const Direction & d = Xplus, const Angle & a = A0) : Piece(c, d, a),
+							      length1(l1), length2(l2) {
     Q_ASSERT(l1 > 0);
   }
   /** copy constructor */
@@ -273,6 +278,65 @@ public:
   /** return the number of voxels of the object */
   inline unsigned int nbVoxels() const {
     return length1 + length2 - 1;
+  }
+
+  /** generate an xml version of the piece */
+  virtual QDomElement toXML(QDomDocument & doc) const;
+
+  /** comparison operator */
+  virtual bool operator==(const Piece & piece) const;
+
+};
+
+/** a generic piece */
+class GenericPiece : public Piece {
+private:
+  QVector<Coord> coords;
+  Box bbox;
+  Coord cend;
+
+  virtual const QString getName() const { return "generic"; }
+public:
+  /** constructor */
+  GenericPiece(const QDomElement & elem, const QString & name = "piece");
+
+  /** constructor */
+  GenericPiece(const QVector<Coord> & localCoords,
+	       const Coord & c,
+	       const Direction & d = Xplus, const Angle & a = A0) : Piece(c, d, a),
+								    coords(localCoords),
+								    bbox(localCoords),
+								    cend(bbox.getCorner2() + Coord(1., 1., 1.)) {
+    Q_ASSERT(!localCoords.isEmpty());
+  }
+  /** copy constructor */
+  GenericPiece(const GenericPiece & p) : Piece(p), coords(p.coords), bbox(p.bbox), cend(p.cend) { }
+
+  /** destructor */
+  virtual ~GenericPiece() {
+  }
+
+  /** a clone tool */
+  Piece * clone() const {
+    return new GenericPiece(*this);
+  }
+
+  /** return the bounded box of the current piece */
+  inline Box getLocalBoundedBox() const {
+    return bbox;
+  }
+
+  /** return the i-st voxel of the structure */
+  inline Coord getLocalCoordById(unsigned int t) const {
+    if (t >= (unsigned int)coords.size())
+      return cend;
+    else
+      return coords[t];
+  }
+
+  /** return the number of voxels of the object */
+  inline unsigned int nbVoxels() const {
+    return coords.size();
   }
 
   /** generate an xml version of the piece */

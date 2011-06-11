@@ -23,7 +23,6 @@
 #include "Piece.hxx"
 #include "Exception.hxx"
 
-
 Box StraightPiece::getLocalBoundedBox() const {
   return Box(Coord(0., 0., 0), getLocalCoordById(nbVoxels() - 1));
 }
@@ -215,6 +214,23 @@ QDomElement LPiece::toXML(QDomDocument & doc) const {
   return piece;
 }
 
+QDomElement GenericPiece::toXML(QDomDocument & doc) const {
+  QDomElement piece = Piece::toXML(doc);
+
+  QDomElement ee = doc.createElement("voxels");
+  piece.appendChild(ee);
+
+  for(QVector<Coord>::const_iterator c = coords.begin(); c != coords.end(); ++c) {
+    QDomElement cc = doc.createElement("coord");
+    cc.setAttribute("x", (*c).getX());
+    cc.setAttribute("y", (*c).getY());
+    cc.setAttribute("z", (*c).getZ());
+    ee.appendChild(cc);
+  }
+
+  return piece;
+}
+
 
 bool Piece::operator==(const Piece & piece) const {
   return (piece.location == location) && (piece.direction == direction) && (piece.angle == angle);
@@ -242,6 +258,17 @@ bool LPiece::operator==(const Piece & piece) const {
 
 }
 
+bool GenericPiece::operator==(const Piece & piece) const {
+  try {
+    const GenericPiece & p = dynamic_cast<const GenericPiece &>(piece);
+    return Piece::operator==(piece) && (coords == p.coords);
+  }
+  catch (...) {
+    return false;
+  }
+
+}
+
 
 Piece * PieceFactory::build(const QDomElement & elem, const QString & name) {
   if (elem.isNull())
@@ -256,6 +283,9 @@ Piece * PieceFactory::build(const QDomElement & elem, const QString & name) {
   }
   else if (attr == "L") {
     result = new LPiece(elem, name);
+  }
+  else if (attr == "generic") {
+    result = new GenericPiece(elem, name);
   }
   else {
     throw Exception("Bad piece type");
@@ -303,6 +333,56 @@ LPiece::LPiece(const QDomElement & elem, const QString & name) : Piece(elem, nam
     throw Exception("Bad length description (2)");
 }
 
+GenericPiece::GenericPiece(const QDomElement & elem, const QString & name) : Piece(elem, name) {
+  if (elem.isNull())
+    throw Exception("NULL Dom element");
+  if (elem.tagName() != name)
+    throw Exception("Bad name");
+
+  QString t = elem.attribute("type");
+  if (t != getName())
+    throw Exception("Bad piece type");
+
+  QDomNode n = elem.firstChild();
+  bool v = false;
+  while(!n.isNull() && !v) {
+    QDomElement e = n.toElement();
+    if(!e.isNull()) {
+      if (e.tagName() == "voxels") {
+	QDomNode nn = e.firstChild();
+	while(!nn.isNull()) {
+	  QDomElement ee = nn.toElement();
+	  if (!ee.isNull()) {
+	    if (ee.tagName() == "coord") {
+	      bool ok;
+	      const QString sx = ee.attribute("x");
+	      const QString sy = ee.attribute("y");
+	      const QString sz = ee.attribute("z");
+	      const double x = sx.toUInt(&ok);
+	      if (!ok)
+		throw Exception("Bad coordinate description (x)");
+	      const double y = sy.toUInt(&ok);
+	      if (!ok)
+		throw Exception("Bad coordinate description (y)");
+	      const double z = sz.toUInt(&ok);
+	      if (!ok)
+		throw Exception("Bad coordinate description (z)");
+	      coords.push_back(Coord(x, y, z));
+	    }
+	  }
+	  nn = nn.nextSibling();
+	}
+	v = true;
+	break;
+      }
+    }
+    n = n.nextSibling();
+  }
+  if (!v)
+    throw Exception("Voxels not found");
+
+}
+
 Piece::Piece(const QDomElement & elem, const QString & name) {
   if (elem.isNull())
     throw Exception("NULL Dom element");
@@ -315,12 +395,13 @@ Piece::Piece(const QDomElement & elem, const QString & name) {
 
   QDomNode n = elem.firstChild();
   bool l = false;
-  while(!n.isNull()) {
+  while(!n.isNull() && !l) {
     QDomElement e = n.toElement();
     if(!e.isNull()) {
       if (e.tagName() == "location") {
 	location.fromXML(e, "location");
 	l = true;
+	break;
       }
     }
     n = n.nextSibling();

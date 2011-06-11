@@ -65,6 +65,25 @@ private slots:
       QVERIFY(p.isUsing(Coord(0, 1, 0)));
       QVERIFY(!p.isUsing(Coord(0, 0, 0)));
     }
+
+    {
+      QVector<Coord> coords;
+      coords.push_back(Coord(0., 0., 0.));
+      coords.push_back(Coord(1., 0., 0.));
+      coords.push_back(Coord(2., 0., 0.));
+      coords.push_back(Coord(2., 1., 0.));
+      coords.push_back(Coord(2., 2., 0.));
+      coords.push_back(Coord(1., 2., 0.));
+      coords.push_back(Coord(0., 2., 0.));
+      coords.push_back(Coord(0., 1., 0.));
+
+      GenericPiece p(coords, Coord(0, 0, 0));
+      QVERIFY(p.nbVoxels() == (unsigned int)coords.size());
+      for(QVector<Coord>::const_iterator c = coords.begin(); c != coords.end(); ++c) {
+	QVERIFY(p.isUsing(*c));
+      }
+      QVERIFY(!p.isUsing(*(p.end())));
+    }
   }
 
   void testTranslate(void) {
@@ -132,6 +151,23 @@ private slots:
 
     {
       LPiece p(4, 3, Coord(0, 0, 0), Yplus, A90);
+      Box b(p.getBoundedBox());
+      for(Piece::const_iterator c = p.begin(); c != p.end(); ++c)
+	QVERIFY(b.contains(*c));
+    }
+
+    {
+      QVector<Coord> coords;
+      coords.push_back(Coord(0., 0., 0.));
+      coords.push_back(Coord(1., 0., 0.));
+      coords.push_back(Coord(2., 0., 0.));
+      coords.push_back(Coord(2., 1., 0.));
+      coords.push_back(Coord(2., 2., 0.));
+      coords.push_back(Coord(1., 2., 0.));
+      coords.push_back(Coord(0., 2., 0.));
+      coords.push_back(Coord(0., 1., 0.));
+
+      GenericPiece p(coords, Coord(0, 0, 0));
       Box b(p.getBoundedBox());
       for(Piece::const_iterator c = p.begin(); c != p.end(); ++c)
 	QVERIFY(b.contains(*c));

@@ -24,6 +24,7 @@
 
 #include <cmath>
 #include <QString>
+#include <QVector>
 #include <QTextStream>
 #include <QDomDocument>
 #include <QDomElement>
@@ -143,9 +144,16 @@ public:
   }
 
   /** translation by 1 in the given direction */
-  inline Coord operator+(const Direction & direction) {
+  inline Coord operator+(const Direction & direction) const {
     Coord r(*this);
     return r.translate(direction);
+  }
+
+  /** translation operator */
+  inline Coord operator+(const Coord & vector) const {
+    Coord r(*this);
+    r += vector;
+    return r;
   }
 
   /** compute the distance between two discrete points */
@@ -227,8 +235,28 @@ public:
 
   }
 
+  /** create a bounded box of the given points */
+  Box(const QVector<Coord> & coords) {
+    Q_ASSERT(!coords.isEmpty());
+    corner1 = coords.front();
+    corner2 = coords.front();
+    for(QVector<Coord>::const_iterator c = coords.begin() + 1; c != coords.end(); ++c)
+      add(*c);
+  }
+
   /** destructor */
   virtual ~Box() {}
+
+  /** after adding the point, the box is the bounded box of the original one, and the given point */
+  inline Box & add(const Coord & c) {
+    if (corner1.getX() > c.getX()) corner1.setX(c.getX());
+    if (corner1.getY() > c.getY()) corner1.setY(c.getY());
+    if (corner1.getZ() > c.getZ()) corner1.setZ(c.getZ());
+    if (corner2.getX() < c.getX()) corner2.setX(c.getX());
+    if (corner2.getY() < c.getY()) corner2.setY(c.getY());
+    if (corner2.getZ() < c.getZ()) corner2.setZ(c.getZ());
+    return *this;
+  }
 
   inline Box & operator=(const Box & b) {
     corner1 = b.corner1;
