@@ -77,7 +77,7 @@ Coord & Piece::local2Global(Coord & coord) const {
   {
     const double x = coord.getX();
     const double y = coord.getY();
-    const double z = coord.getY();
+    const double z = coord.getZ();
     switch(direction)  {
     case Yplus:
       coord.setX(z).setY(x).setZ(y);

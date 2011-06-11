@@ -52,6 +52,19 @@ private slots:
       QVERIFY(p.isUsing(Coord(3, 2, 0)));
       QVERIFY(!p.isUsing(Coord(3, 3, 0)));
     }
+
+    {
+      LPiece p(4, 3, Coord(3, 3, 0), Xminus, A0);
+      QVERIFY(p.nbVoxels() == 6);
+      QVERIFY(p.isUsing(Coord(3, 3, 0)));
+      QVERIFY(p.isUsing(Coord(2, 3, 0)));
+      QVERIFY(p.isUsing(Coord(1, 3, 0)));
+      QVERIFY(p.isUsing(Coord(0, 3, 0)));
+      QVERIFY(!p.isUsing(Coord(-1, 3, 0)));
+      QVERIFY(p.isUsing(Coord(0, 2, 0)));
+      QVERIFY(p.isUsing(Coord(0, 1, 0)));
+      QVERIFY(!p.isUsing(Coord(0, 0, 0)));
+    }
   }
 
   void testTranslate(void) {

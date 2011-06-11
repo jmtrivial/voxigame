@@ -92,22 +92,38 @@ private slots:
 
 
   void testStaticStructure(void) {
-    Board board(3, 3, 2, Coord(1, 1, 0), Coord(1, 1, 1));
-    for(unsigned int i = 0; i != 2; ++i) {
-      StraightPiece p1(2, Coord(0, 0, i), Xplus);
-      StraightPiece p2(2, Coord(2, 0, i), Yplus);
-      StraightPiece p3(2, Coord(2, 2, i), Xminus);
-      StraightPiece p4(2, Coord(0, 2, i), Yminus);
-      board.addPiece(p1);
-      board.addPiece(p2);
-      board.addPiece(p3);
-      board.addPiece(p4);
+    {
+      Board board(3, 3, 2, Coord(1, 1, 0), Coord(1, 1, 1));
+      for(unsigned int i = 0; i != 2; ++i) {
+	StraightPiece p1(2, Coord(0, 0, i), Xplus);
+	StraightPiece p2(2, Coord(2, 0, i), Yplus);
+	StraightPiece p3(2, Coord(2, 2, i), Xminus);
+	StraightPiece p4(2, Coord(0, 2, i), Yminus);
+	board.addPiece(p1);
+	board.addPiece(p2);
+	board.addPiece(p3);
+	board.addPiece(p4);
+      }
+      QVERIFY(board.validWindows());
+      QVERIFY(board.isStaticAndValid());
+      QVERIFY(board.hasPathBetweenWindows());
+      QVERIFY(board.checkInternalMemoryState());
     }
-    QVERIFY(board.validWindows());
-    QVERIFY(board.isStaticAndValid());
-    QVERIFY(board.hasPathBetweenWindows());
-    QVERIFY(board.checkInternalMemoryState());
-  }
+
+    {
+      Board board(3, 3, 2, Coord(1, 1, 0), Coord(1, 1, 1));
+      for(unsigned int i = 0; i != 2; ++i) {
+	LPiece p1(3, 2, Coord(0, 0, i), Xplus, A0);
+	LPiece p2(3, 2, Coord(2, 2, i), Xminus, A0);
+	board.addPiece(p1);
+	board.addPiece(p2);
+      }
+      QVERIFY(board.validWindows());
+      QVERIFY(board.isStaticAndValid());
+      QVERIFY(board.hasPathBetweenWindows());
+      QVERIFY(board.checkInternalMemoryState());
+    }
+   }
 
   void testSaveLoad(void) {
     int x = 10;
