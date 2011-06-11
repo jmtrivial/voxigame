@@ -121,7 +121,7 @@ public:
   virtual Box getBoundedBox() const = 0;
 
   /** return true if the current piece and the given one are using
-   a common voxel */
+      a common voxel */
   bool intersect(const Piece & p) const {
     for(const_iterator i = begin(); i != end(); ++i)
       for(const_iterator j = p.begin(); j != p.end(); ++j)
@@ -130,10 +130,23 @@ public:
     return false;
   }
 
+  /** tranformation of the given coordinate using the translation and
+      rotations that describe the piece's location. */
+  Coord & local2Global(Coord & coord) const;
+
   /** return the coordinates of the voxel at the t-st location.
-   if the end of the piece is reached, the location is a fake one, outside
-   of the structure. */
-  virtual Coord getCoordById(unsigned int t) const = 0;
+      if the end of the piece is reached, the location is a fake one, outside
+      of the structure. */
+  Coord getCoordById(unsigned int t) const {
+    Coord local = getLocalCoordById(t);
+    return local2Global(local);
+  }
+
+  /** return the coordinates of the voxel at the t-st location, before
+      transformations (rotations, translations, etc.).
+      if the end of the piece is reached, the location is a fake one, outside
+      of the structure. */
+  virtual Coord getLocalCoordById(unsigned int t) const = 0;
 
   /** return the number of voxels */
   virtual unsigned int nbVoxels() const = 0;
@@ -193,7 +206,7 @@ public:
   Box getBoundedBox() const;
 
   /** return the i-st voxel of the structure */
-  Coord getCoordById(unsigned int t) const;
+  Coord getLocalCoordById(unsigned int t) const;
 
   /** return the number of voxels of the object */
   inline unsigned int nbVoxels() const {

@@ -29,16 +29,68 @@ Box StraightPiece::getBoundedBox() const {
   return Box(location, *last);
 }
 
-Coord StraightPiece::getCoordById(unsigned int t) const {
+Coord StraightPiece::getLocalCoordById(unsigned int t) const {
   // the straight pieces do not care about rotation
-  Coord c(location);
+  Coord c(0., 0., 0.);
   if (t < length)
-    c.translate(direction, t);
+    return Coord(t, 0., 0.);
   else
-    c.translate(direction, -1);
-  return c;
+    return Coord(-1., 0., 0.);
 }
 
+
+Coord & Piece::local2Global(Coord & coord) const {
+  // first apply rotation
+  {
+    const double x = coord.getX();
+    const double y = coord.getY();
+    switch(angle)  {
+    case A90:
+      coord.setX(y).setY(-x);
+      break;
+    case A180:
+      coord.setX(-x).setY(-y);
+      break;
+    case A270:
+      coord.setX(-y).setY(x);
+      break;
+    case A0:
+    default:
+      break;
+    }
+  }
+
+  // then apply direction
+  {
+    const double x = coord.getX();
+    const double y = coord.getY();
+    const double z = coord.getY();
+    switch(direction)  {
+    case Yplus:
+      coord.setX(z).setY(x).setZ(y);
+      break;
+    case Yminus:
+      coord.setX(z).setY(-x).setZ(-y);
+      break;
+    case Zplus:
+      coord.setX(y).setY(z).setZ(x);
+      break;
+    case Zminus:
+      coord.setX(-y).setY(z).setZ(-x);
+      break;
+    case Xminus:
+      coord.setX(-x).setY(-y).setZ(z);
+      break;
+    case Xplus:
+    default:
+      break;
+    }
+  }
+
+  // finally, translation
+  coord += location;
+  return coord;
+}
 
 Piece & Piece::rotate(Direction d) {
   if (d == direction)
