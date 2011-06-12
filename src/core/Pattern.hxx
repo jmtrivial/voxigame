@@ -184,10 +184,12 @@ public:
   static Pattern pipe(const Coord & c,
 		      const QVector<Direction> & steps);
 
-  /** create a 6x6x12 spiral, using 3x3x3 pipes.
-   The coordinate corresponds to the first corner. */
+  /** create a 6x6x(12n) spiral, using 3x3x3 pipes.
+   The coordinate corresponds to the first corner. A global
+   step of the spiral is contained in a 6x6x12 box. */
   static Pattern spiral(const Coord & c,
-			const Direction & d);
+			const Direction & d,
+			unsigned int nbsteps = 1);
 
 };
 

@@ -120,8 +120,9 @@ private slots:
   }
 
   void testPipe5(void) {
-    Board board(6, 6, 12, Coord(1, 1, 0), Coord(1, 1, 11));
-    board.addPattern(Pattern::spiral(Coord(0, 0, 0), Zplus));
+    const unsigned int step = 4;
+    Board board(6, 6, 12 * step, Coord(1, 1, 0), Coord(1, 1, 12 * step - 1));
+    board.addPattern(Pattern::spiral(Coord(0, 0, 0), Zplus, step));
 
     QVERIFY(board.validWindows());
     QVERIFY(board.isStaticAndValid());

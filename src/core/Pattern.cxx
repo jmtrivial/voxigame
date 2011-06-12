@@ -282,30 +282,33 @@ Pattern Pattern::pipe(const Coord & c,
 }
 
 Pattern Pattern::spiral(const Coord & c,
-			const Direction & d) {
+			const Direction & d, unsigned int step) {
 
+  Q_ASSERT(step >= 1);
   Pattern pattern(c, d, A0);
   QVector<Direction> path;
 
-  path.push_back(Xplus);
-  path.push_back(Zplus);
-  path.push_back(Yplus);
-  path.push_back(Zminus);
+  for(unsigned int i = 0; i != step; ++ i) {
+    path.push_back(Xplus);
+    path.push_back(Zplus);
+    path.push_back(Yplus);
+    path.push_back(Zminus);
 
-  path.push_back(Xplus);
-  path.push_back(Yminus);
-  path.push_back(Zplus);
-  path.push_back(Yplus);
+    path.push_back(Xplus);
+    path.push_back(Yminus);
+    path.push_back(Zplus);
+    path.push_back(Yplus);
 
-  path.push_back(Xplus);
-  path.push_back(Zminus);
-  path.push_back(Yminus);
-  path.push_back(Zplus);
+    path.push_back(Xplus);
+    path.push_back(Zminus);
+    path.push_back(Yminus);
+    path.push_back(Zplus);
 
-  path.push_back(Xplus);
-  path.push_back(Yplus);
-  path.push_back(Zminus);
-  path.push_back(Yminus);
+    path.push_back(Xplus);
+    path.push_back(Yplus);
+    path.push_back(Zminus);
+    path.push_back(Yminus);
+  }
 
   path.push_back(Xplus);
 
