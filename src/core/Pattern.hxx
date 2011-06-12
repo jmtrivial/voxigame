@@ -62,6 +62,9 @@ public:
   /** add a piece in the pattern. Pieces are described in the local coordinate system */
   Pattern & addPiece(const Piece & piece);
 
+  /** add a pattern in the current pattern. Pattern is described in the local coordinate system */
+  Pattern & addPattern(const Pattern & pattern);
+
   /** return the list of pieces, in the absolute coordinate system */
   QVector<QSharedPointer<Piece> > getPieces() const;
 

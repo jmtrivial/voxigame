@@ -39,6 +39,13 @@ Pattern & Pattern::addPiece(const Piece & piece) {
   return *this;
 }
 
+Pattern & Pattern::addPattern(const Pattern & pattern) {
+  QVector<QSharedPointer<Piece> > newPieces = pattern.getPieces();
+  for(QVector<QSharedPointer<Piece> >::const_iterator p = newPieces.begin(); p != newPieces.end(); ++p)
+    addPiece(**p);
+  return *this;
+}
+
 QVector<QSharedPointer<Piece> > Pattern::getPieces() const {
   QVector<QSharedPointer<Piece> > result;
   for(QVector<QSharedPointer<Piece> >::const_iterator p = pieces.begin(); p != pieces.end(); ++p) {
