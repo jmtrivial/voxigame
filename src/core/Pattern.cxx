@@ -80,6 +80,7 @@ Pattern Pattern::tunnel(unsigned int piecesize1,
   StraightPiece p3(piecesize1, Coord(0, piecesize1, piecesize2), Yminus);
   StraightPiece p4(piecesize2, Coord(0, 0, piecesize2), Zminus);
 
+  Q_ASSERT(!pattern.hasIntersection());
   return pattern.addPiece(p1).addPiece(p2).addPiece(p3).addPiece(p4);
 }
 
@@ -108,6 +109,7 @@ Pattern Pattern::armchair(unsigned int width,
     pattern.addPiece(StraightPiece(depth, Coord(0, width - 1, z), Xplus));
   }
 
+  Q_ASSERT(!pattern.hasIntersection());
   return pattern;
 }
 
@@ -148,6 +150,7 @@ Pattern Pattern::corner(unsigned int sizex,
     pattern.addPiece(StraightPiece(sizex, Coord(0, 0, z), Xplus));
   }
 
+  Q_ASSERT(!pattern.hasIntersection());
   return pattern;
 }
 
@@ -173,6 +176,7 @@ Pattern Pattern::diagonal(const Coord & c,
   // |
   pattern.addPiece(StraightPiece(3, Coord(1, 1, 0), Zplus));
 
+  Q_ASSERT(!pattern.hasIntersection());
   return pattern;
 }
 
@@ -244,6 +248,8 @@ Pattern Pattern::pipe(const Coord & c,
 
     pattern.addPattern(turning(3, 3, myC, myD, myA));
   }
+
+  Q_ASSERT(!pattern.hasIntersection());
   return pattern;
 }
 
@@ -263,6 +269,7 @@ Pattern Pattern::turning(unsigned int width,
   pattern.addPiece(StraightPiece(1, Coord(0, 0, 0)));
   pattern.addPiece(StraightPiece(1, Coord(0, width - 1, 0)));
 
+  Q_ASSERT(!pattern.hasIntersection());
   return pattern;
 }
 
@@ -278,6 +285,7 @@ Pattern Pattern::pipe(const Coord & c,
     current.translate(*s2, 3);
   }
 
+  Q_ASSERT(!pattern.hasIntersection());
   return pattern;
 }
 
@@ -314,5 +322,6 @@ Pattern Pattern::spiral(const Coord & c,
 
   pattern.addPattern(pipe(Coord(1, 1, 1), path));
 
+  Q_ASSERT(!pattern.hasIntersection());
   return pattern;
 }
