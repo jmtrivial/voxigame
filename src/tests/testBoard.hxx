@@ -164,14 +164,14 @@ private slots:
     {
       Board board(3, 3, 2, Coord(1, 1, 0), Coord(1, 1, 1));
       QVector<Coord> coords;
-      coords.push_back(Coord(0., 0., 0.));
-      coords.push_back(Coord(1., 0., 0.));
-      coords.push_back(Coord(2., 0., 0.));
-      coords.push_back(Coord(2., 1., 0.));
-      coords.push_back(Coord(2., 2., 0.));
-      coords.push_back(Coord(1., 2., 0.));
-      coords.push_back(Coord(0., 2., 0.));
-      coords.push_back(Coord(0., 1., 0.));
+      coords.push_back(Coord(0, 0, 0));
+      coords.push_back(Coord(1, 0, 0));
+      coords.push_back(Coord(2, 0, 0));
+      coords.push_back(Coord(2, 1, 0));
+      coords.push_back(Coord(2, 2, 0));
+      coords.push_back(Coord(1, 2, 0));
+      coords.push_back(Coord(0, 2, 0));
+      coords.push_back(Coord(0, 1, 0));
       for(unsigned int i = 0; i != 2; ++i) {
 	GenericPiece p1(coords, Coord(0, 0, i));
 	board.addPiece(p1);
@@ -190,14 +190,14 @@ private slots:
     StraightPiece p2(4, Coord(0, 1, 0), Xplus);
     LPiece p3(4, 4, Coord(0, 2, 0), Xplus, A0);
     QVector<Coord> coords;
-    coords.push_back(Coord(0., 0., 0.));
-    coords.push_back(Coord(1., 0., 0.));
-    coords.push_back(Coord(2., 0., 0.));
-    coords.push_back(Coord(2., 0., 1.));
-    coords.push_back(Coord(2., 0., 2.));
-    coords.push_back(Coord(1., 0., 2.));
-    coords.push_back(Coord(0., 0., 2.));
-    coords.push_back(Coord(0., 0., 1.));
+    coords.push_back(Coord(0, 0, 0));
+    coords.push_back(Coord(1, 0, 0));
+    coords.push_back(Coord(2, 0, 0));
+    coords.push_back(Coord(2, 0, 1));
+    coords.push_back(Coord(2, 0, 2));
+    coords.push_back(Coord(1, 0, 2));
+    coords.push_back(Coord(0, 0, 2));
+    coords.push_back(Coord(0, 0, 1));
     GenericPiece p4(coords, Coord(0, 3, 0), Xplus, A0);
 
     board1.addPiece(p1);
