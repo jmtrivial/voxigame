@@ -265,3 +265,51 @@ Pattern Pattern::turning(unsigned int width,
 
   return pattern;
 }
+
+Pattern Pattern::pipe(const Coord & c,
+		      const QVector<Direction> & steps) {
+  Q_ASSERT(steps.size() >= 2);
+  Pattern pattern(Coord(0, 0, 0), Xplus, A0);
+
+  Coord current(c);
+  QVector<Direction>::const_iterator s1 = steps.begin();
+  for(QVector<Direction>::const_iterator s2 = steps.begin() + 1; s2 != steps.end(); ++s1, ++s2) {
+    pattern.addPattern(pipe(current, -(*s1), *s2));
+    current.translate(*s2, 3);
+  }
+
+  return pattern;
+}
+
+Pattern Pattern::spiral(const Coord & c,
+			const Direction & d) {
+
+  Pattern pattern(c, d, A0);
+  QVector<Direction> path;
+
+  path.push_back(Xplus);
+  path.push_back(Zplus);
+  path.push_back(Yplus);
+  path.push_back(Zminus);
+
+  path.push_back(Xplus);
+  path.push_back(Yminus);
+  path.push_back(Zplus);
+  path.push_back(Yplus);
+
+  path.push_back(Xplus);
+  path.push_back(Zminus);
+  path.push_back(Yminus);
+  path.push_back(Zplus);
+
+  path.push_back(Xplus);
+  path.push_back(Yplus);
+  path.push_back(Zminus);
+  path.push_back(Yminus);
+
+  path.push_back(Xplus);
+
+  pattern.addPattern(pipe(Coord(1, 1, 1), path));
+
+  return pattern;
+}

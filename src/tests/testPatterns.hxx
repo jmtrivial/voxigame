@@ -118,4 +118,15 @@ private slots:
     QVERIFY(board.hasPathBetweenWindows());
     QVERIFY(board.checkInternalMemoryState());
   }
+
+  void testPipe5(void) {
+    Board board(6, 6, 12, Coord(1, 1, 0), Coord(1, 1, 11));
+    board.addPattern(Pattern::spiral(Coord(0, 0, 0), Zplus));
+
+    QVERIFY(board.validWindows());
+    QVERIFY(board.isStaticAndValid());
+    QVERIFY(board.hasPathBetweenWindows());
+    QVERIFY(board.checkInternalMemoryState());
+  }
+
 };

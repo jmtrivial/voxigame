@@ -56,8 +56,9 @@ Board & Board::addPiece(const Piece & b) {
 }
 
 Board & Board::addPattern(const Pattern & p) {
-  if (!allowOutside && !box.contains(p.getBoundedBox()))
+  if (!allowOutside && !box.contains(p.getBoundedBox())) {
     throw ExceptionOutside();
+  }
 
   if ((!allowIntersections) && p.hasIntersection())
     throw ExceptionIntersection();
@@ -75,6 +76,7 @@ Board & Board::addPattern(const Pattern & p) {
   for(QVector<QSharedPointer<Piece> >::const_iterator piece = newPieces.begin();
       piece != newPieces.end(); ++piece) {
     pieces.push_back(QSharedPointer<Piece>((**piece).clone()));
+
     addInCells(pieces.back());
   }
 

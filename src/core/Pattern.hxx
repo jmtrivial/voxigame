@@ -49,7 +49,7 @@ private:
 public:
 
   /** constructor */
-  Pattern(const Coord & c,
+  Pattern(const Coord & c = Coord(0, 0, 0),
 	  const Direction & d = Xplus,
 	  const Angle & a = A0) : location(c), direction(d), angle(a) {}
 
@@ -177,6 +177,18 @@ public:
   static Pattern pipe(const Coord & c,
 		      const Direction & d1,
 		      const Direction & d2);
+
+  /** create a path, using elementary pipes, starting from the given coordinate,
+      opening with the opposite of first step, and generating a path using the intermediate steps.
+      The ending is given by the last step direction */
+  static Pattern pipe(const Coord & c,
+		      const QVector<Direction> & steps);
+
+  /** create a 6x6x12 spiral, using 3x3x3 pipes.
+   The coordinate corresponds to the first corner. */
+  static Pattern spiral(const Coord & c,
+			const Direction & d);
+
 };
 
 #endif
