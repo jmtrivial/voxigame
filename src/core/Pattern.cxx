@@ -21,6 +21,44 @@
 
 #include "Pattern.hxx"
 
+Pattern::Pattern(const Pattern & p) : location(p.location), direction(p.direction),
+				      angle(p.angle), box(p.box) {
+  for(QVector<QSharedPointer<Piece> >::const_iterator pp = p.pieces.begin();
+      pp != p.pieces.end(); ++pp)
+    pieces.push_back(QSharedPointer<Piece>((**pp).clone()));
+
+}
+
+Pattern & Pattern::addPiece(const Piece & piece) {
+  if (pieces.isEmpty())
+    box = piece.getBoundedBox();
+  else
+    for(Piece::const_iterator p = piece.begin(); p != piece.end(); ++p)
+      box.add(*p);
+  pieces.push_back(QSharedPointer<Piece>(piece.clone()));
+  return *this;
+}
+
+QVector<QSharedPointer<Piece> > Pattern::getPieces() const {
+  QVector<QSharedPointer<Piece> > result;
+  for(QVector<QSharedPointer<Piece> >::const_iterator p = pieces.begin(); p != pieces.end(); ++p) {
+    result.push_back(QSharedPointer<Piece>((**p).clone()));
+    (*(result.back())).transform(angle, direction, location);
+  }
+  Q_ASSERT(result.size() == pieces.size());
+  return result;
+}
+
+
+/** return true if the current pattern contains intersection configurations */
+bool Pattern::hasIntersection() const {
+  QVector<QSharedPointer<Piece> >::const_iterator e(pieces.end());
+  for(QVector<QSharedPointer<Piece> >::const_iterator p = pieces.begin(); p != e; ++p)
+    for(QVector<QSharedPointer<Piece> >::const_iterator p1 = p + 1; p1 != e; ++p1)
+      if ((**p).intersect(**p1))
+	return true;
+  return false;
+}
 
 Pattern Pattern::tunnel(unsigned int piecesize1,
 			unsigned int piecesize2,

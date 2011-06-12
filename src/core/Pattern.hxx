@@ -54,38 +54,16 @@ public:
 	  const Angle & a = A0) : location(c), direction(d), angle(a) {}
 
   /** copy constructor */
-  Pattern(const Pattern & p) : location(p.location), direction(p.direction),
-			       angle(p.angle), box(p.box) {
-    for(QVector<QSharedPointer<Piece> >::const_iterator pp = p.pieces.begin();
-	pp != p.pieces.end(); ++pp)
-      pieces.push_back(QSharedPointer<Piece>((**pp).clone()));
-
-  }
+  Pattern(const Pattern & p);
 
   /** accessor */
   inline unsigned int getNbPieces() const { return pieces.size(); }
 
   /** add a piece in the pattern. Pieces are described in the local coordinate system */
-  Pattern & addPiece(const Piece & piece) {
-    if (pieces.isEmpty())
-      box = piece.getBoundedBox();
-    else
-      for(Piece::const_iterator p = piece.begin(); p != piece.end(); ++p)
-	box.add(*p);
-    pieces.push_back(QSharedPointer<Piece>(piece.clone()));
-    return *this;
-  }
+  Pattern & addPiece(const Piece & piece);
 
   /** return the list of pieces, in the absolute coordinate system */
-  QVector<QSharedPointer<Piece> > getPieces() const {
-    QVector<QSharedPointer<Piece> > result;
-    for(QVector<QSharedPointer<Piece> >::const_iterator p = pieces.begin(); p != pieces.end(); ++p) {
-      result.push_back(QSharedPointer<Piece>((**p).clone()));
-      (*(result.back())).transform(angle, direction, location);
-    }
-    Q_ASSERT(result.size() == pieces.size());
-    return result;
-  }
+  QVector<QSharedPointer<Piece> > getPieces() const;
 
   /** return the bounded box in the global coordinate system */
   inline Box getBoundedBox() const {
@@ -93,14 +71,7 @@ public:
   }
 
   /** return true if the current pattern contains intersection configurations */
-  inline bool hasIntersection() const {
-    QVector<QSharedPointer<Piece> >::const_iterator e(pieces.end());
-    for(QVector<QSharedPointer<Piece> >::const_iterator p = pieces.begin(); p != e; ++p)
-      for(QVector<QSharedPointer<Piece> >::const_iterator p1 = p + 1; p1 != e; ++p1)
-	if ((**p).intersect(**p1))
-	  return true;
-    return false;
-  }
+  bool hasIntersection() const;
 
   /** Initial pattern designed by Laurent Provot */
   inline static Pattern tunnel(unsigned int piecesize,
