@@ -38,6 +38,9 @@ typedef enum Angle { A0, A90, A180, A270 } Angle;
 /** increment the direction using the enum ordering */
 Direction & operator++(Direction & d);
 
+/** rotate the given direction \p d according to the axis \p ref, with an angle of \p a */
+Direction & rotate(Direction & d, const Direction & ref, const Angle & a);
+
 /** return true if the two directions are the opposite */
 bool opposite(Direction d1, Direction d2);
 
@@ -282,8 +285,11 @@ public:
   /** transform the box using first a rotation arround axis Xplus with angle \p angle,
       then reorient the coordinate system along the main given direction, then apply a translation */
   Box & transform(const Angle & angle, const Direction & direction = Xplus, const Coord & translation = Coord(0., 0., 0.)) {
-    corner1.transform(angle, direction, translation);
-    corner2.transform(angle, direction, translation);
+    Coord c1 = corner1.getTransform(angle, direction, translation);
+    Coord c2 = corner2.getTransform(angle, direction, translation);
+    corner1 = c1;
+    corner2 = c1;
+    add(c2);
     return *this;
   }
 

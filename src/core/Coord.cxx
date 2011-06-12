@@ -134,6 +134,57 @@ bool opposite(Direction d1, Direction d2) {
     return false;
 }
 
+Direction & rotate(Direction & d, const Direction & ref, const Angle & a) {
+  if ((a == A0) || (d == ref) || (d == -ref))
+    return d;
+  if (a == A180) {
+    d = -d;
+    return d;
+  }
+
+  if (a == A270)
+    return rotate(d, -ref, A90);
+
+  Q_ASSERT(a == A90);
+
+  if ((ref == Xminus) || (ref == Yminus) || (ref == Zminus)) {
+    d = -d;
+    return rotate(d, -ref, a);
+  }
+
+  switch(ref) {
+  case Xplus:
+    switch(d) {
+    case Yplus: d = Zplus; break;
+    case Zplus: d = Yminus; break;
+    case Yminus: d = Zminus; break;
+    case Zminus: d = Yplus; break;
+    default: break;
+    }
+    break;
+  case Yplus:
+    switch(d) {
+    case Xplus: d = Zminus; break;
+    case Zplus: d = Xplus; break;
+    case Xminus: d = Zplus; break;
+    case Zminus: d = Xminus; break;
+    default: break;
+    }
+    break;
+  case Zplus:
+    switch(d) {
+    case Xplus: d = Yplus; break;
+    case Yplus: d = Xminus; break;
+    case Xminus: d = Yminus; break;
+    case Yminus: d = Xplus; break;
+    default: break;
+    }
+    default: break;
+  }
+
+  return d;
+}
+
 Box::Box(int x, int y, int z) : corner1(0, 0, 0), corner2(x - 1, y - 1, z - 1) {
   Q_ASSERT(x > 0);
   Q_ASSERT(y > 0);
