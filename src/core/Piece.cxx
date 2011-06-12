@@ -19,7 +19,6 @@
 
  *****************************************************************************/
 
-
 #include "Piece.hxx"
 #include "Exception.hxx"
 
@@ -366,7 +365,13 @@ Piece & Piece::transform(const Angle & a, const Direction & d,
   location.transform(a, d, t);
 
   direction = reorient(direction, d);
-  angle = angle + a;
+
+  // rotation
+  rotateDirection(direction, d, a);
+  if (direction == d)
+    angle = angle + a;
+  else if (direction == -d)
+    angle = angle + a;
 
   return *this;
 }

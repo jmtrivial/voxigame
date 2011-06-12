@@ -91,7 +91,10 @@ public:
 			const Direction & d = Xplus,
 			const Angle & a = A0);
 
-  /** Initial pattern designed by Jean-Marie Favreau */
+  /** Initial pattern designed by Jean-Marie Favreau
+      The openings are in X and Z direction.
+      \param width Size in the Y direction
+      \param height Size in the X and Z directions */
   inline static Pattern armchair(unsigned int width,
 				 unsigned int height,
 				 const Coord & c,
@@ -100,13 +103,38 @@ public:
     return armchair(width, height, height, c, d, a);
   }
 
-  /** Initial pattern designed by Jean-Marie Favreau */
+  /** Initial pattern designed by Jean-Marie Favreau
+      The openings are in X and Z direction.
+      \param width Size in the Y direction
+      \param height Size in the Z direction
+      \param height Size in the X direction
+*/
   static Pattern armchair(unsigned int width,
 			  unsigned int height,
 			  unsigned int depth,
 			  const Coord & c,
 			  const Direction & d = Xplus,
 			  const Angle & a = A0);
+
+  /** Initial pattern designed by Laurent Provot and Jean-Marie Favreau,
+      using a small armchair and a tunnel. */
+  static Pattern turning(unsigned int width,
+			 unsigned int height,
+			 const Coord & c,
+			 const Direction & d = Xplus,
+			 const Angle & a = A0) {
+    return turning(width, height, height, c, d, a);
+  }
+
+
+  /** Initial pattern designed by Laurent Provot and Jean-Marie Favreau,
+      using a small armchair and a tunnel. */
+  static Pattern turning(unsigned int width,
+			 unsigned int height,
+			 unsigned int depth,
+			 const Coord & c,
+			 const Direction & d = Xplus,
+			 const Angle & a = A0);
 
   /** create a cube filled with pieces */
   inline static Pattern cube(unsigned int size,
@@ -143,6 +171,12 @@ public:
   static Pattern diagonal(const Coord & c,
 			  const Direction & d = Xplus,
 			  const Angle & a = A0);
+
+  /** create a 3x3x3 pipe, centered in the given coordinate,
+      and open in the two given directions */
+  static Pattern pipe(const Coord & c,
+		      const Direction & d1,
+		      const Direction & d2);
 };
 
 #endif

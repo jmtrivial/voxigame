@@ -20,6 +20,7 @@
  *****************************************************************************/
 
 #include "Pattern.hxx"
+#include "Exception.hxx"
 
 Pattern::Pattern(const Pattern & p) : location(p.location), direction(p.direction),
 				      angle(p.angle), box(p.box) {
@@ -41,8 +42,9 @@ Pattern & Pattern::addPiece(const Piece & piece) {
 
 Pattern & Pattern::addPattern(const Pattern & pattern) {
   QVector<QSharedPointer<Piece> > newPieces = pattern.getPieces();
-  for(QVector<QSharedPointer<Piece> >::const_iterator p = newPieces.begin(); p != newPieces.end(); ++p)
+  for(QVector<QSharedPointer<Piece> >::const_iterator p = newPieces.begin(); p != newPieces.end(); ++p) {
     addPiece(**p);
+  }
   return *this;
 }
 
@@ -170,6 +172,96 @@ Pattern Pattern::diagonal(const Coord & c,
 
   // |
   pattern.addPiece(StraightPiece(3, Coord(1, 1, 0), Zplus));
+
+  return pattern;
+}
+
+
+Pattern Pattern::pipe(const Coord & c,
+		      const Direction & d1,
+		      const Direction & d2) {
+  if ((d1 == Static) || (d2 == Static))
+    throw Exception("Static direction, not possible");
+  if (d1 == d2)
+    throw Exception("Two identical directions, not possible");
+
+  Pattern pattern(c, Xplus, A0);
+
+  if (d1 == -d2) {
+    Coord myC(-1, -1, -1);
+    Direction myD = d1;
+    if ((d1 == Xminus) || (d1 == Yminus) || (d1 == Zminus))
+      myD = d2;
+
+    // add 3 tunnels in the correct direction
+    for(unsigned char i = 0; i != 3; ++i) {
+      pattern.addPattern(tunnel(2, myC, myD));
+      myC.translate(myD);
+    }
+  }
+  else {
+    // add an armchair
+    Direction myD = d1;
+    Direction otherD;
+    Direction ortho;
+    switch (d1) {
+    case Xplus:
+      otherD = Zplus;
+      ortho = Yplus;
+      break;
+    case Xminus:
+      otherD = Zplus;
+      ortho = Yminus;
+      break;
+    case Yplus:
+      otherD = Xplus;
+      ortho = Zplus;
+      break;
+    case Yminus:
+      otherD = Xplus;
+      ortho = Zminus;
+      break;
+    case Zplus:
+      otherD = Yplus;
+      ortho = Xplus;
+      break;
+    case Zminus:
+      otherD = Yplus;
+      ortho = Xminus;
+      break;
+    default:
+      break;
+    }
+    Angle myA = A0;
+    while(otherD != d2) {
+      ++myA;
+      rotateDirection(otherD, myD, A90);
+      rotateDirection(ortho, myD, A90);
+    }
+
+    Coord myC(0, 0, 0);
+    myC.translate(-d1).translate(-d2).translate(-ortho);
+
+    pattern.addPattern(turning(3, 3, myC, myD, myA));
+  }
+  return pattern;
+}
+
+Pattern Pattern::turning(unsigned int width,
+			 unsigned int height,
+			 unsigned int depth,
+			 const Coord & c,
+			 const Direction & d,
+			 const Angle & a) {
+
+  Q_ASSERT(width > 2);
+  Q_ASSERT(height > 2);
+  Q_ASSERT(depth > 2);
+  Pattern pattern(c, d, a);
+  pattern.addPattern(armchair(width, height - 1, depth, Coord(0, 0, 0)));
+  pattern.addPattern(tunnel(width - 1, depth - 1, Coord(0, 0, height - 1), Zplus));
+  pattern.addPiece(StraightPiece(1, Coord(0, 0, 0)));
+  pattern.addPiece(StraightPiece(1, Coord(0, width - 1, 0)));
 
   return pattern;
 }

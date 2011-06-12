@@ -39,7 +39,7 @@ typedef enum Angle { A0, A90, A180, A270 } Angle;
 Direction & operator++(Direction & d);
 
 /** rotate the given direction \p d according to the axis \p ref, with an angle of \p a */
-Direction & rotate(Direction & d, const Direction & ref, const Angle & a);
+Direction & rotateDirection(Direction & d, const Direction & ref, const Angle & a);
 
 /** return true if the two directions are the opposite */
 bool opposite(Direction d1, Direction d2);

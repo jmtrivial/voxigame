@@ -83,34 +83,47 @@ Direction operator-(const Direction & d) {
 }
 
 Direction reorient(const Direction & d1, const Direction & d2) {
+  if ((d1 == Xminus) || (d1 == Yminus) || (d1 == Zminus))
+    return -reorient(-d1, d2);
+
   switch(d2) {
   case Zplus:
     switch(d1) {
     case Xplus: return Zplus;
-    case Xminus: return Zminus;
     case Yplus: return Xplus;
-    case Yminus: return Xminus;
     case Zplus: return Yplus;
-    case Zminus: return Yminus;
     default:
       return d1;
     }
   case Yplus:
     switch(d1) {
     case Xplus: return Yplus;
-    case Xminus: return Yminus;
     case Yplus: return Zplus;
-    case Yminus: return Zminus;
     case Zplus: return Xplus;
-    case Zminus: return Yplus;
     default:
       return d1;
     }
   case Zminus:
+    switch(d1) {
+    case Xplus: return Zminus;
+    case Yplus: return Xminus;
+    case Zplus: return Yplus;
+    default:
+      return d1;
+    }
   case Yminus:
-    return -reorient(d1, -d2);
+    switch(d1) {
+    case Xplus: return Yminus;
+    case Yplus: return Zminus;
+    case Zplus: return Xplus;
+    default:
+      return d1;
+    }
   case Xminus:
-    return -d1;
+    if (d1 == Zplus)
+      return d1;
+    else
+      return -d1;
   case Xplus:
   default:
     return d1;
@@ -134,7 +147,7 @@ bool opposite(Direction d1, Direction d2) {
     return false;
 }
 
-Direction & rotate(Direction & d, const Direction & ref, const Angle & a) {
+Direction & rotateDirection(Direction & d, const Direction & ref, const Angle & a) {
   if ((a == A0) || (d == ref) || (d == -ref))
     return d;
   if (a == A180) {
@@ -143,13 +156,14 @@ Direction & rotate(Direction & d, const Direction & ref, const Angle & a) {
   }
 
   if (a == A270)
-    return rotate(d, -ref, A90);
+    return rotateDirection(d, -ref, A90);
 
   Q_ASSERT(a == A90);
 
   if ((ref == Xminus) || (ref == Yminus) || (ref == Zminus)) {
+    rotateDirection(d, -ref, a);
     d = -d;
-    return rotate(d, -ref, a);
+    return d;
   }
 
   switch(ref) {
@@ -339,7 +353,7 @@ Coord & Coord::transform(const Angle & angle, const Direction & direction, const
       setY(-z_).setZ(y_);
       break;
     case A180:
-      setY(-z_).setZ(-y_);
+      setY(-y_).setZ(-z_);
       break;
     case A270:
       setY(z_).setZ(-y_);
