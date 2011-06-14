@@ -24,7 +24,12 @@
 #include <QtCore>
 #include <QTemporaryFile>
 
-#include "Board.hxx"
+#include "core/Board.hxx"
+#include "core/Piece.hxx"
+#include "core/StraightPiece.hxx"
+#include "core/LPiece.hxx"
+#include "core/GenericPiece.hxx"
+
 
 class testBoard : public QObject {
   Q_OBJECT

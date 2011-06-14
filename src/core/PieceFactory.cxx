@@ -19,42 +19,36 @@
 
  *****************************************************************************/
 
-#include <QObject>
-#include <QtTest>
-#include <QtCore>
+#include "core/PieceFactory.hxx"
+#include "core/Exception.hxx"
+#include "core/Piece.hxx"
+#include "core/StraightPiece.hxx"
+#include "core/LPiece.hxx"
+#include "core/GenericPiece.hxx"
+#include <QString>
+#include <QDomElement>
 
-#include "core/Coord.hxx"
-#include "core/Box.hxx"
 
-class testCoord : public QObject {
-  Q_OBJECT
-private slots:
-  void testTranslate(void) {
-    Coord c1(0, 0, 0);
-    c1.translate(Xplus);
-    Coord c2(1, 0, 0);
-    QVERIFY(c1 == c2);
+Piece * PieceFactory::build(const QDomElement & elem, const QString & name) {
+  if (elem.isNull())
+    throw Exception("NULL Dom element");
+  if (elem.tagName() != name)
+    throw Exception("Bad name");
+
+  QString attr = elem.attribute("type");
+  Piece * result;
+  if (attr == "straight") {
+    result = new StraightPiece(elem, name);
+  }
+  else if (attr == "L") {
+    result = new LPiece(elem, name);
+  }
+  else if (attr == "generic") {
+    result = new GenericPiece(elem, name);
+  }
+  else {
+    throw Exception("Bad piece type");
   }
 
-  void testCoordAndBox(void) {
-    Coord c(0, 0, 0);
-    Box b(3, 4, 5);
-    QVERIFY(b.contains(c));
-    QVERIFY(b.inBorder(c));
-  }
-
-  void testIteratorOnBoundedBox(void) {
-    Box b(Coord(5, 2, 3), Coord(25, 0, 4));
-    for(Box::const_iterator c = b.begin(); c != b.end(); ++c)
-      QVERIFY(b.contains(*c));
-  }
-
-  void testOnBorder(void) {
-    Box b(Coord(5, 2, 3), Coord(25, 0, 4));
-    QVERIFY(b.inBorder(Coord(15, 0, 3)));
-  }
-
-};
-
-
-
+  return result;
+}

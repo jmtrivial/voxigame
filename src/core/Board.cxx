@@ -19,10 +19,13 @@
 
  *****************************************************************************/
 
-#include<QFile>
-#include<QTextStream>
+#include "core/Board.hxx"
+#include "core/PieceFactory.hxx"
+#include <QDomElement>
+#include <QDomDocument>
+#include <QFile>
+#include <QTextStream>
 
-#include "Board.hxx"
 
 Board::Board(unsigned int x, unsigned int y, unsigned int z,
 	     const Coord & w1, const Coord & w2,

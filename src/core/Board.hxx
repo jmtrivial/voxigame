@@ -1,4 +1,3 @@
-
 /*****************************************************************************
     This file is part of Voxigame.
 
@@ -20,20 +19,21 @@
 
  *****************************************************************************/
 
-#ifndef BOARD
-#define BOARD
+#ifndef VOXIGAME_CORE_BOARD_HXX
+#define VOXIGAME_CORE_BOARD_HXX
 
 
 #include <QVector>
 #include <QSharedPointer>
-#include <QDomDocument>
-#include <QDomElement>
+class QDomDocument;
+class QDomElement;
 #include <QFile>
 
-#include "Exception.hxx"
-#include "Coord.hxx"
-#include "Piece.hxx"
-#include "Pattern.hxx"
+#include "core/Exception.hxx"
+#include "core/Coord.hxx"
+#include "core/Piece.hxx"
+#include "core/Pattern.hxx"
+
 
 class Board {
 private:
@@ -300,4 +300,4 @@ public:
   bool checkInternalMemoryState() const;
 };
 
-#endif
+#endif // VOXIGAME_CORE_BOARD_HXX

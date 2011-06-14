@@ -19,34 +19,58 @@
 
  *****************************************************************************/
 
-#include "Piece.hxx"
-#include "Exception.hxx"
+#include "core/Piece.hxx"
+#include "core/Exception.hxx"
+#include <QDomDocument>
+#include <QDomElement>
+#include <QString>
 
-Box StraightPiece::getLocalBoundedBox() const {
-  return Box(Coord(0., 0., 0), getLocalCoordById(nbVoxels() - 1));
+Piece::Piece(const QDomElement & elem, const QString & name) {
+  if (elem.isNull())
+    throw Exception("NULL Dom element");
+  if (elem.tagName() != name)
+    throw Exception("Bad name");
+
+  QString d = elem.attribute("direction");
+  QString a = elem.attribute("angle");
+
+  QDomNode n = elem.firstChild();
+  bool l = false;
+  while(!n.isNull() && !l) {
+    QDomElement e = n.toElement();
+    if(!e.isNull()) {
+      if (e.tagName() == "location") {
+    location.fromXML(e, "location");
+    l = true;
+    break;
+      }
+    }
+    n = n.nextSibling();
+  }
+  if (!l)
+    throw Exception("Location not found");
+
+  direction = toDirectionString(d);
+  angle = toAngleString(a);
 }
 
-Box LPiece::getLocalBoundedBox() const {
-  return Box(Coord(0., 0., 0), getLocalCoordById(nbVoxels() - 1));
+bool Piece::operator==(const Piece & piece) const {
+  return (piece.location == location) && (piece.direction == direction) && (piece.angle == angle);
 }
 
+Piece & Piece::transform(const Angle & a, const Direction & d, const Coord & t) {
+  location.transform(a, d, t);
 
-Coord StraightPiece::getLocalCoordById(unsigned int t) const {
-  // the straight pieces do not care about rotation
-  if (t < length)
-    return Coord(t, 0., 0.);
-  else
-    return Coord(-1., 0., 0.);
-}
+  direction = reorient(direction, d);
 
-Coord LPiece::getLocalCoordById(unsigned int t) const {
-  // the straight pieces do not care about rotation
-  if (t < length1)
-    return Coord(t, 0., 0.);
-  else if (t < nbVoxels())
-    return Coord(length1 - 1, t - length1 + 1, 0.);
-  else
-    return Coord(-1, 0., 0.);
+  // rotation
+  rotateDirection(direction, d, a);
+  if (direction == d)
+    angle = angle + a;
+  else if (direction == -d)
+    angle = angle + a;
+
+  return *this;
 }
 
 
@@ -138,240 +162,6 @@ QDomElement Piece::toXML(QDomDocument & doc) const {
   QDomElement l = location.toXML(doc, "location");
   b.appendChild(l);
 
-
   return b;
 }
 
-
-QDomElement StraightPiece::toXML(QDomDocument & doc) const {
-  QDomElement piece = Piece::toXML(doc);
-
-  piece.setAttribute("length", length);
-
-  return piece;
-}
-
-QDomElement LPiece::toXML(QDomDocument & doc) const {
-  QDomElement piece = Piece::toXML(doc);
-
-  piece.setAttribute("length1", length1);
-  piece.setAttribute("length2", length2);
-
-  return piece;
-}
-
-QDomElement GenericPiece::toXML(QDomDocument & doc) const {
-  QDomElement piece = Piece::toXML(doc);
-
-  QDomElement ee = doc.createElement("voxels");
-  piece.appendChild(ee);
-
-  for(QVector<Coord>::const_iterator c = coords.begin(); c != coords.end(); ++c) {
-    QDomElement cc = doc.createElement("coord");
-    cc.setAttribute("x", (*c).getX());
-    cc.setAttribute("y", (*c).getY());
-    cc.setAttribute("z", (*c).getZ());
-    ee.appendChild(cc);
-  }
-
-  return piece;
-}
-
-
-bool Piece::operator==(const Piece & piece) const {
-  return (piece.location == location) && (piece.direction == direction) && (piece.angle == angle);
-}
-
-bool StraightPiece::operator==(const Piece & piece) const {
-  try {
-    const StraightPiece & p = dynamic_cast<const StraightPiece &>(piece);
-    return Piece::operator==(piece) && (length == p.length);
-  }
-  catch (...) {
-    return false;
-  }
-
-}
-
-bool LPiece::operator==(const Piece & piece) const {
-  try {
-    const LPiece & p = dynamic_cast<const LPiece &>(piece);
-    return Piece::operator==(piece) && (length1 == p.length1) && (length2 == p.length2);
-  }
-  catch (...) {
-    return false;
-  }
-
-}
-
-bool GenericPiece::operator==(const Piece & piece) const {
-  try {
-    const GenericPiece & p = dynamic_cast<const GenericPiece &>(piece);
-    return Piece::operator==(piece) && (coords == p.coords);
-  }
-  catch (...) {
-    return false;
-  }
-
-}
-
-
-Piece * PieceFactory::build(const QDomElement & elem, const QString & name) {
-  if (elem.isNull())
-    throw Exception("NULL Dom element");
-  if (elem.tagName() != name)
-    throw Exception("Bad name");
-
-  QString attr = elem.attribute("type");
-  Piece * result;
-  if (attr == "straight") {
-    result = new StraightPiece(elem, name);
-  }
-  else if (attr == "L") {
-    result = new LPiece(elem, name);
-  }
-  else if (attr == "generic") {
-    result = new GenericPiece(elem, name);
-  }
-  else {
-    throw Exception("Bad piece type");
-  }
-
-  return result;
-}
-
-StraightPiece::StraightPiece(const QDomElement & elem, const QString & name) : Piece(elem, name) {
-  if (elem.isNull())
-    throw Exception("NULL Dom element");
-  if (elem.tagName() != name)
-    throw Exception("Bad name");
-
-  QString t = elem.attribute("type");
-  if (t != getName())
-    throw Exception("Bad piece type");
-
-  QString l = elem.attribute("length");
-  bool ok;
-  length = l.toUInt(&ok);
-  if (!ok)
-    throw Exception("Bad length description");
-}
-
-LPiece::LPiece(const QDomElement & elem, const QString & name) : Piece(elem, name) {
-  if (elem.isNull())
-    throw Exception("NULL Dom element");
-  if (elem.tagName() != name)
-    throw Exception("Bad name");
-
-  QString t = elem.attribute("type");
-  if (t != getName())
-    throw Exception("Bad piece type");
-
-  QString l1 = elem.attribute("length1");
-  bool ok;
-  length1 = l1.toUInt(&ok);
-  if (!ok)
-    throw Exception("Bad length description (1)");
-
-  QString l2 = elem.attribute("length2");
-  length2 = l2.toUInt(&ok);
-  if (!ok)
-    throw Exception("Bad length description (2)");
-}
-
-GenericPiece::GenericPiece(const QDomElement & elem, const QString & name) : Piece(elem, name) {
-  if (elem.isNull())
-    throw Exception("NULL Dom element");
-  if (elem.tagName() != name)
-    throw Exception("Bad name");
-
-  QString t = elem.attribute("type");
-  if (t != getName())
-    throw Exception("Bad piece type");
-
-  QDomNode n = elem.firstChild();
-  bool v = false;
-  while(!n.isNull() && !v) {
-    QDomElement e = n.toElement();
-    if(!e.isNull()) {
-      if (e.tagName() == "voxels") {
-	QDomNode nn = e.firstChild();
-	while(!nn.isNull()) {
-	  QDomElement ee = nn.toElement();
-	  if (!ee.isNull()) {
-	    if (ee.tagName() == "coord") {
-	      bool ok;
-	      const QString sx = ee.attribute("x");
-	      const QString sy = ee.attribute("y");
-	      const QString sz = ee.attribute("z");
-	      const double x = sx.toUInt(&ok);
-	      if (!ok)
-		throw Exception("Bad coordinate description (x)");
-	      const double y = sy.toUInt(&ok);
-	      if (!ok)
-		throw Exception("Bad coordinate description (y)");
-	      const double z = sz.toUInt(&ok);
-	      if (!ok)
-		throw Exception("Bad coordinate description (z)");
-	      coords.push_back(Coord(x, y, z));
-	    }
-	  }
-	  nn = nn.nextSibling();
-	}
-	v = true;
-	break;
-      }
-    }
-    n = n.nextSibling();
-  }
-  if (!v)
-    throw Exception("Voxels not found");
-
-}
-
-Piece::Piece(const QDomElement & elem, const QString & name) {
-  if (elem.isNull())
-    throw Exception("NULL Dom element");
-  if (elem.tagName() != name)
-    throw Exception("Bad name");
-
-  QString d = elem.attribute("direction");
-  QString a = elem.attribute("angle");
-
-
-  QDomNode n = elem.firstChild();
-  bool l = false;
-  while(!n.isNull() && !l) {
-    QDomElement e = n.toElement();
-    if(!e.isNull()) {
-      if (e.tagName() == "location") {
-	location.fromXML(e, "location");
-	l = true;
-	break;
-      }
-    }
-    n = n.nextSibling();
-  }
-  if (!l)
-    throw Exception("Location not found");
-
-
-  direction = toDirectionString(d);
-  angle = toAngleString(a);
-}
-
-Piece & Piece::transform(const Angle & a, const Direction & d,
-			 const Coord & t) {
-  location.transform(a, d, t);
-
-  direction = reorient(direction, d);
-
-  // rotation
-  rotateDirection(direction, d, a);
-  if (direction == d)
-    angle = angle + a;
-  else if (direction == -d)
-    angle = angle + a;
-
-  return *this;
-}

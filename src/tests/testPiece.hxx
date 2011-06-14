@@ -23,7 +23,10 @@
 #include <QtTest>
 #include <QtCore>
 
-#include "Piece.hxx"
+#include "core/Piece.hxx"
+#include "core/StraightPiece.hxx"
+#include "core/LPiece.hxx"
+#include "core/GenericPiece.hxx"
 
 
 class testPiece : public QObject {

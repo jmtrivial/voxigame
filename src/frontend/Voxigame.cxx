@@ -21,7 +21,7 @@
 
 #include <QFileDialog>
 #include <QMessageBox>
-#include "voxigame.hxx"
+#include "Voxigame.hxx"
 #include "ui_about.h"
 
 

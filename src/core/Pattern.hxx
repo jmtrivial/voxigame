@@ -19,16 +19,20 @@
 
  *****************************************************************************/
 
-#ifndef PATTERN
-#define PATTERN
+#ifndef VOXIGAME_CORE_PATTERN_HXX
+#define VOXIGAME_CORE_PATTERN_HXX
 
 #include<QVector>
 #include<QSharedPointer>
 
-#include "Coord.hxx"
-#include "Piece.hxx"
+#include "core/Coord.hxx"
+#include "core/Box.hxx"
+#include "core/Piece.hxx"
 
-/** a pattern is described by angle, direction, translation, and a set of pieces */
+/**
+ * A pattern is described by angle, direction, translation, and a set of pieces
+ * @author Jean-Marie Favreau
+ */
 class Pattern {
 private:
   /** location of the origin */
@@ -193,4 +197,4 @@ public:
 
 };
 
-#endif
+#endif // VOXIGAME_CORE_PATTERN_HXX

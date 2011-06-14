@@ -24,8 +24,8 @@
 #include <QtCore>
 #include <QTemporaryFile>
 
-#include "Board.hxx"
-#include "Pattern.hxx"
+#include "core/Board.hxx"
+#include "core/Pattern.hxx"
 
 class testPatterns : public QObject {
   Q_OBJECT

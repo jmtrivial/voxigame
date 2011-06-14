@@ -20,9 +20,17 @@
 
 # add the files of the current library
 INCLUDE_DIRECTORIES(. core/ frontend/ tests/)
-SET(CORE_CPP_LIST core/Coord.cxx core/Piece.cxx core/Board.cxx core/Pattern.cxx)
+SET(CORE_CPP_LIST core/Coord.cxx
+                  core/Box.cxx
+                  core/Piece.cxx
+                  core/StraightPiece.cxx
+                  core/LPiece.cxx
+                  core/GenericPiece.cxx
+                  core/Board.cxx
+                  core/Pattern.cxx
+                  core/PieceFactory.cxx)
 
-ADD_LIBRARY(libvoxigame STATIC ${CORE_CPP_LIST})
+ADD_LIBRARY(VoxigameCore STATIC ${CORE_CPP_LIST})
 
 
 FIND_PACKAGE(Qt4 REQUIRED)
@@ -35,9 +43,9 @@ IF(QT_QTOPENGL_FOUND)
   INCLUDE(${QT_USE_FILE})
 
   INCLUDE_DIRECTORIES(${QT_INCLUDES} ${CMAKE_CURRENT_BINARY_DIR})
-  SET(VOXIGAME_UIS frontend/mainwindow.ui frontend/about.ui)
-  SET(VOXIGAME_SRC frontend/voxigame.cxx frontend/main.cxx)
-  SET(VOXIGAME_MOC_HDRS frontend/voxigame.hxx)
+  SET(VOXIGAME_UIS frontend/MainWindow.ui frontend/about.ui)
+  SET(VOXIGAME_SRC frontend/Voxigame.cxx frontend/main.cxx)
+  SET(VOXIGAME_MOC_HDRS frontend/Voxigame.hxx)
 
   FIND_PACKAGE(QGLViewer REQUIRED)
   INCLUDE_DIRECTORIES(${QGLVIEWER_INCLUDE_DIR})
@@ -45,7 +53,7 @@ IF(QT_QTOPENGL_FOUND)
   QT4_WRAP_UI(UIHeaders ${VOXIGAME_UIS})
   QT4_WRAP_CPP(VOXIGAME_MOC_SRCS ${VOXIGAME_MOC_HDRS})
   ADD_EXECUTABLE(voxigame ${VOXIGAME_SRC} ${UIHeaders} ${VOXIGAME_MOC_SRCS})
-  TARGET_LINK_LIBRARIES(voxigame libvoxigame ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} ${QT_QTOPENGL_LIBRARY} ${QT_QTXML_LIBRARY} ${QGLVIEWER_LIBRARY})
+  TARGET_LINK_LIBRARIES(voxigame VoxigameCore ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} ${QT_QTOPENGL_LIBRARY} ${QT_QTXML_LIBRARY} ${QGLVIEWER_LIBRARY})
 ENDIF(QT_QTOPENGL_FOUND)
 
 
@@ -67,18 +75,18 @@ QT4_WRAP_CPP(TEST_MOC_TCOORD_SRCS ${TEST_MOC_TCOORD_HDRS})
 QT4_WRAP_CPP(TEST_MOC_TPATTERN_SRCS ${TEST_MOC_TPATTERN_HDRS})
 
 ADD_EXECUTABLE(testCoord tests/testCoord.cxx ${TEST_MOC_TCOORD_SRCS})
-TARGET_LINK_LIBRARIES(testCoord libvoxigame ${QT_LIBRARIES} ${QT_QTTEST_LIBRARY})
+TARGET_LINK_LIBRARIES(testCoord VoxigameCore ${QT_LIBRARIES} ${QT_QTTEST_LIBRARY})
 ADD_TEST(testCoord testCoord)
 
 ADD_EXECUTABLE(testPiece tests/testPiece.cxx ${TEST_MOC_TPIECE_SRCS})
-TARGET_LINK_LIBRARIES(testPiece libvoxigame ${QT_LIBRARIES} ${QT_QTTEST_LIBRARY})
+TARGET_LINK_LIBRARIES(testPiece VoxigameCore ${QT_LIBRARIES} ${QT_QTTEST_LIBRARY})
 ADD_TEST(testPiece testPiece)
 
 ADD_EXECUTABLE(testBoard tests/testBoard.cxx ${TEST_MOC_TBOARD_SRCS})
-TARGET_LINK_LIBRARIES(testBoard libvoxigame ${QT_LIBRARIES} ${QT_QTTEST_LIBRARY})
+TARGET_LINK_LIBRARIES(testBoard VoxigameCore ${QT_LIBRARIES} ${QT_QTTEST_LIBRARY})
 ADD_TEST(testBoard testBoard)
 
 ADD_EXECUTABLE(testPatterns tests/testPatterns.cxx ${TEST_MOC_TPATTERN_SRCS})
-TARGET_LINK_LIBRARIES(testPatterns libvoxigame ${QT_LIBRARIES} ${QT_QTTEST_LIBRARY})
+TARGET_LINK_LIBRARIES(testPatterns VoxigameCore ${QT_LIBRARIES} ${QT_QTTEST_LIBRARY})
 ADD_TEST(testPatterns testPatterns)
 

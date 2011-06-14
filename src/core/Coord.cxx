@@ -19,9 +19,12 @@
 
  *****************************************************************************/
 
+#include "core/Coord.hxx"
+#include "core/Exception.hxx"
 
-#include "Coord.hxx"
-#include "Exception.hxx"
+#include <QTextStream>
+#include <QDomDocument>
+#include <QDomElement>
 
 Direction & operator++(Direction & d) {
   switch(d) {
@@ -199,20 +202,6 @@ Direction & rotateDirection(Direction & d, const Direction & ref, const Angle & 
   return d;
 }
 
-Box::Box(int x, int y, int z) : corner1(0, 0, 0), corner2(x - 1, y - 1, z - 1) {
-  Q_ASSERT(x > 0);
-  Q_ASSERT(y > 0);
-  Q_ASSERT(z > 0);
-}
-
-
-Box::Box(const Coord & c1, const Coord & c2) : corner1(c1.getX() < c2.getX() ? c1.getX() : c2.getX(),
-						       c1.getY() < c2.getY() ? c1.getY() : c2.getY(),
-						       c1.getZ() < c2.getZ() ? c1.getZ() : c2.getZ()),
-					       corner2(c1.getX() > c2.getX() ? c1.getX() : c2.getX(),
-						       c1.getY() > c2.getY() ? c1.getY() : c2.getY(),
-						       c1.getZ() > c2.getZ() ? c1.getZ() : c2.getZ()) {
-}
 
 QTextStream & operator<<(QTextStream & f, const Coord & p) {
   f << "(" << p.getX() << ", " << p.getY() << ", " << p.getZ() << ")";
@@ -270,32 +259,6 @@ Angle toAngleString(const QString & s) {
   throw Exception("Wrong angle description");
 }
 
-QDomElement Box::toXML(QDomDocument & doc, const QString & name) const {
-  QDomElement b = doc.createElement(name);
-  QDomElement c1 = corner1.toXML(doc, "corner1");
-  b.appendChild(c1);
-  QDomElement c2 = corner2.toXML(doc, "corner2");
-  b.appendChild(c2);
-  return b;
-}
-
-
-Coord Box::getNextPosition(const Coord & c) const {
-  if (!contains(c))
-    return c;
-  Coord result(c);
-  result.translate(Xplus);
-  if (!contains(result)) {
-    result.setX(corner1.getX());
-    result.translate(Yplus);
-    if (!contains(result)) {
-      result.setY(corner2.getY());
-      result.translate(Zplus);
-    }
-  }
-  return result;
-}
-
 
 Coord & Coord::fromXML(const QDomElement & elem, const QString & name) {
   if (elem.isNull())
@@ -317,31 +280,6 @@ Coord & Coord::fromXML(const QDomElement & elem, const QString & name) {
   return setX(cx).setY(cy).setZ(cz);
 }
 
-Box & Box::fromXML(const QDomElement & elem, const QString & name) {
-  if (elem.isNull())
-    throw Exception("NULL Dom element");
-  if (elem.tagName() != name)
-    throw Exception("Bad name");
-
-  Coord c1, c2;
-  QDomNode n = elem.firstChild();
-  while(!n.isNull()) {
-    QDomElement ee = n.toElement();
-    if(!ee.isNull()) {
-      if (ee.tagName() == "corner1")
-	c1.fromXML(ee, "corner1");
-      else if (ee.tagName() == "corner2")
-	c2.fromXML(ee, "corner2");
-      else
-	throw Exception("Bad box description");
-    }
-    n = n.nextSibling();
-  }
-
-  *this = Box(c1, c2);
-
-  return *this;
-}
 
 Coord & Coord::transform(const Angle & angle, const Direction & direction, const Coord & translation) {
   // first apply rotation (counterclockwise)

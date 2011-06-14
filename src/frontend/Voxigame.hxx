@@ -24,8 +24,8 @@
 #define VOXIGAME_H
 
 #include <QMainWindow>
-#include "ui_mainwindow.h"
-#include "Board.hxx"
+#include "ui_MainWindow.h"
+#include "core/Board.hxx"
 
 class Voxigame : public QMainWindow
 {

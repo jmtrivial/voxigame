@@ -19,8 +19,11 @@
 
  *****************************************************************************/
 
-#include "Pattern.hxx"
-#include "Exception.hxx"
+#include "core/Pattern.hxx"
+#include "core/Exception.hxx"
+#include "core/StraightPiece.hxx"
+#include "core/LPiece.hxx"
+#include "core/GenericPiece.hxx"
 
 Pattern::Pattern(const Pattern & p) : location(p.location), direction(p.direction),
 				      angle(p.angle), box(p.box) {
