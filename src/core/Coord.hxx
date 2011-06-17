@@ -36,10 +36,12 @@ namespace Direction {
           Type;
 } // namespace Direction
 
+
 namespace Angle {
   /** angles for discrete rotations */
   typedef enum Angle { A0, A90, A180, A270 } Type;
 } // namespace Angle
+
 
 namespace Direction {
   /** increment the direction using the enum ordering */

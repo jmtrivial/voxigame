@@ -18,75 +18,76 @@
 #   along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-# add the files of the current library
-INCLUDE_DIRECTORIES(. core/ frontend/ tests/)
-SET(CORE_CPP_LIST core/Coord.cxx
-                  core/Box.cxx
-                  core/Piece.cxx
-                  core/StraightPiece.cxx
-                  core/LPiece.cxx
-                  core/GenericPiece.cxx
-                  core/Board.cxx
-                  core/Pattern.cxx
-                  core/PieceFactory.cxx)
-
-ADD_LIBRARY(VoxigameCore STATIC ${CORE_CPP_LIST})
+OPTION(BUILD_WITH_FRONTEND "Build the Qt front-end for Voxigame" ON)
+OPTION(BUILD_WITH_TESTS    "Build the unit tests"                ON)
 
 
 FIND_PACKAGE(Qt4 REQUIRED)
 
+SET(VOXIGAME_CORE_LIB VoxigameCore)
+SET(VOXIGAME_EXE voxigame)
+
+# add the files of the current library
+SET(VOXIGAME_CORE_SRCS
+  core/Coord.cxx
+  core/Box.cxx
+  core/Board.cxx
+  core/Piece.cxx
+  core/StraightPiece.cxx
+  core/LPiece.cxx
+  core/GenericPiece.cxx
+  core/Pattern.cxx
+  core/PieceFactory.cxx
+)
+INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR})
+ADD_LIBRARY(${VOXIGAME_CORE_LIB} ${VOXIGAME_CORE_SRCS})
+
 
 # GUI
-IF(QT_QTOPENGL_FOUND)
-  SET(QT_USE_QTOPENGL 1)
-  SET(QT_USE_QTXML 1)
+IF(BUILD_WITH_FRONTEND)
+  IF(QT_QTOPENGL_FOUND)
+    SET(QT_USE_QTOPENGL TRUE)
+    SET(QT_USE_QTXML    TRUE)
+    INCLUDE(${QT_USE_FILE})
+    ADD_DEFINITIONS(${QT_DEFINITIONS})
+    INCLUDE_DIRECTORIES(${QT_INCLUDES})
+
+    FIND_PACKAGE(QGLViewer REQUIRED)
+    INCLUDE_DIRECTORIES(${QGLVIEWER_INCLUDE_DIR})
+
+    SET(VOXIGAME_HDRS
+      frontend/Voxigame.hxx
+    )
+    SET(VOXIGAME_SRCS
+      frontend/Voxigame.cxx
+      frontend/main.cxx
+    )
+    SET(VOXIGAME_UIS
+      frontend/MainWindow.ui
+      frontend/about.ui
+    )
+
+    INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR})
+    QT4_WRAP_UI(VOXIGAME_UIS_H ${VOXIGAME_UIS})
+    QT4_WRAP_CPP(VOXIGAME_MOC_SRCS ${VOXIGAME_HDRS})
+
+    ADD_EXECUTABLE(${VOXIGAME_EXE}
+      ${VOXIGAME_SRCS} ${VOXIGAME_UIS_H} ${VOXIGAME_MOC_SRCS}
+    )
+    TARGET_LINK_LIBRARIES(${VOXIGAME_EXE}
+      ${VOXIGAME_CORE_LIB} ${QT_LIBRARIES} ${QGLVIEWER_LIBRARY}
+    )
+  ENDIF(QT_QTOPENGL_FOUND)
+ENDIF(BUILD_WITH_FRONTEND)
+
+
+# Testing
+IF(BUILD_WITH_TESTS)
+  ENABLE_TESTING()
+  SET(QT_USE_QTTEST TRUE)
+  SET(QT_USE_QTXML TRUE)
   INCLUDE(${QT_USE_FILE})
 
-  INCLUDE_DIRECTORIES(${QT_INCLUDES} ${CMAKE_CURRENT_BINARY_DIR})
-  SET(VOXIGAME_UIS frontend/MainWindow.ui frontend/about.ui)
-  SET(VOXIGAME_SRC frontend/Voxigame.cxx frontend/main.cxx)
-  SET(VOXIGAME_MOC_HDRS frontend/Voxigame.hxx)
-
-  FIND_PACKAGE(QGLViewer REQUIRED)
-  INCLUDE_DIRECTORIES(${QGLVIEWER_INCLUDE_DIR})
-
-  QT4_WRAP_UI(UIHeaders ${VOXIGAME_UIS})
-  QT4_WRAP_CPP(VOXIGAME_MOC_SRCS ${VOXIGAME_MOC_HDRS})
-  ADD_EXECUTABLE(voxigame ${VOXIGAME_SRC} ${UIHeaders} ${VOXIGAME_MOC_SRCS})
-  TARGET_LINK_LIBRARIES(voxigame VoxigameCore ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} ${QT_QTOPENGL_LIBRARY} ${QT_QTXML_LIBRARY} ${QGLVIEWER_LIBRARY})
-ENDIF(QT_QTOPENGL_FOUND)
-
-
-# testing
-ENABLE_TESTING()
-SET(QT_USE_QTTEST true)
-SET(QT_USE_QTXML true)
-SET(TEST_LIBRARIES ${QT_QTTEST_LIBRARY} ${QT_LIBRARIES})
-INCLUDE(${QT_USE_FILE})
-
-SET(TEST_MOC_TBOARD_HDRS tests/testBoard.hxx)
-SET(TEST_MOC_TPIECE_HDRS tests/testPiece.hxx)
-SET(TEST_MOC_TCOORD_HDRS tests/testCoord.hxx)
-SET(TEST_MOC_TPATTERN_HDRS tests/testPatterns.hxx)
-
-QT4_WRAP_CPP(TEST_MOC_TBOARD_SRCS ${TEST_MOC_TBOARD_HDRS})
-QT4_WRAP_CPP(TEST_MOC_TPIECE_SRCS ${TEST_MOC_TPIECE_HDRS})
-QT4_WRAP_CPP(TEST_MOC_TCOORD_SRCS ${TEST_MOC_TCOORD_HDRS})
-QT4_WRAP_CPP(TEST_MOC_TPATTERN_SRCS ${TEST_MOC_TPATTERN_HDRS})
-
-ADD_EXECUTABLE(testCoord tests/testCoord.cxx ${TEST_MOC_TCOORD_SRCS})
-TARGET_LINK_LIBRARIES(testCoord VoxigameCore ${QT_LIBRARIES} ${QT_QTTEST_LIBRARY})
-ADD_TEST(testCoord testCoord)
-
-ADD_EXECUTABLE(testPiece tests/testPiece.cxx ${TEST_MOC_TPIECE_SRCS})
-TARGET_LINK_LIBRARIES(testPiece VoxigameCore ${QT_LIBRARIES} ${QT_QTTEST_LIBRARY})
-ADD_TEST(testPiece testPiece)
-
-ADD_EXECUTABLE(testBoard tests/testBoard.cxx ${TEST_MOC_TBOARD_SRCS})
-TARGET_LINK_LIBRARIES(testBoard VoxigameCore ${QT_LIBRARIES} ${QT_QTTEST_LIBRARY})
-ADD_TEST(testBoard testBoard)
-
-ADD_EXECUTABLE(testPatterns tests/testPatterns.cxx ${TEST_MOC_TPATTERN_SRCS})
-TARGET_LINK_LIBRARIES(testPatterns VoxigameCore ${QT_LIBRARIES} ${QT_QTTEST_LIBRARY})
-ADD_TEST(testPatterns testPatterns)
-
+  INCLUDE_DIRECTORIES(tests)
+  ADD_SUBDIRECTORY(tests)
+ENDIF(BUILD_WITH_TESTS)
