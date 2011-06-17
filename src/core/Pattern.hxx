@@ -39,10 +39,10 @@ private:
   Coord location;
 
   /** main orientation of the pattern */
-  Direction direction;
+  Direction::Type direction;
 
   /** rotation according to the main axis */
-  Angle angle;
+  Angle::Type angle;
 
   /** the list of pieces in the board */
   QVector<QSharedPointer<Piece> > pieces;
@@ -54,8 +54,12 @@ public:
 
   /** constructor */
   Pattern(const Coord & c = Coord(0, 0, 0),
-	  const Direction & d = Xplus,
-	  const Angle & a = A0) : location(c), direction(d), angle(a) {}
+          const Direction::Type & d = Direction::Xplus,
+          const Angle::Type & a = Angle::A0)
+    : location(c),
+      direction(d),
+      angle(a)
+  {}
 
   /** copy constructor */
   Pattern(const Pattern & p);
@@ -82,28 +86,30 @@ public:
 
   /** Initial pattern designed by Laurent Provot */
   inline static Pattern tunnel(unsigned int piecesize,
-			       const Coord & c,
-			       const Direction & d = Xplus,
-			       const Angle & a = A0) {
+                               const Coord & c,
+                               const Direction::Type & d = Direction::Xplus,
+                               const Angle::Type & a = Angle::A0)
+  {
     return tunnel(piecesize, piecesize, c, d, a);
   }
 
   /** Initial pattern designed by Vincent Barra and Jean-Marie Favreau */
   static Pattern tunnel(unsigned int piecesize1,
-			unsigned int piecesize2,
-			const Coord & c,
-			const Direction & d = Xplus,
-			const Angle & a = A0);
+                        unsigned int piecesize2,
+                        const Coord & c,
+                        const Direction::Type & d = Direction::Xplus,
+                        const Angle::Type & a = Angle::A0);
 
   /** Initial pattern designed by Jean-Marie Favreau
       The openings are in X and Z direction.
       \param width Size in the Y direction
       \param height Size in the X and Z directions */
   inline static Pattern armchair(unsigned int width,
-				 unsigned int height,
-				 const Coord & c,
-				 const Direction & d = Xplus,
-				 const Angle & a = A0) {
+                                 unsigned int height,
+                                 const Coord & c,
+                                 const Direction::Type & d = Direction::Xplus,
+                                 const Angle::Type & a = Angle::A0)
+  {
     return armchair(width, height, height, c, d, a);
   }
 
@@ -114,19 +120,20 @@ public:
       \param height Size in the X direction
 */
   static Pattern armchair(unsigned int width,
-			  unsigned int height,
-			  unsigned int depth,
-			  const Coord & c,
-			  const Direction & d = Xplus,
-			  const Angle & a = A0);
+                          unsigned int height,
+                          unsigned int depth,
+                          const Coord & c,
+                          const Direction::Type & d = Direction::Xplus,
+                          const Angle::Type & a = Angle::A0);
 
   /** Initial pattern designed by Laurent Provot and Jean-Marie Favreau,
       using a small armchair and a tunnel. */
   static Pattern turning(unsigned int width,
-			 unsigned int height,
-			 const Coord & c,
-			 const Direction & d = Xplus,
-			 const Angle & a = A0) {
+                         unsigned int height,
+                         const Coord & c,
+                         const Direction::Type & d = Direction::Xplus,
+                         const Angle::Type & a = Angle::A0)
+  {
     return turning(width, height, height, c, d, a);
   }
 
@@ -134,66 +141,68 @@ public:
   /** Initial pattern designed by Laurent Provot and Jean-Marie Favreau,
       using a small armchair and a tunnel. */
   static Pattern turning(unsigned int width,
-			 unsigned int height,
-			 unsigned int depth,
-			 const Coord & c,
-			 const Direction & d = Xplus,
-			 const Angle & a = A0);
+                         unsigned int height,
+                         unsigned int depth,
+                         const Coord & c,
+                         const Direction::Type & d = Direction::Xplus,
+                         const Angle::Type & a = Angle::A0);
 
   /** create a cube filled with pieces */
   inline static Pattern cube(unsigned int size,
-			     const Coord & c) {
+                             const Coord & c)
+  {
     return parallelepiped(size, size, size, c);
   }
 
   /** create a parallelepiped filled with pieces */
   static Pattern parallelepiped(unsigned int sizex,
-				unsigned int sizey,
-				unsigned int sizez,
-				const Coord & c,
-				const Direction & d = Xplus,
-				const Angle & a = A0);
+                                unsigned int sizey,
+                                unsigned int sizez,
+                                const Coord & c,
+                                const Direction::Type & d = Direction::Xplus,
+                                const Angle::Type & a = Angle::A0);
 
   /** a corner. Initial pattern designed by Laurent Provot and Jean-Marie Favreau */
   inline static Pattern corner(unsigned int size,
-			const Coord & c,
-			const Direction & d = Xplus,
-			const Angle & a = A0) {
+                               const Coord & c,
+                               const Direction::Type & d = Direction::Xplus,
+                               const Angle::Type & a = Angle::A0)
+  {
     return corner(size, size, size, c, d, a);
   }
 
   /** a corner. Initial pattern designed by Laurent Provot and Jean-Marie Favreau */
   static Pattern corner(unsigned int sizex,
-			unsigned int sizey,
-			unsigned int sizez,
-			const Coord & c,
-			const Direction & d = Xplus,
-			const Angle & a = A0);
+                        unsigned int sizey,
+                        unsigned int sizez,
+                        const Coord & c,
+                        const Direction::Type & d = Direction::Xplus,
+                        const Angle::Type & a = Angle::A0);
 
   /** create a pattern with a "diagonal" whole.
       Initial pattern designed by Laurent Provot and Jean-Marie Favreau */
   static Pattern diagonal(const Coord & c,
-			  const Direction & d = Xplus,
-			  const Angle & a = A0);
+                          const Direction::Type & d = Direction::Xplus,
+                          const Angle::Type & a = Angle::A0);
 
   /** create a 3x3x3 pipe, centered in the given coordinate,
       and open in the two given directions */
   static Pattern pipe(const Coord & c,
-		      const Direction & d1,
-		      const Direction & d2);
+                      const Direction::Type & d1,
+                      const Direction::Type & d2);
 
   /** create a path, using elementary pipes, starting from the given coordinate,
       opening with the opposite of first step, and generating a path using the intermediate steps.
       The ending is given by the last step direction */
   static Pattern pipe(const Coord & c,
-		      const QVector<Direction> & steps);
+                      const QVector<Direction::Type> & steps);
 
   /** create a 6x6x(12n) spiral, using 3x3x3 pipes.
    The coordinate corresponds to the first corner. A global
    step of the spiral is contained in a 6x6x12 box. */
   static Pattern spiral(const Coord & c,
-			const Direction & d,
-			unsigned int nbsteps = 1);
+                        const Direction::Type & d,
+                        unsigned int nbsteps = 1);
 
 };
 

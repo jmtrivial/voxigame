@@ -37,17 +37,23 @@ public:
 
   /** constructor */
   LPiece(unsigned int l1, unsigned int l2,
-     const Coord & c,
-     const Direction & d = Xplus, const Angle & a = A0) : Piece(c, d, a),
-                                  length1(l1), length2(l2) {
+         const Coord & c,
+         const Direction::Type & d = Direction::Xplus,
+         const Angle::Type & a = Angle::A0)
+    : Piece(c, d, a),
+      length1(l1), length2(l2)
+  {
     Q_ASSERT(l1 > 0);
   }
+
   /** copy constructor */
-  LPiece(const LPiece & p) : Piece(p), length1(p.length1), length2(p.length2) { }
+  LPiece(const LPiece & p)
+    : Piece(p), length1(p.length1), length2(p.length2)
+  {}
 
   /** destructor */
-  virtual ~LPiece() {
-  }
+  virtual ~LPiece()
+  {}
 
   /** a clone tool */
   Piece * clone() const {

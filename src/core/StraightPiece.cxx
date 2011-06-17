@@ -27,7 +27,9 @@
 #include <QDomDocument>
 
 
-StraightPiece::StraightPiece(const QDomElement & elem, const QString & name) : Piece(elem, name) {
+StraightPiece::StraightPiece(const QDomElement & elem, const QString & name)
+  : Piece(elem, name)
+{
   if (elem.isNull())
     throw Exception("NULL Dom element");
   if (elem.tagName() != name)

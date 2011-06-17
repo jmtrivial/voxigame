@@ -67,13 +67,13 @@ Coord Box::getNextPosition(const Coord & c) const
   if (!contains(c))
     return c;
   Coord result(c);
-  result.translate(Xplus);
+  result.translate(Direction::Xplus);
   if (!contains(result)) {
     result.setX(corner1.getX());
-    result.translate(Yplus);
+    result.translate(Direction::Yplus);
     if (!contains(result)) {
       result.setY(corner2.getY());
-      result.translate(Zplus);
+      result.translate(Direction::Zplus);
     }
   }
   return result;

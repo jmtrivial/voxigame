@@ -207,7 +207,7 @@ public:
 
   /** move piece in the board. This function throws an exception if the configuration is not valid according to
       the requirements of the board. */
-  Board & movePiece(const iterator & i, Direction d);
+  Board & movePiece(const iterator & i, Direction::Type d);
 
   Board & removePiece(const iterator & i);
 
@@ -238,7 +238,7 @@ public:
   bool hasPathBetweenWindows() const;
 
   /** do not throws an exception if the given piece can be moved in the given direction */
-  void isAvailableLocationForMove(const const_iterator & i, Direction d) const;
+  void isAvailableLocationForMove(const const_iterator & i, Direction::Type d) const;
 
   /** return the number of pieces contained by this board */
   inline unsigned int getNbPiece() const {

@@ -34,7 +34,7 @@ class testPiece : public QObject {
 private slots:
   void testUsingVoxels(void) {
     {
-      StraightPiece p(4, Coord(0, 0, 0), Xplus);
+      StraightPiece p(4, Coord(0, 0, 0), Direction::Xplus);
       QVERIFY(p.nbVoxels() == 4);
       QVERIFY(p.isUsing(Coord(0, 0, 0)));
       QVERIFY(p.isUsing(Coord(1, 0, 0)));
@@ -44,7 +44,7 @@ private slots:
     }
 
     {
-      LPiece p(4, 3, Coord(0, 0, 0), Xplus, A0);
+      LPiece p(4, 3, Coord(0, 0, 0), Direction::Xplus, Angle::A0);
       QVERIFY(p.nbVoxels() == 6);
       QVERIFY(p.isUsing(Coord(0, 0, 0)));
       QVERIFY(p.isUsing(Coord(1, 0, 0)));
@@ -57,7 +57,7 @@ private slots:
     }
 
     {
-      LPiece p(4, 3, Coord(3, 3, 0), Xminus, A0);
+      LPiece p(4, 3, Coord(3, 3, 0), Direction::Xminus, Angle::A0);
       QVERIFY(p.nbVoxels() == 6);
       QVERIFY(p.isUsing(Coord(3, 3, 0)));
       QVERIFY(p.isUsing(Coord(2, 3, 0)));
@@ -81,9 +81,10 @@ private slots:
       coords.push_back(Coord(0., 1., 0.));
 
       GenericPiece p(coords, Coord(0, 0, 0));
-      QVERIFY(p.nbVoxels() == (unsigned int)coords.size());
-      for(QVector<Coord>::const_iterator c = coords.begin(); c != coords.end(); ++c) {
-	QVERIFY(p.isUsing(*c));
+      QVERIFY(p.nbVoxels() == static_cast<unsigned int>(coords.size()));
+      for(QVector<Coord>::const_iterator c = coords.begin();
+          c != coords.end(); ++c) {
+        QVERIFY(p.isUsing(*c));
       }
       QVERIFY(!p.isUsing(*(p.end())));
     }
@@ -91,16 +92,16 @@ private slots:
 
   void testTranslate(void) {
     {
-      StraightPiece p1(4, Coord(0, 0, 0), Xplus);
-      StraightPiece p2(4, Coord(0, 1, 0), Xplus);
-      p1.move(Yplus);
+      StraightPiece p1(4, Coord(0, 0, 0), Direction::Xplus);
+      StraightPiece p2(4, Coord(0, 1, 0), Direction::Xplus);
+      p1.move(Direction::Yplus);
       QVERIFY(p1 == p2);
     }
 
     {
-      LPiece p1(4, 3, Coord(0, 0, 0), Xplus, A90);
-      LPiece p2(4, 3, Coord(0, 1, 0), Xplus, A90);
-      p1.move(Yplus);
+      LPiece p1(4, 3, Coord(0, 0, 0), Direction::Xplus, Angle::A90);
+      LPiece p2(4, 3, Coord(0, 1, 0), Direction::Xplus, Angle::A90);
+      p1.move(Direction::Yplus);
       QVERIFY(p1 == p2);
     }
   }
@@ -108,22 +109,22 @@ private slots:
 
   void testRotate(void) {
     {
-      StraightPiece p1(4, Coord(0, 0, 0), Xplus, A0);
-      StraightPiece p2(4, Coord(0, 0, 0), Yplus, A270);
-      p1.rotate(Zplus);
+      StraightPiece p1(4, Coord(0, 0, 0), Direction::Xplus, Angle::A0);
+      StraightPiece p2(4, Coord(0, 0, 0), Direction::Yplus, Angle::A270);
+      p1.rotate(Direction::Zplus);
       QVERIFY(p1 == p2);
     }
 
     {
-      LPiece p(2, 2, Coord(0, 0, 0), Xplus, A0);
+      LPiece p(2, 2, Coord(0, 0, 0), Direction::Xplus, Angle::A0);
       QVERIFY(p.isUsing(Coord(0, 0, 0)));
       QVERIFY(p.isUsing(Coord(1, 0, 0)));
       QVERIFY(p.isUsing(Coord(1, 1, 0)));
-      p.rotate(Zplus);
+      p.rotate(Direction::Zplus);
       QVERIFY(p.isUsing(Coord(0, 0, 0)));
       QVERIFY(p.isUsing(Coord(0, 1, 0)));
       QVERIFY(p.isUsing(Coord(-1, 1, 0)));
-      LPiece pv(2, 2, Coord(0, 0, 0), Yplus, A270);
+      LPiece pv(2, 2, Coord(0, 0, 0), Direction::Yplus, Angle::A270);
       QVERIFY(pv == p);
     }
   }
@@ -131,28 +132,28 @@ private slots:
 
   void testIteratorOnBoundedBox(void) {
     {
-      StraightPiece p(4, Coord(0, 0, 0), Xplus);
+      StraightPiece p(4, Coord(0, 0, 0), Direction::Xplus);
       Box b(p.getBoundedBox());
       for(Piece::const_iterator c = p.begin(); c != p.end(); ++c)
 	QVERIFY(b.contains(*c));
     }
 
     {
-      LPiece p(4, 3, Coord(0, 0, 0), Xplus, A0);
+      LPiece p(4, 3, Coord(0, 0, 0), Direction::Xplus, Angle::A0);
       Box b(p.getBoundedBox());
       for(Piece::const_iterator c = p.begin(); c != p.end(); ++c)
 	QVERIFY(b.contains(*c));
     }
 
     {
-      LPiece p(4, 3, Coord(0, 0, 0), Yplus, A0);
+      LPiece p(4, 3, Coord(0, 0, 0), Direction::Yplus, Angle::A0);
       Box b(p.getBoundedBox());
       for(Piece::const_iterator c = p.begin(); c != p.end(); ++c)
 	QVERIFY(b.contains(*c));
     }
 
     {
-      LPiece p(4, 3, Coord(0, 0, 0), Yplus, A90);
+      LPiece p(4, 3, Coord(0, 0, 0), Direction::Yplus, Angle::A90);
       Box b(p.getBoundedBox());
       for(Piece::const_iterator c = p.begin(); c != p.end(); ++c)
 	QVERIFY(b.contains(*c));
@@ -172,7 +173,7 @@ private slots:
       GenericPiece p(coords, Coord(0, 0, 0));
       Box b(p.getBoundedBox());
       for(Piece::const_iterator c = p.begin(); c != p.end(); ++c)
-	QVERIFY(b.contains(*c));
+        QVERIFY(b.contains(*c));
     }
   }
 };

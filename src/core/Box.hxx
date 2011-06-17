@@ -109,7 +109,10 @@ public:
 
   /** transform the box using first a rotation arround axis Xplus with angle \p angle,
       then reorient the coordinate system along the main given direction, then apply a translation */
-  Box & transform(const Angle & angle, const Direction & direction = Xplus, const Coord & translation = Coord(0., 0., 0.)) {
+  Box & transform(const Angle::Type & angle,
+                  const Direction::Type & direction = Direction::Xplus,
+                  const Coord & translation = Coord(0, 0, 0))
+  {
     Coord c1 = corner1.getTransform(angle, direction, translation);
     Coord c2 = corner2.getTransform(angle, direction, translation);
     corner1 = c1;
@@ -120,8 +123,10 @@ public:
 
   /** create a new box from the current one using first a rotation arround axis Xplus with angle \p angle,
       then reorient the coordinate system along the main given direction, then apply a translation */
-  inline Box getTransform(const Angle & angle, const Direction & direction = Xplus,
-              const Coord & translation = Coord(0., 0., 0.)) const {
+  inline Box getTransform(const Angle::Type & angle,
+                          const Direction::Type & direction = Direction::Xplus,
+                          const Coord & translation = Coord(0, 0, 0)) const
+  {
     Box result(*this);
     return result.transform(angle, direction, translation);
   }

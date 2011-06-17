@@ -29,48 +29,65 @@ class QTextStream;
 class QDomDocument;
 class QDomElement;
 
-/** main direction in 3D space */
-typedef enum Direction { Xplus, Xminus, Yplus, Yminus, Zplus, Zminus, Static } Direction;
 
-/** angles for discrete rotations */
-typedef enum Angle { A0, A90, A180, A270 } Angle;
+namespace Direction {
+  /** main direction in 3D space */
+  typedef enum Direction { Xplus, Xminus, Yplus, Yminus, Zplus, Zminus, Static }
+          Type;
+} // namespace Direction
 
-/** increment the direction using the enum ordering */
-Direction & operator++(Direction & d);
+namespace Angle {
+  /** angles for discrete rotations */
+  typedef enum Angle { A0, A90, A180, A270 } Type;
+} // namespace Angle
 
-/** rotate the given direction \p d according to the axis \p ref, with an angle of \p a */
-Direction & rotateDirection(Direction & d, const Direction & ref, const Angle & a);
+namespace Direction {
+  /** increment the direction using the enum ordering */
+  // TODO: I wonder if this operator shoudn't be defined in the global namespace
+  Direction & operator++(Direction & d);
 
-/** return true if the two directions are the opposite */
-bool opposite(Direction d1, Direction d2);
+  /**
+   * rotate the given direction \p d according to the axis \p ref,
+   * with an angle of \p a
+   */
+  Direction & rotate(Direction & d,
+                     const Direction & ref,
+                     const Angle::Type & a);
 
-/** increment the angle using the enum ordering */
-Angle & operator++(Angle & a);
+  /** return true if the two directions are the opposite */
+  bool areOpposite(Direction d1, Direction d2);
 
-/** sum of two angles modulo 2PI */
-Angle operator+(const Angle & a, const Angle & b);
+  /** return the opposite direction */
+  Direction operator-(const Direction & d);
 
-/** return the opposite direction */
-Direction operator-(const Direction & d);
+  /** reorient the first direction using the new one as "Xplus" axis */
+  Direction reorient(const Direction & d1, const Direction & d2);
 
-/** reorien the first direction using the new one as "Xplus" axis */
-Direction reorient(const Direction & d1, const Direction & d2);
+  /** return a string corresponding to the given direction */
+  QString toString(Direction d);
 
-/** increment the angle using the reverse of enum ordering */
-Angle & operator--(Angle & a);
-
-/** return a string corresponding to the given direction */
-QString toStringDirection(Direction d);
-
-/** return a string corresponding to the given angle */
-QString toStringAngle(Angle a);
+  /** build a direction given the corresponding string */
+  Direction fromString(const QString & s);
+} // namespace Direction
 
 
-/** build a direction given the corresponding string */
-Direction toDirectionString(const QString & s);
+namespace Angle {
+  /** increment the angle using the enum ordering */
+  Angle & operator++(Angle & a);
 
-/** build an angle given the corresponding string */
-Angle toAngleString(const QString & s);
+  /** sum of two angles modulo 2PI */
+  Angle operator+(const Angle & a, const Angle & b);
+
+  /** increment the angle using the reverse of enum ordering */
+  Angle & operator--(Angle & a);
+
+  /** return a string corresponding to the given angle */
+  QString toString(Angle a);
+
+  /** build an angle given the corresponding string */
+  Angle fromString(const QString & s);
+} // namespace Angle
+
 
 /**
    A class to describe discrete 3D coordinates
@@ -133,41 +150,43 @@ public:
   inline Coord & addZ(int v) { z += v; return *this; }
 
   /** translate the current point in the given direction, with a distance of \p t */
-  Coord & translate(const Direction & direction, unsigned int t = 1) {
-    if (direction == Xplus)
+  Coord & translate(const Direction::Type & direction, unsigned int t = 1) {
+    if (direction == Direction::Xplus)
       addX(t);
-    else if (direction == Xminus)
+    else if (direction == Direction::Xminus)
       addX(-t);
-    if (direction == Yplus)
+    if (direction == Direction::Yplus)
       addY(t);
-    else if (direction == Yminus)
+    else if (direction == Direction::Yminus)
       addY(-t);
-    if (direction == Zplus)
+    if (direction == Direction::Zplus)
       addZ(t);
-    else if (direction == Zminus)
+    else if (direction == Direction::Zminus)
       addZ(-t);
     return *this;
   }
 
   /** create a new object by translation */
-  inline Coord getTanslate(const Direction & direction, unsigned int t = 1) const {
+  inline Coord getTanslate(const Direction::Type & direction,
+                           unsigned int t = 1) const
+  {
     Coord result(*this);
     return result.translate(direction, t);
   }
 
   /** transform the point using first a rotation arround axis Xplus with angle \p angle,
       then reorient the coordinate system along the main given direction, then apply a translation */
-  Coord & transform(const Angle & angle, const Direction & direction = Xplus, const Coord & translation = Coord(0., 0., 0.));
+  Coord & transform(const Angle::Type & angle, const Direction::Type & direction = Direction::Xplus, const Coord & translation = Coord(0, 0, 0));
 
   /** create a new point from the current one using first a rotation arround axis Xplus with angle \p angle,
       then reorient the coordinate system along the main given direction, then apply a translation */
-  inline Coord getTransform(const Angle & angle, const Direction & direction = Xplus, const Coord & translation = Coord(0., 0., 0.)) const {
+  inline Coord getTransform(const Angle::Type & angle, const Direction::Type & direction = Direction::Xplus, const Coord & translation = Coord(0, 0, 0)) const {
     Coord r(*this);
     return r.transform(angle, direction, translation);
   }
 
   /** translation by 1 in the given direction */
-  inline Coord operator+(const Direction & direction) const {
+  inline Coord operator+(const Direction::Type & direction) const {
     Coord r(*this);
     return r.translate(direction);
   }

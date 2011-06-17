@@ -36,18 +36,22 @@ public:
 
   /** constructor */
   StraightPiece(unsigned int l, const Coord & c,
-        const Direction & d = Xplus,
-        const Angle & a = A0) : Piece(c, d, a),
-                      length(l) {
+                const Direction::Type & d = Direction::Xplus,
+                const Angle::Type & a = Angle::A0)
+    : Piece(c, d, a),
+      length(l)
+  {
     Q_ASSERT(l > 0);
   }
 
   /** copy constructor */
-  StraightPiece(const StraightPiece & p) : Piece(p), length(p.length) { }
+  StraightPiece(const StraightPiece & p)
+    : Piece(p), length(p.length)
+  {}
 
   /** destructor */
-  virtual ~StraightPiece() {
-  }
+  virtual ~StraightPiece()
+  {}
 
   /** a clone tool */
   Piece * clone() const {

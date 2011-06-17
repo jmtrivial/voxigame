@@ -26,6 +26,9 @@
 #include <QDomDocument>
 #include <QDomElement>
 
+
+namespace Direction {
+
 Direction & operator++(Direction & d) {
   switch(d) {
   case Xplus: d = Xminus; return d;
@@ -37,41 +40,6 @@ Direction & operator++(Direction & d) {
   default: d = Static; return d;
   }
 }
-
-Angle & operator++(Angle & a) {
-  switch(a) {
-  case A0: a = A90; return a;
-  case A90: a = A180; return a;
-  case A180: a = A270; return a;
-  case A270:
-  default: a = A0; return a;
-  }
-}
-
-Angle & operator--(Angle & a) {
-  switch(a) {
-  case A0: a = A270; return a;
-  case A90: a = A0; return a;
-  case A180: a = A90; return a;
-  case A270:
-  default: a = A180; return a;
-  }
-}
-
-Angle operator+(const Angle & a, const Angle & b) {
-  Angle result = a;
-
-  switch(b) {
-  case A270: --result; break;
-  case A180: ++result; // 2 ++a: this line, and the next one
-  case A90: ++result; break;
-  case A0:
-  default: break;
-  }
-
-  return result;
-}
-
 Direction operator-(const Direction & d) {
   switch(d) {
   case Xminus: return Xplus;
@@ -133,7 +101,7 @@ Direction reorient(const Direction & d1, const Direction & d2) {
   }
 }
 
-bool opposite(Direction d1, Direction d2) {
+bool areOpposite(Direction d1, Direction d2) {
   if ((d1 == Xplus) || (d1 == Yplus) ||
       (d1 == Zplus)) {
     Direction d = d1;
@@ -150,21 +118,24 @@ bool opposite(Direction d1, Direction d2) {
     return false;
 }
 
-Direction & rotateDirection(Direction & d, const Direction & ref, const Angle & a) {
-  if ((a == A0) || (d == ref) || (d == -ref))
+Direction & rotate(Direction & d,
+                   const Direction & ref,
+                   const Angle::Type & a)
+{
+  if ((a == Angle::A0) || (d == ref) || (d == -ref))
     return d;
-  if (a == A180) {
+  if (a == Angle::A180) {
     d = -d;
     return d;
   }
 
-  if (a == A270)
-    return rotateDirection(d, -ref, A90);
+  if (a == Angle::A270)
+    return rotate(d, -ref, Angle::A90);
 
-  Q_ASSERT(a == A90);
+  Q_ASSERT(a == Angle::A90);
 
   if ((ref == Xminus) || (ref == Yminus) || (ref == Zminus)) {
-    rotateDirection(d, -ref, a);
+    rotate(d, -ref, a);
     d = -d;
     return d;
   }
@@ -202,22 +173,7 @@ Direction & rotateDirection(Direction & d, const Direction & ref, const Angle & 
   return d;
 }
 
-
-QTextStream & operator<<(QTextStream & f, const Coord & p) {
-  f << "(" << p.getX() << ", " << p.getY() << ", " << p.getZ() << ")";
-  return f;
-}
-
-QDomElement Coord::toXML(QDomDocument & doc, const QString & name) const {
-  QDomElement b = doc.createElement(name);
-  b.setAttribute("x", QString().setNum(getX()));
-  b.setAttribute("y", QString().setNum(getY()));
-  b.setAttribute("z", QString().setNum(getZ()));
-  return b;
-}
-
-
-QString toStringDirection(Direction d) {
+QString toString(Direction d) {
   switch(d) {
   case Xplus: return "x";
   case Xminus: return "-x";
@@ -230,7 +186,55 @@ QString toStringDirection(Direction d) {
   return "";
 }
 
-QString toStringAngle(Angle a) {
+Direction fromString(const QString & s) {
+  if (s == "x") return Xplus;
+  if (s == "-x") return Xminus;
+  if (s == "y") return Yplus;
+  if (s == "-y") return Yminus;
+  if (s == "z") return Zplus;
+  if (s == "-z") return Zminus;
+  throw Exception("Wrong direction description");
+}
+} // namespace Direction
+
+
+namespace Angle {
+
+Angle & operator++(Angle & a) {
+  switch(a) {
+  case A0: a = A90; return a;
+  case A90: a = A180; return a;
+  case A180: a = A270; return a;
+  case A270:
+  default: a = A0; return a;
+  }
+}
+
+Angle & operator--(Angle & a) {
+  switch(a) {
+  case A0: a = A270; return a;
+  case A90: a = A0; return a;
+  case A180: a = A90; return a;
+  case A270:
+  default: a = A180; return a;
+  }
+}
+
+Angle operator+(const Angle & a, const Angle & b) {
+  Angle result = a;
+
+  switch(b) {
+  case A270: --result; break;
+  case A180: ++result; // 2 ++a: this line, and the next one
+  case A90: ++result; break;
+  case A0:
+  default: break;
+  }
+
+  return result;
+}
+
+QString toString(Angle a) {
   switch(a) {
   case A0: return "0";
   case A90: return "90";
@@ -241,22 +245,28 @@ QString toStringAngle(Angle a) {
   return "";
 }
 
-Direction toDirectionString(const QString & s) {
-  if (s == "x") return Xplus;
-  if (s == "-x") return Xminus;
-  if (s == "y") return Yplus;
-  if (s == "-y") return Yminus;
-  if (s == "z") return Zplus;
-  if (s == "-z") return Zminus;
-  throw Exception("Wrong direction description");
-}
-
-Angle toAngleString(const QString & s) {
+Angle fromString(const QString & s) {
   if (s == "0") return A0;
   if (s == "90") return A90;
   if (s == "180") return A180;
   if (s == "270") return A270;
   throw Exception("Wrong angle description");
+}
+} // namespace Angle
+
+
+QTextStream & operator<<(QTextStream & f, const Coord & p) {
+  f << "(" << p.getX() << ", " << p.getY() << ", " << p.getZ() << ")";
+  return f;
+}
+
+
+QDomElement Coord::toXML(QDomDocument & doc, const QString & name) const {
+  QDomElement b = doc.createElement(name);
+  b.setAttribute("x", QString().setNum(getX()));
+  b.setAttribute("y", QString().setNum(getY()));
+  b.setAttribute("z", QString().setNum(getZ()));
+  return b;
 }
 
 
@@ -281,22 +291,25 @@ Coord & Coord::fromXML(const QDomElement & elem, const QString & name) {
 }
 
 
-Coord & Coord::transform(const Angle & angle, const Direction & direction, const Coord & translation) {
+Coord & Coord::transform(const Angle::Type & angle,
+                         const Direction::Type & direction,
+                         const Coord & translation)
+{
   // first apply rotation (counterclockwise)
   {
     const double y_ = getY();
     const double z_ = getZ();
     switch(angle)  {
-    case A90:
+    case Angle::A90:
       setY(-z_).setZ(y_);
       break;
-    case A180:
+    case Angle::A180:
       setY(-y_).setZ(-z_);
       break;
-    case A270:
+    case Angle::A270:
       setY(z_).setZ(-y_);
       break;
-    case A0:
+    case Angle::A0:
     default:
       break;
     }
@@ -308,22 +321,22 @@ Coord & Coord::transform(const Angle & angle, const Direction & direction, const
     const double y_ = getY();
     const double z_ = getZ();
     switch(direction)  {
-    case Yplus:
+    case Direction::Yplus:
       setX(z_).setY(x_).setZ(y_);
       break;
-    case Yminus:
+    case Direction::Yminus:
       setX(z_).setY(-x_).setZ(-y_);
       break;
-    case Zplus:
+    case Direction::Zplus:
       setX(y_).setY(z).setZ(x_);
       break;
-    case Zminus:
+    case Direction::Zminus:
       setX(-y_).setY(z).setZ(-x_);
       break;
-    case Xminus:
+    case Direction::Xminus:
       setX(-x_).setY(-y).setZ(z_);
       break;
-    case Xplus:
+    case Direction::Xplus:
     default:
       break;
     }

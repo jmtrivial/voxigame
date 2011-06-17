@@ -25,12 +25,15 @@
 #include "core/LPiece.hxx"
 #include "core/GenericPiece.hxx"
 
-Pattern::Pattern(const Pattern & p) : location(p.location), direction(p.direction),
-				      angle(p.angle), box(p.box) {
+Pattern::Pattern(const Pattern & p)
+  : location(p.location),
+    direction(p.direction),
+    angle(p.angle),
+    box(p.box)
+{
   for(QVector<QSharedPointer<Piece> >::const_iterator pp = p.pieces.begin();
       pp != p.pieces.end(); ++pp)
     pieces.push_back(QSharedPointer<Piece>((**pp).clone()));
-
 }
 
 Pattern & Pattern::addPiece(const Piece & piece) {
@@ -43,17 +46,21 @@ Pattern & Pattern::addPiece(const Piece & piece) {
   return *this;
 }
 
-Pattern & Pattern::addPattern(const Pattern & pattern) {
+Pattern & Pattern::addPattern(const Pattern & pattern)
+{
   QVector<QSharedPointer<Piece> > newPieces = pattern.getPieces();
-  for(QVector<QSharedPointer<Piece> >::const_iterator p = newPieces.begin(); p != newPieces.end(); ++p) {
+  for(QVector<QSharedPointer<Piece> >::const_iterator p = newPieces.begin();
+      p != newPieces.end(); ++p) {
     addPiece(**p);
   }
   return *this;
 }
 
-QVector<QSharedPointer<Piece> > Pattern::getPieces() const {
+QVector<QSharedPointer<Piece> > Pattern::getPieces() const
+{
   QVector<QSharedPointer<Piece> > result;
-  for(QVector<QSharedPointer<Piece> >::const_iterator p = pieces.begin(); p != pieces.end(); ++p) {
+  for(QVector<QSharedPointer<Piece> >::const_iterator p = pieces.begin();
+      p != pieces.end(); ++p) {
     result.push_back(QSharedPointer<Piece>((**p).clone()));
     (*(result.back())).transform(angle, direction, location);
   }
@@ -63,7 +70,8 @@ QVector<QSharedPointer<Piece> > Pattern::getPieces() const {
 
 
 /** return true if the current pattern contains intersection configurations */
-bool Pattern::hasIntersection() const {
+bool Pattern::hasIntersection() const
+{
   QVector<QSharedPointer<Piece> >::const_iterator e(pieces.end());
   for(QVector<QSharedPointer<Piece> >::const_iterator p = pieces.begin(); p != e; ++p)
     for(QVector<QSharedPointer<Piece> >::const_iterator p1 = p + 1; p1 != e; ++p1)
@@ -73,26 +81,28 @@ bool Pattern::hasIntersection() const {
 }
 
 Pattern Pattern::tunnel(unsigned int piecesize1,
-			unsigned int piecesize2,
-			const Coord & c,
-			const Direction & d,
-			const Angle & a) {
+                        unsigned int piecesize2,
+                        const Coord & c,
+                        const Direction::Type & d,
+                        const Angle::Type & a)
+{
   Pattern pattern(c, d, a);
-  StraightPiece p1(piecesize1, Coord(0, 0, 0), Yplus);
-  StraightPiece p2(piecesize2, Coord(0, piecesize1, 0), Zplus);
-  StraightPiece p3(piecesize1, Coord(0, piecesize1, piecesize2), Yminus);
-  StraightPiece p4(piecesize2, Coord(0, 0, piecesize2), Zminus);
+  StraightPiece p1(piecesize1, Coord(0, 0, 0), Direction::Yplus);
+  StraightPiece p2(piecesize2, Coord(0, piecesize1, 0), Direction::Zplus);
+  StraightPiece p3(piecesize1, Coord(0, piecesize1, piecesize2), Direction::Yminus);
+  StraightPiece p4(piecesize2, Coord(0, 0, piecesize2), Direction::Zminus);
 
   Q_ASSERT(!pattern.hasIntersection());
   return pattern.addPiece(p1).addPiece(p2).addPiece(p3).addPiece(p4);
 }
 
 Pattern Pattern::armchair(unsigned int width,
-			  unsigned int height,
-			  unsigned int depth,
-			  const Coord & c,
-			  const Direction & d,
-			  const Angle & a) {
+                          unsigned int height,
+                          unsigned int depth,
+                          const Coord & c,
+                          const Direction::Type & d,
+                          const Angle::Type & a)
+{
   Q_ASSERT(width > 2);
   Q_ASSERT(height > 1);
   Q_ASSERT(depth > 1);
@@ -100,16 +110,16 @@ Pattern Pattern::armchair(unsigned int width,
 
   // bottom part
   for(unsigned int x = 1; x < depth; ++x)
-    pattern.addPiece(StraightPiece(width, Coord(x, 0, 0), Yplus));
+    pattern.addPiece(StraightPiece(width, Coord(x, 0, 0), Direction::Yplus));
 
   // back part
   for(unsigned int y = 1; y < width - 1; ++y)
-    pattern.addPiece(StraightPiece(height, Coord(0, y, 0), Zplus));
+    pattern.addPiece(StraightPiece(height, Coord(0, y, 0), Direction::Zplus));
 
   // armrest part
   for(unsigned int z = 1; z < height; ++z) {
-    pattern.addPiece(StraightPiece(depth, Coord(0, 0, z), Xplus));
-    pattern.addPiece(StraightPiece(depth, Coord(0, width - 1, z), Xplus));
+    pattern.addPiece(StraightPiece(depth, Coord(0, 0, z), Direction::Xplus));
+    pattern.addPiece(StraightPiece(depth, Coord(0, width - 1, z), Direction::Xplus));
   }
 
   Q_ASSERT(!pattern.hasIntersection());
@@ -117,40 +127,41 @@ Pattern Pattern::armchair(unsigned int width,
 }
 
 Pattern Pattern::parallelepiped(unsigned int sizex,
-				unsigned int sizey,
-				unsigned int sizez,
-				const Coord & c,
-				const Direction & d,
-				const Angle & a) {
-
+                                unsigned int sizey,
+                                unsigned int sizez,
+                                const Coord & c,
+                                const Direction::Type & d,
+                                const Angle::Type & a)
+{
   Pattern pattern(c, d, a);
 
   for(unsigned int x = 0; x != sizex; ++x)
     for(unsigned int y = 0; y != sizey; ++y)
-      pattern.addPiece(StraightPiece(sizez, Coord(x, y, 0), Zplus));
+      pattern.addPiece(StraightPiece(sizez, Coord(x, y, 0), Direction::Zplus));
 
   return pattern;
 }
 
 Pattern Pattern::corner(unsigned int sizex,
-			unsigned int sizey,
-			unsigned int sizez,
-			const Coord & c,
-			const Direction & d,
-			const Angle & a) {
+                        unsigned int sizey,
+                        unsigned int sizez,
+                        const Coord & c,
+                        const Direction::Type & d,
+                        const Angle::Type & a)
+{
   Pattern pattern(c, d, a);
 
   // bottom part
   for(unsigned int x = 1; x < sizex; ++x)
-    pattern.addPiece(StraightPiece(sizey, Coord(x, 0, 0), Yplus));
+    pattern.addPiece(StraightPiece(sizey, Coord(x, 0, 0), Direction::Yplus));
 
   // back part
   for(unsigned int y = 1; y < sizey; ++y)
-    pattern.addPiece(StraightPiece(sizez, Coord(0, y, 0), Zplus));
+    pattern.addPiece(StraightPiece(sizez, Coord(0, y, 0), Direction::Zplus));
 
   // armrest part (y = 0)
   for(unsigned int z = 1; z < sizez; ++z) {
-    pattern.addPiece(StraightPiece(sizex, Coord(0, 0, z), Xplus));
+    pattern.addPiece(StraightPiece(sizex, Coord(0, 0, z), Direction::Xplus));
   }
 
   Q_ASSERT(!pattern.hasIntersection());
@@ -158,26 +169,27 @@ Pattern Pattern::corner(unsigned int sizex,
 }
 
 Pattern Pattern::diagonal(const Coord & c,
-			  const Direction & d,
-			  const Angle & a) {
+                          const Direction::Type & d,
+                          const Angle::Type & a)
+{
   Pattern pattern(c, d, a);
 
   // z = 0
-  pattern.addPiece(StraightPiece(3, Coord(0, 0, 0), Yplus));
-  pattern.addPiece(StraightPiece(3, Coord(2, 0, 0), Yplus));
-  pattern.addPiece(StraightPiece(3, Coord(3, 0, 0), Yplus));
+  pattern.addPiece(StraightPiece(3, Coord(0, 0, 0), Direction::Yplus));
+  pattern.addPiece(StraightPiece(3, Coord(2, 0, 0), Direction::Yplus));
+  pattern.addPiece(StraightPiece(3, Coord(3, 0, 0), Direction::Yplus));
 
   // z = 1
-  pattern.addPiece(StraightPiece(3, Coord(3, 0, 1), Yplus));
-  pattern.addPiece(StraightPiece(3, Coord(0, 0, 1), Xplus));
-  pattern.addPiece(StraightPiece(2, Coord(0, 1, 1), Yplus));
+  pattern.addPiece(StraightPiece(3, Coord(3, 0, 1), Direction::Yplus));
+  pattern.addPiece(StraightPiece(3, Coord(0, 0, 1), Direction::Xplus));
+  pattern.addPiece(StraightPiece(2, Coord(0, 1, 1), Direction::Yplus));
 
   // z = 2
-  pattern.addPiece(StraightPiece(2, Coord(0, 0, 2), Yplus));
-  pattern.addPiece(StraightPiece(4, Coord(0, 2, 2), Xplus));
+  pattern.addPiece(StraightPiece(2, Coord(0, 0, 2), Direction::Yplus));
+  pattern.addPiece(StraightPiece(4, Coord(0, 2, 2), Direction::Xplus));
 
   // |
-  pattern.addPiece(StraightPiece(3, Coord(1, 1, 0), Zplus));
+  pattern.addPiece(StraightPiece(3, Coord(1, 1, 0), Direction::Zplus));
 
   Q_ASSERT(!pattern.hasIntersection());
   return pattern;
@@ -185,19 +197,22 @@ Pattern Pattern::diagonal(const Coord & c,
 
 
 Pattern Pattern::pipe(const Coord & c,
-		      const Direction & d1,
-		      const Direction & d2) {
-  if ((d1 == Static) || (d2 == Static))
+                      const Direction::Type & d1,
+                      const Direction::Type & d2)
+{
+  if ((d1 == Direction::Static) || (d2 == Direction::Static))
     throw Exception("Static direction, not possible");
   if (d1 == d2)
     throw Exception("Two identical directions, not possible");
 
-  Pattern pattern(c, Xplus, A0);
+  Pattern pattern(c, Direction::Xplus, Angle::A0);
 
   if (d1 == -d2) {
     Coord myC(-1, -1, -1);
-    Direction myD = d1;
-    if ((d1 == Xminus) || (d1 == Yminus) || (d1 == Zminus))
+    Direction::Type myD = d1;
+    if ((d1 == Direction::Xminus) ||
+        (d1 == Direction::Yminus) ||
+        (d1 == Direction::Zminus))
       myD = d2;
 
     // add 3 tunnels in the correct direction
@@ -208,42 +223,42 @@ Pattern Pattern::pipe(const Coord & c,
   }
   else {
     // add an armchair
-    Direction myD = d1;
-    Direction otherD;
-    Direction ortho;
+    Direction::Type myD = d1;
+    Direction::Type otherD;
+    Direction::Type ortho;
     switch (d1) {
-    case Xplus:
-      otherD = Zplus;
-      ortho = Yplus;
+    case Direction::Xplus:
+      otherD = Direction::Zplus;
+      ortho = Direction::Yplus;
       break;
-    case Xminus:
-      otherD = Zplus;
-      ortho = Yminus;
+    case Direction::Xminus:
+      otherD = Direction::Zplus;
+      ortho = Direction::Yminus;
       break;
-    case Yplus:
-      otherD = Xplus;
-      ortho = Zplus;
+    case Direction::Yplus:
+      otherD = Direction::Xplus;
+      ortho = Direction::Zplus;
       break;
-    case Yminus:
-      otherD = Xplus;
-      ortho = Zminus;
+    case Direction::Yminus:
+      otherD = Direction::Xplus;
+      ortho = Direction::Zminus;
       break;
-    case Zplus:
-      otherD = Yplus;
-      ortho = Xplus;
+    case Direction::Zplus:
+      otherD = Direction::Yplus;
+      ortho = Direction::Xplus;
       break;
-    case Zminus:
-      otherD = Yplus;
-      ortho = Xminus;
+    case Direction::Zminus:
+      otherD = Direction::Yplus;
+      ortho = Direction::Xminus;
       break;
     default:
       break;
     }
-    Angle myA = A0;
+    Angle::Type myA = Angle::A0;
     while(otherD != d2) {
       ++myA;
-      rotateDirection(otherD, myD, A90);
-      rotateDirection(ortho, myD, A90);
+      Direction::rotate(otherD, myD, Angle::A90);
+      Direction::rotate(ortho, myD, Angle::A90);
     }
 
     Coord myC(0, 0, 0);
@@ -257,18 +272,18 @@ Pattern Pattern::pipe(const Coord & c,
 }
 
 Pattern Pattern::turning(unsigned int width,
-			 unsigned int height,
-			 unsigned int depth,
-			 const Coord & c,
-			 const Direction & d,
-			 const Angle & a) {
-
+                         unsigned int height,
+                         unsigned int depth,
+                         const Coord & c,
+                         const Direction::Type & d,
+                         const Angle::Type & a)
+{
   Q_ASSERT(width > 2);
   Q_ASSERT(height > 2);
   Q_ASSERT(depth > 2);
   Pattern pattern(c, d, a);
   pattern.addPattern(armchair(width, height - 1, depth, Coord(0, 0, 0)));
-  pattern.addPattern(tunnel(width - 1, depth - 1, Coord(0, 0, height - 1), Zplus));
+  pattern.addPattern(tunnel(width - 1, depth - 1, Coord(0, 0, height - 1), Direction::Zplus));
   pattern.addPiece(StraightPiece(1, Coord(0, 0, 0)));
   pattern.addPiece(StraightPiece(1, Coord(0, width - 1, 0)));
 
@@ -277,13 +292,15 @@ Pattern Pattern::turning(unsigned int width,
 }
 
 Pattern Pattern::pipe(const Coord & c,
-		      const QVector<Direction> & steps) {
+                      const QVector<Direction::Type> & steps)
+{
   Q_ASSERT(steps.size() >= 2);
-  Pattern pattern(Coord(0, 0, 0), Xplus, A0);
+  Pattern pattern(Coord(0, 0, 0), Direction::Xplus, Angle::A0);
 
   Coord current(c);
-  QVector<Direction>::const_iterator s1 = steps.begin();
-  for(QVector<Direction>::const_iterator s2 = steps.begin() + 1; s2 != steps.end(); ++s1, ++s2) {
+  QVector<Direction::Type>::const_iterator s1 = steps.begin();
+  for(QVector<Direction::Type>::const_iterator s2 = steps.begin() + 1;
+      s2 != steps.end(); ++s1, ++s2) {
     pattern.addPattern(pipe(current, -(*s1), *s2));
     current.translate(*s2, 3);
   }
@@ -293,35 +310,35 @@ Pattern Pattern::pipe(const Coord & c,
 }
 
 Pattern Pattern::spiral(const Coord & c,
-			const Direction & d, unsigned int step) {
-
+                        const Direction::Type & d, unsigned int step)
+{
   Q_ASSERT(step >= 1);
-  Pattern pattern(c, d, A0);
-  QVector<Direction> path;
+  Pattern pattern(c, d, Angle::A0);
+  QVector<Direction::Type> path;
 
   for(unsigned int i = 0; i != step; ++ i) {
-    path.push_back(Xplus);
-    path.push_back(Zplus);
-    path.push_back(Yplus);
-    path.push_back(Zminus);
+    path.push_back(Direction::Xplus);
+    path.push_back(Direction::Zplus);
+    path.push_back(Direction::Yplus);
+    path.push_back(Direction::Zminus);
 
-    path.push_back(Xplus);
-    path.push_back(Yminus);
-    path.push_back(Zplus);
-    path.push_back(Yplus);
+    path.push_back(Direction::Xplus);
+    path.push_back(Direction::Yminus);
+    path.push_back(Direction::Zplus);
+    path.push_back(Direction::Yplus);
 
-    path.push_back(Xplus);
-    path.push_back(Zminus);
-    path.push_back(Yminus);
-    path.push_back(Zplus);
+    path.push_back(Direction::Xplus);
+    path.push_back(Direction::Zminus);
+    path.push_back(Direction::Yminus);
+    path.push_back(Direction::Zplus);
 
-    path.push_back(Xplus);
-    path.push_back(Yplus);
-    path.push_back(Zminus);
-    path.push_back(Yminus);
+    path.push_back(Direction::Xplus);
+    path.push_back(Direction::Yplus);
+    path.push_back(Direction::Zminus);
+    path.push_back(Direction::Yminus);
   }
 
-  path.push_back(Xplus);
+  path.push_back(Direction::Xplus);
 
   pattern.addPattern(pipe(Coord(1, 1, 1), path));
 

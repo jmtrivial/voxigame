@@ -40,10 +40,10 @@ protected:
   Coord location;
 
   /** main orientation of the piece */
-  Direction direction;
+  Direction::Type direction;
 
   /** rotation according to the main axis */
-  Angle angle;
+  Angle::Type angle;
 
   /** name of the object */
   virtual const QString getName() const = 0;
@@ -101,13 +101,19 @@ public:
 
   /** constructor */
   Piece(const Coord & c,
-	const Direction & d = Xplus,
-	const Angle & a = A0) : location(c), direction(d), angle(a) {}
+        const Direction::Type & d = Direction::Xplus,
+        const Angle::Type & a = Angle::A0)
+    : location(c),
+      direction(d),
+      angle(a)
+  {}
 
   /** copy construtor */
-  Piece(const Piece & p) : location(p.location),
-			   direction(p.direction),
-			   angle(p.angle){ }
+  Piece(const Piece & p)
+    : location(p.location),
+      direction(p.direction),
+      angle(p.angle)
+  {}
 
   /** destructor */
   virtual ~Piece() {}
@@ -115,9 +121,9 @@ public:
   /** accessor */
   inline const Coord & getLocation() const { return location; }
   /** accessor */
-  inline const Direction & getDirection() const { return direction; }
+  inline const Direction::Type & getDirection() const { return direction; }
   /** accessor */
-  inline const Angle & getAngle() const { return angle; }
+  inline const Angle::Type & getAngle() const { return angle; }
 
   /** clone the curent box */
   virtual Piece * clone() const = 0;
@@ -170,16 +176,16 @@ public:
   virtual unsigned int nbVoxels() const = 0;
 
   /** move the piece according to the given direction */
-  inline Piece & move(Direction d, unsigned int step = 1) {
+  inline Piece & move(Direction::Type d, unsigned int step = 1) {
     location.translate(d, step);
     return *this;
   }
 
   /** rotate the current piece according to the given direction */
-  Piece & rotate(Direction d);
+  Piece & rotate(Direction::Type d);
 
   /** apply the given transformation */
-  Piece & transform(const Angle & a, const Direction & d, const Coord & t);
+  Piece & transform(const Angle::Type & a, const Direction::Type & d, const Coord & t);
 
   /** generate an xml version of the piece */
   virtual QDomElement toXML(QDomDocument & doc) const;

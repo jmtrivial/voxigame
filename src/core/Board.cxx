@@ -28,11 +28,12 @@
 
 
 Board::Board(unsigned int x, unsigned int y, unsigned int z,
-	     const Coord & w1, const Coord & w2,
-	     bool aI, bool aO) : box(x, y, z),
-				 allowIntersections(aI),
-				 allowOutside(aO),
-				 window1(w1), window2(w2) {
+             const Coord & w1, const Coord & w2, bool aI, bool aO)
+  : box(x, y, z),
+    allowIntersections(aI),
+    allowOutside(aO),
+    window1(w1), window2(w2)
+{
   Q_ASSERT((x > 0) && (y > 0) && (z > 0));
   cells = new QVector<QSharedPointer<Piece> >[x * y * z];
   if (!box.inBorder(w1)) {
@@ -84,11 +85,12 @@ Board & Board::addPattern(const Pattern & p) {
   }
 
   return *this;
-
 }
 
 
-void Board::isAvailableLocationForMove(const const_iterator & i, Direction d) const {
+void Board::isAvailableLocationForMove(const const_iterator & i,
+                                       Direction::Type d) const
+{
   QSharedPointer<Piece> newp((*i).clone());
 
   (*newp).move(d);
@@ -107,7 +109,8 @@ void Board::isAvailableLocationForMove(const const_iterator & i, Direction d) co
 
 }
 
-Board & Board::movePiece(const iterator & i, Direction d) {
+Board & Board::movePiece(const iterator & i, Direction::Type d)
+{
   isAvailableLocationForMove(i, d);
 
   removeFromCells(*(i.it));
@@ -131,7 +134,7 @@ bool Board::hasIntersectionPiece(const const_iterator & i) const {
 }
 
 bool Board::isMovablePiece(const const_iterator & i) const {
-  for(Direction d = Xplus; d != Static; ++d) {
+  for(Direction::Type d = Direction::Xplus; d != Direction::Static; ++d) {
     try {
       isAvailableLocationForMove(i, d);
       return true;
@@ -229,7 +232,7 @@ bool Board::hasPathBetweenWindows() const {
   for(unsigned int x = 0; x != box.getSizeX(); ++x)
     for(unsigned int y = 0; y != box.getSizeY(); ++y)
       for(unsigned int z = 0; z != box.getSizeZ(); ++z)
-	seen[x][y][z] = false;
+        seen[x][y][z] = false;
 
   open.push_back(window1);
   seen[window1.getX()][window1.getY()][window1.getZ()] = true;
@@ -240,12 +243,14 @@ bool Board::hasPathBetweenWindows() const {
     if (c == window2)
       return true;
     else {
-      for(Direction d = Xplus; d != Static; ++d) {
-	Coord cc = c + d;
-	if (box.contains(cc) && !seen[cc.getX()][cc.getY()][cc.getZ()] && (getNbPiece(cc) == 0)) {
-	  seen[cc.getX()][cc.getY()][cc.getZ()] = true;
-	  open.push_back(cc);
-	}
+      for(Direction::Type d = Direction::Xplus; d != Direction::Static; ++d) {
+        Coord cc = c + d;
+        if (box.contains(cc) &&
+            !seen[cc.getX()][cc.getY()][cc.getZ()] &&
+            getNbPiece(cc) == 0) {
+          seen[cc.getX()][cc.getY()][cc.getZ()] = true;
+          open.push_back(cc);
+        }
       }
     }
   }

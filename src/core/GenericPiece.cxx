@@ -27,7 +27,9 @@
 #include <QDomDocument>
 
 
-GenericPiece::GenericPiece(const QDomElement & elem, const QString & name) : Piece(elem, name) {
+GenericPiece::GenericPiece(const QDomElement & elem, const QString & name)
+  : Piece(elem, name)
+{
   if (elem.isNull())
     throw Exception("NULL Dom element");
   if (elem.tagName() != name)

@@ -31,7 +31,7 @@ class testCoord : public QObject {
 private slots:
   void testTranslate(void) {
     Coord c1(0, 0, 0);
-    c1.translate(Xplus);
+    c1.translate(Direction::Xplus);
     Coord c2(1, 0, 0);
     QVERIFY(c1 == c2);
   }

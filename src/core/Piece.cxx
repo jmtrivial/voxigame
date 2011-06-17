@@ -25,7 +25,8 @@
 #include <QDomElement>
 #include <QString>
 
-Piece::Piece(const QDomElement & elem, const QString & name) {
+Piece::Piece(const QDomElement & elem, const QString & name)
+{
   if (elem.isNull())
     throw Exception("NULL Dom element");
   if (elem.tagName() != name)
@@ -50,21 +51,24 @@ Piece::Piece(const QDomElement & elem, const QString & name) {
   if (!l)
     throw Exception("Location not found");
 
-  direction = toDirectionString(d);
-  angle = toAngleString(a);
+  direction = Direction::fromString(d);
+  angle = Angle::fromString(a);
 }
 
 bool Piece::operator==(const Piece & piece) const {
   return (piece.location == location) && (piece.direction == direction) && (piece.angle == angle);
 }
 
-Piece & Piece::transform(const Angle & a, const Direction & d, const Coord & t) {
+Piece & Piece::transform(const Angle::Type & a,
+                         const Direction::Type & d,
+                         const Coord & t)
+{
   location.transform(a, d, t);
 
-  direction = reorient(direction, d);
+  direction = Direction::reorient(direction, d);
 
   // rotation
-  rotateDirection(direction, d, a);
+  Direction::rotate(direction, d, a);
   if (direction == d)
     angle = angle + a;
   else if (direction == -d)
@@ -74,79 +78,79 @@ Piece & Piece::transform(const Angle & a, const Direction & d, const Coord & t) 
 }
 
 
-Piece & Piece::rotate(Direction d) {
+Piece & Piece::rotate(Direction::Type d) {
   if (d == direction) {
     ++angle;
     return *this;
   }
-  if (opposite(d, direction)) {
+  if (areOpposite(d, direction)) {
     --angle;
     return *this;
   }
 
   // (x, y, z) is a direct coordinate system
   switch(d) {
-  case Xplus: // y -> z
+  case Direction::Xplus: // y -> z
     switch(direction) {
-    case Yplus: direction = Zplus; --angle; break;
-    case Zplus: direction = Yminus; ++angle; break;
-    case Yminus: direction = Zminus; ++angle; break;
-    case Zminus: direction = Yplus; --angle; break;
+    case Direction::Yplus: direction = Direction::Zplus; --angle; break;
+    case Direction::Zplus: direction = Direction::Yminus; ++angle; break;
+    case Direction::Yminus: direction = Direction::Zminus; ++angle; break;
+    case Direction::Zminus: direction = Direction::Yplus; --angle; break;
     default:
       throw Exception();
     }
     break;
-  case Xminus: // z -> y
+  case Direction::Xminus: // z -> y
     switch(direction) {
-    case Yplus: direction = Zminus; ++angle; break;
-    case Zplus: direction = Yplus; ++angle; break;
-    case Yminus: direction = Zplus; --angle; break;
-    case Zminus: direction = Yminus; --angle; break;
+    case Direction::Yplus: direction = Direction::Zminus; ++angle; break;
+    case Direction::Zplus: direction = Direction::Yplus; ++angle; break;
+    case Direction::Yminus: direction = Direction::Zplus; --angle; break;
+    case Direction::Zminus: direction = Direction::Yminus; --angle; break;
     default:
       throw Exception();
     }
     break;
-  case Yplus: // z -> x
+  case Direction::Yplus: // z -> x
     switch(direction) {
-    case Xplus: direction = Zminus; ++angle; break;
-    case Zplus: direction = Xplus; --angle; break;
-    case Xminus: direction = Zplus; --angle; break;
-    case Zminus: direction = Xminus; ++angle; break;
+    case Direction::Xplus: direction = Direction::Zminus; ++angle; break;
+    case Direction::Zplus: direction = Direction::Xplus; --angle; break;
+    case Direction::Xminus: direction = Direction::Zplus; --angle; break;
+    case Direction::Zminus: direction = Direction::Xminus; ++angle; break;
     default:
       throw Exception();
     }
     break;
-  case Yminus: // x -> z
+  case Direction::Yminus: // x -> z
     switch(direction) {
-    case Xplus: direction = Zplus; ++angle; break;
-    case Zplus: direction = Xminus; ++angle; break;
-    case Xminus: direction = Zminus; --angle; break;
-    case Zminus: direction = Xplus; --angle; break;
+    case Direction::Xplus: direction = Direction::Zplus; ++angle; break;
+    case Direction::Zplus: direction = Direction::Xminus; ++angle; break;
+    case Direction::Xminus: direction = Direction::Zminus; --angle; break;
+    case Direction::Zminus: direction = Direction::Xplus; --angle; break;
     default:
       throw Exception();
     }
     break;
-  case Zplus: // x -> y
+  case Direction::Zplus: // x -> y
     switch(direction) {
-    case Xplus: direction = Yplus; --angle; break;
-    case Yplus: direction = Xminus; ++angle; break;
-    case Xminus: direction = Yminus; ++angle; break;
-    case Yminus: direction = Xplus; --angle; break;
+    case Direction::Xplus: direction = Direction::Yplus; --angle; break;
+    case Direction::Yplus: direction = Direction::Xminus; ++angle; break;
+    case Direction::Xminus: direction = Direction::Yminus; ++angle; break;
+    case Direction::Yminus: direction = Direction::Xplus; --angle; break;
     default:
       throw Exception();
     }
     break;
-  case Zminus: // y -> x
+  case Direction::Zminus: // y -> x
     switch(direction) {
-    case Xplus: direction = Yminus; ++angle; break;
-    case Yplus: direction = Xplus; ++angle; break;
-    case Xminus: direction = Yplus; --angle; break;
-    case Yminus: direction = Xminus; --angle; break;
+    case Direction::Xplus: direction = Direction::Yminus; ++angle; break;
+    case Direction::Yplus: direction = Direction::Xplus; ++angle; break;
+    case Direction::Xminus: direction = Direction::Yplus; --angle; break;
+    case Direction::Yminus: direction = Direction::Xminus; --angle; break;
     default:
       throw Exception();
     }
     break;
-  case Static:
+  case Direction::Static:
     throw Exception();
   }
 
@@ -155,8 +159,8 @@ Piece & Piece::rotate(Direction d) {
 
 QDomElement Piece::toXML(QDomDocument & doc) const {
   QDomElement b = doc.createElement("piece");
-  b.setAttribute("direction", toStringDirection(direction));
-  b.setAttribute("angle", toStringAngle(angle));
+  b.setAttribute("direction", Direction::toString(direction));
+  b.setAttribute("angle", Angle::toString(angle));
   b.setAttribute("type", getName());
 
   QDomElement l = location.toXML(doc, "location");

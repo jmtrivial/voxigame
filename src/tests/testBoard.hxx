@@ -38,13 +38,13 @@ private slots:
   void testValidStructure(void) {
     int x = 10;
     Board board(x, x, x, Coord(0, 0, 0), Coord(x - 1, x - 1, x - 1));
-    StraightPiece p1(4, Coord(0, 0, 0), Xplus);
+    StraightPiece p1(4, Coord(0, 0, 0), Direction::Xplus);
     board.addPiece(p1);
     QVERIFY(board.isValid());
     QVERIFY(board.validWindows());
     QVERIFY(!board.hasPathBetweenWindows());
 
-    board.movePiece(board.begin(), Xplus);
+    board.movePiece(board.begin(), Direction::Xplus);
     QVERIFY(board.hasPathBetweenWindows());
 
     QVERIFY(board.checkInternalMemoryState());
@@ -54,8 +54,8 @@ private slots:
   void testValidNumberOfPieces(void) {
     int x = 10;
     Board board(x, x, x, Coord(0, 0, 0), Coord(x - 1, x - 1, x - 1));
-    StraightPiece p1(4, Coord(0, 0, 0), Xplus);
-    StraightPiece p2(4, Coord(0, 1, 0), Xplus);
+    StraightPiece p1(4, Coord(0, 0, 0), Direction::Xplus);
+    StraightPiece p2(4, Coord(0, 1, 0), Direction::Xplus);
     board.addPiece(p1);
     board.addPiece(p2);
     QVERIFY(board.hasPiece(p1));
@@ -67,8 +67,8 @@ private slots:
   void testAddRemove(void) {
     int x = 10;
     Board board(x, x, x, Coord(0, 0, 0), Coord(x - 1, x - 1, x - 1));
-    StraightPiece p1(4, Coord(0, 0, 0), Xplus);
-    StraightPiece p2(4, Coord(0, 1, 0), Xplus);
+    StraightPiece p1(4, Coord(0, 0, 0), Direction::Xplus);
+    StraightPiece p2(4, Coord(0, 1, 0), Direction::Xplus);
     board.addPiece(p1);
     board.addPiece(p2);
     board.removePiece(board.begin());
@@ -81,13 +81,13 @@ private slots:
   void testMove(void) {
     int x = 10;
     Board board1(x, x, x, Coord(0, 0, 0), Coord(x - 1, x - 1, x - 1));
-    StraightPiece p1(4, Coord(0, 0, 0), Xplus);
+    StraightPiece p1(4, Coord(0, 0, 0), Direction::Xplus);
     board1.addPiece(p1);
-    board1.movePiece(board1.begin(), Yplus);
-    board1.movePiece(board1.begin(), Yplus);
+    board1.movePiece(board1.begin(), Direction::Yplus);
+    board1.movePiece(board1.begin(), Direction::Yplus);
 
     Board board2(x, x, x, Coord(0, 0, 0), Coord(x - 1, x - 1, x - 1));
-    StraightPiece p2(4, Coord(0, 2, 0), Xplus);
+    StraightPiece p2(4, Coord(0, 2, 0), Direction::Xplus);
     board2.addPiece(p2);
 
     QVERIFY(board1 == board2);
@@ -100,7 +100,7 @@ private slots:
     {
       Board board(3, 3, 3, Coord(0, 1, 1), Coord(2, 1, 1));
       for(unsigned int i = 0; i != 3; ++i) {
-	board.addPattern(Pattern::tunnel(2, Coord(i, 0, 0)));
+        board.addPattern(Pattern::tunnel(2, Coord(i, 0, 0)));
       }
       QVERIFY(board.validWindows());
       QVERIFY(board.isStaticAndValid());
@@ -112,7 +112,7 @@ private slots:
       Board board(3, 3, 3, Coord(1, 1, 2), Coord(2, 1, 1));
 
       board.addPattern(Pattern::armchair(3, 2, 3, Coord(0, 0, 0)));
-      board.addPattern(Pattern::tunnel(2, Coord(0, 0, 2), Zplus));
+      board.addPattern(Pattern::tunnel(2, Coord(0, 0, 2), Direction::Zplus));
 
       QVERIFY(board.validWindows());
       QVERIFY(board.isStaticAndValid());
@@ -142,23 +142,22 @@ private slots:
       QVERIFY(board.hasPathBetweenWindows());
       QVERIFY(board.checkInternalMemoryState());
 
-      board.addPiece(StraightPiece(2, Coord(2, 0, 2), Yplus));
-      board.addPiece(StraightPiece(2, Coord(3, 0, 2), Yplus));
+      board.addPiece(StraightPiece(2, Coord(2, 0, 2), Direction::Yplus));
+      board.addPiece(StraightPiece(2, Coord(3, 0, 2), Direction::Yplus));
 
       QVERIFY(board.validWindows());
       QVERIFY(board.isStaticAndValid());
       QVERIFY(!board.hasPathBetweenWindows());
       QVERIFY(board.checkInternalMemoryState());
-
     }
 
     {
       Board board(3, 3, 2, Coord(1, 1, 0), Coord(1, 1, 1));
       for(unsigned int i = 0; i != 2; ++i) {
-	LPiece p1(3, 2, Coord(0, 0, i), Xplus, A0);
-	LPiece p2(3, 2, Coord(2, 2, i), Xminus, A0);
-	board.addPiece(p1);
-	board.addPiece(p2);
+        LPiece p1(3, 2, Coord(0, 0, i), Direction::Xplus, Angle::A0);
+        LPiece p2(3, 2, Coord(2, 2, i), Direction::Xminus, Angle::A0);
+        board.addPiece(p1);
+        board.addPiece(p2);
       }
       QVERIFY(board.validWindows());
       QVERIFY(board.isStaticAndValid());
@@ -178,8 +177,8 @@ private slots:
       coords.push_back(Coord(0, 2, 0));
       coords.push_back(Coord(0, 1, 0));
       for(unsigned int i = 0; i != 2; ++i) {
-	GenericPiece p1(coords, Coord(0, 0, i));
-	board.addPiece(p1);
+        GenericPiece p1(coords, Coord(0, 0, i));
+        board.addPiece(p1);
       }
       QVERIFY(board.validWindows());
       QVERIFY(board.isStaticAndValid());
@@ -191,9 +190,9 @@ private slots:
   void testSaveLoad(void) {
     int x = 10;
     Board board1(x, x, x, Coord(0, 0, 0), Coord(x - 1, x - 1, x - 1));
-    StraightPiece p1(4, Coord(0, 0, 0), Xplus);
-    StraightPiece p2(4, Coord(0, 1, 0), Xplus);
-    LPiece p3(4, 4, Coord(0, 2, 0), Xplus, A0);
+    StraightPiece p1(4, Coord(0, 0, 0), Direction::Xplus);
+    StraightPiece p2(4, Coord(0, 1, 0), Direction::Xplus);
+    LPiece p3(4, 4, Coord(0, 2, 0), Direction::Xplus, Angle::A0);
     QVector<Coord> coords;
     coords.push_back(Coord(0, 0, 0));
     coords.push_back(Coord(1, 0, 0));
@@ -203,7 +202,7 @@ private slots:
     coords.push_back(Coord(1, 0, 2));
     coords.push_back(Coord(0, 0, 2));
     coords.push_back(Coord(0, 0, 1));
-    GenericPiece p4(coords, Coord(0, 3, 0), Xplus, A0);
+    GenericPiece p4(coords, Coord(0, 3, 0), Direction::Xplus, Angle::A0);
 
     board1.addPiece(p1);
     board1.addPiece(p2);

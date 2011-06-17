@@ -36,7 +36,9 @@ private slots:
       const unsigned int size = 4;
       Board board(3, 3, 3 * size, Coord(1, 1, 0), Coord(1, 1, 11));
       for(unsigned int i = 0; i != size; ++i)
-	board.addPattern(Pattern::pipe(Coord(1, 1, 3 * i + 1), Zminus, Zplus));
+        board.addPattern(Pattern::pipe(Coord(1, 1, 3 * i + 1),
+                                       Direction::Zminus,
+                                       Direction::Zplus));
 
       QVERIFY(board.validWindows());
       QVERIFY(board.isStaticAndValid());
@@ -46,7 +48,9 @@ private slots:
 
     {
       Board board(3, 3, 3, Coord(1, 0, 1), Coord(0, 1, 1));
-      board.addPattern(Pattern::pipe(Coord(1, 1, 1), Yminus, Xminus));
+      board.addPattern(Pattern::pipe(Coord(1, 1, 1),
+                                     Direction::Yminus,
+                                     Direction::Xminus));
 
       QVERIFY(board.validWindows());
       QVERIFY(board.isStaticAndValid());
@@ -59,8 +63,12 @@ private slots:
   void testPipe1(void) {
     Board board(3, 6, 3, Coord(0, 1, 1), Coord(2, 4, 1));
 
-    board.addPattern(Pattern::pipe(Coord(1, 1, 1), Xminus, Yplus));
-    board.addPattern(Pattern::pipe(Coord(1, 4, 1), Yminus, Xplus));
+    board.addPattern(Pattern::pipe(Coord(1, 1, 1),
+                                   Direction::Xminus,
+                                   Direction::Yplus));
+    board.addPattern(Pattern::pipe(Coord(1, 4, 1),
+                                   Direction::Yminus,
+                                   Direction::Xplus));
 
     QVERIFY(board.validWindows());
     QVERIFY(board.isValid());
@@ -72,10 +80,18 @@ private slots:
   void testPipe2(void) {
     Board board(6, 6, 3, Coord(0, 1, 1), Coord(4, 1, 2));
 
-    board.addPattern(Pattern::pipe(Coord(1, 1, 1), Xminus, Yplus));
-    board.addPattern(Pattern::pipe(Coord(1, 4, 1), Yminus, Xplus));
-    board.addPattern(Pattern::pipe(Coord(4, 4, 1), Xminus, Yminus));
-    board.addPattern(Pattern::pipe(Coord(4, 1, 1), Yplus, Zplus));
+    board.addPattern(Pattern::pipe(Coord(1, 1, 1),
+                                   Direction::Xminus,
+                                   Direction::Yplus));
+    board.addPattern(Pattern::pipe(Coord(1, 4, 1),
+                                   Direction::Yminus,
+                                   Direction::Xplus));
+    board.addPattern(Pattern::pipe(Coord(4, 4, 1),
+                                   Direction::Xminus,
+                                   Direction::Yminus));
+    board.addPattern(Pattern::pipe(Coord(4, 1, 1),
+                                   Direction::Yplus,
+                                   Direction::Zplus));
 
     QVERIFY(board.validWindows());
     QVERIFY(board.isValid());
@@ -87,10 +103,18 @@ private slots:
   void testPipe3(void) {
     Board board(6, 6, 3, Coord(4, 1, 0), Coord(5, 4, 1));
 
-    board.addPattern(Pattern::pipe(Coord(4, 1, 1), Zminus, Xminus));
-    board.addPattern(Pattern::pipe(Coord(1, 1, 1), Xplus, Yplus));
-    board.addPattern(Pattern::pipe(Coord(1, 4, 1), Yminus, Xplus));
-    board.addPattern(Pattern::pipe(Coord(4, 4, 1), Xminus, Xplus));
+    board.addPattern(Pattern::pipe(Coord(4, 1, 1),
+                                   Direction::Zminus,
+                                   Direction::Xminus));
+    board.addPattern(Pattern::pipe(Coord(1, 1, 1),
+                                   Direction::Xplus,
+                                   Direction::Yplus));
+    board.addPattern(Pattern::pipe(Coord(1, 4, 1),
+                                   Direction::Yminus,
+                                   Direction::Xplus));
+    board.addPattern(Pattern::pipe(Coord(4, 4, 1),
+                                   Direction::Xminus,
+                                   Direction::Xplus));
 
     QVERIFY(board.validWindows());
     QVERIFY(board.isStaticAndValid());
@@ -102,16 +126,32 @@ private slots:
   void testPipe4(void) {
     Board board(6, 6, 6, Coord(0, 1, 1), Coord(5, 4, 4));
     // Z = 0
-    board.addPattern(Pattern::pipe(Coord(1, 1, 1), Xminus, Yplus));
-    board.addPattern(Pattern::pipe(Coord(1, 4, 1), Yminus, Xplus));
-    board.addPattern(Pattern::pipe(Coord(4, 4, 1), Xminus, Yminus));
-    board.addPattern(Pattern::pipe(Coord(4, 1, 1), Yplus, Zplus));
+    board.addPattern(Pattern::pipe(Coord(1, 1, 1),
+                                   Direction::Xminus,
+                                   Direction::Yplus));
+    board.addPattern(Pattern::pipe(Coord(1, 4, 1),
+                                   Direction::Yminus,
+                                   Direction::Xplus));
+    board.addPattern(Pattern::pipe(Coord(4, 4, 1),
+                                   Direction::Xminus,
+                                   Direction::Yminus));
+    board.addPattern(Pattern::pipe(Coord(4, 1, 1),
+                                   Direction::Yplus,
+                                   Direction::Zplus));
 
     // Z = 1
-    board.addPattern(Pattern::pipe(Coord(4, 1, 4), Zminus, Xminus));
-    board.addPattern(Pattern::pipe(Coord(1, 1, 4), Xplus, Yplus));
-    board.addPattern(Pattern::pipe(Coord(1, 4, 4), Yminus, Xplus));
-    board.addPattern(Pattern::pipe(Coord(4, 4, 4), Xminus, Xplus));
+    board.addPattern(Pattern::pipe(Coord(4, 1, 4),
+                                   Direction::Zminus,
+                                   Direction::Xminus));
+    board.addPattern(Pattern::pipe(Coord(1, 1, 4),
+                                   Direction::Xplus,
+                                   Direction::Yplus));
+    board.addPattern(Pattern::pipe(Coord(1, 4, 4),
+                                   Direction::Yminus,
+                                   Direction::Xplus));
+    board.addPattern(Pattern::pipe(Coord(4, 4, 4),
+                                   Direction::Xminus,
+                                   Direction::Xplus));
 
     QVERIFY(board.validWindows());
     QVERIFY(board.isStaticAndValid());
@@ -122,7 +162,7 @@ private slots:
   void testPipe5(void) {
     const unsigned int step = 4;
     Board board(6, 6, 12 * step, Coord(1, 1, 0), Coord(1, 1, 12 * step - 1));
-    board.addPattern(Pattern::spiral(Coord(0, 0, 0), Zplus, step));
+    board.addPattern(Pattern::spiral(Coord(0, 0, 0), Direction::Zplus, step));
 
     QVERIFY(board.validWindows());
     QVERIFY(board.isStaticAndValid());

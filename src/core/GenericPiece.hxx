@@ -39,19 +39,25 @@ public:
 
   /** constructor */
   GenericPiece(const QVector<Coord> & localCoords,
-           const Coord & c,
-           const Direction & d = Xplus, const Angle & a = A0) : Piece(c, d, a),
-                                    coords(localCoords),
-                                    bbox(localCoords),
-                                    cend(bbox.getCorner2() + Coord(1., 1., 1.)) {
+               const Coord & c,
+               const Direction::Type & d = Direction::Xplus,
+               const Angle::Type & a = Angle::A0)
+    : Piece(c, d, a),
+      coords(localCoords),
+      bbox(localCoords),
+      cend(bbox.getCorner2() + Coord(1, 1, 1))
+  {
     Q_ASSERT(!localCoords.isEmpty());
   }
+
   /** copy constructor */
-  GenericPiece(const GenericPiece & p) : Piece(p), coords(p.coords), bbox(p.bbox), cend(p.cend) { }
+  GenericPiece(const GenericPiece & p)
+    : Piece(p), coords(p.coords), bbox(p.bbox), cend(p.cend)
+  {}
 
   /** destructor */
-  virtual ~GenericPiece() {
-  }
+  virtual ~GenericPiece()
+  {}
 
   /** a clone tool */
   Piece * clone() const {
@@ -65,7 +71,7 @@ public:
 
   /** return the i-st voxel of the structure */
   inline Coord getLocalCoordById(unsigned int t) const {
-    if (t >= (unsigned int)coords.size())
+    if (t >= static_cast<unsigned int>(coords.size()))
       return cend;
     else
       return coords[t];
