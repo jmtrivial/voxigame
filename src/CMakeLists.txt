@@ -38,6 +38,7 @@ SET(VOXIGAME_CORE_SRCS
   core/GenericPiece.cxx
   core/Pattern.cxx
   core/PieceFactory.cxx
+  core/Face.cxx
 )
 INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR})
 ADD_LIBRARY(${VOXIGAME_CORE_LIB} ${VOXIGAME_CORE_SRCS})

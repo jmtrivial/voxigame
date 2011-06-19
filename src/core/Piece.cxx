@@ -169,3 +169,23 @@ QDomElement Piece::toXML(QDomDocument & doc) const {
   return b;
 }
 
+
+QList<Face> Piece::getFaces() const {
+  QList<Face> result;
+
+  for(const_iterator v = begin(); v != end(); ++v)
+    for(Direction::Type d = Direction::Xplus; d != Direction::Static; ++d) {
+      Face face(*v, d);
+      face.invert(); // get the opposite face
+      int fr = result.indexOf(face);
+      if (fr == -1) { // if the opposite face do not exist, add it
+	face.invert();
+	result.push_back(face);
+      }
+      else { // else, remove the opposite face: it's an inner face
+	result.erase(result.begin() + fr);
+      }
+    }
+
+  return result;
+}

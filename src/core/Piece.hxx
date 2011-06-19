@@ -24,9 +24,11 @@
 
 #include<QString>
 #include<QVector>
+#include<QSet>
 
 #include "core/Coord.hxx"
 #include "core/Box.hxx"
+#include "core/Face.hxx"
 class QDomDocument;
 class QDomElement;
 class QString;
@@ -200,6 +202,9 @@ public:
 	return true;
     return false;
   }
+
+  /** return the set of oriented external faces of the current piece */
+  QList<Face> getFaces() const;
 };
 
 #endif // VOXIGAME_CORE_PIECE_HXX

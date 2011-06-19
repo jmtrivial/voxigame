@@ -3,6 +3,7 @@ SET(VOXIGAME_TESTS
   testPiece
   testCoord
   testPatterns
+  testFaces
 )
 
 FOREACH(FILE ${VOXIGAME_TESTS})

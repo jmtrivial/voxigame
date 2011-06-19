@@ -139,6 +139,13 @@ public:
     return x != c.x || y != c.y || z != c.z;
   }
 
+  /** comparison operator used by ordering algorithms */
+  inline bool operator<(const Coord & c) const {
+    return ((x < c.x) ||
+	    ((x == c.x) && ((y < c.y) ||
+			    ((y == c.y) && (z < c.z)))));
+  }
+
   /** translation */
   inline Coord & operator +=(const Coord & coord) {
     return addX(coord.x).addY(coord.y).addZ(coord.z);
@@ -169,7 +176,7 @@ public:
   }
 
   /** create a new object by translation */
-  inline Coord getTanslate(const Direction::Type & direction,
+  inline Coord getTranslate(const Direction::Type & direction,
                            unsigned int t = 1) const
   {
     Coord result(*this);
