@@ -26,6 +26,7 @@
 
 #include "core/Piece.hxx"
 #include "core/StraightPiece.hxx"
+#include "core/GenericPiece.hxx"
 #include "core/Face.hxx"
 
 
@@ -54,4 +55,33 @@ private slots:
     QVERIFY(faces == pfaces);
   }
 
+  void testFaceCube(void) {
+    const unsigned int l = 6;
+
+    QVector<Coord> cds;
+    for(unsigned int x = 0; x != l; ++x)
+      for(unsigned int y = 0; y != l; ++y)
+	for(unsigned int z = 0; z != l; ++z)
+	  cds.push_back(Coord(x, y, z));
+    GenericPiece piece(cds, Coord(0, 0, 0), Direction::Xplus, Angle::A0);
+    QVERIFY(piece.nbVoxels() == l * l * l);
+
+    QList<Face> faces;
+    for(unsigned int i = 0; i != l; ++i)
+      for(unsigned int j = 0; j != l; ++j) {
+	faces.push_back(Face(Coord(0, i, j), Direction::Xminus));
+	faces.push_back(Face(Coord(l - 1, i, j), Direction::Xplus));
+	faces.push_back(Face(Coord(i, 0, j), Direction::Yminus));
+	faces.push_back(Face(Coord(i, l - 1, j), Direction::Yplus));
+	faces.push_back(Face(Coord(i, j, 0), Direction::Zminus));
+	faces.push_back(Face(Coord(i, j, l - 1), Direction::Zplus));
+      }
+
+    QList<Face> pfaces = piece.getFaces();
+
+    qSort(faces);
+    qSort(pfaces);
+
+    QVERIFY(faces == pfaces);
+  }
 };
