@@ -175,6 +175,11 @@ public:
     return *this;
   }
 
+  /** translation operator */
+  inline Coord & operator+=(const Direction::Type & direction) {
+    return translate(direction);
+  }
+
   /** create a new object by translation */
   inline Coord getTranslate(const Direction::Type & direction,
                            unsigned int t = 1) const

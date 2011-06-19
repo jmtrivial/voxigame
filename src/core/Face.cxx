@@ -31,14 +31,14 @@ int Face::sameLocation(const Face & face) const {
   if (*this == face)
     return 1;
   else if (Direction::areOpposite(face.direction, direction) &&
-	   (face.location.getTranslate((*this).direction) == location))
+	   (face.location + direction == location))
     return -1;
   else
     return 0;
 }
 
 Face & Face::invert() {
-  location.translate(direction);
+  location += direction;
   direction = -direction;
   return *this;
 }
