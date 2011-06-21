@@ -23,8 +23,11 @@ OPTION(BUILD_WITH_TESTS    "Build the unit tests"                ON)
 OPTION(BUILD_WITH_TOOLS    "Build the tools"                     ON)
 
 
-FIND_PACKAGE(Qt4 REQUIRED)
+FIND_PACKAGE(Qt4 REQUIRED QtCore QtXml)
 INCLUDE_DIRECTORIES(${QT_INCLUDES})
+SET(QT_USE_QTXML    TRUE)
+INCLUDE(${QT_USE_FILE})
+
 
 SET(VOXIGAME_CORE_LIB VoxigameCore)
 SET(VOXIGAME_EXE voxigame)

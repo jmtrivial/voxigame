@@ -18,6 +18,7 @@
 #   along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 #
 
+
 # add the files of the current library
 SET(VOXIGAME_CORE_SRCS
   Coord.cxx
