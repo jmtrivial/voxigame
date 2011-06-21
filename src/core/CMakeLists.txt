@@ -18,39 +18,19 @@
 #   along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-OPTION(BUILD_WITH_FRONTEND "Build the Qt front-end for Voxigame" ON)
-OPTION(BUILD_WITH_TESTS    "Build the unit tests"                ON)
+# add the files of the current library
+SET(VOXIGAME_CORE_SRCS
+  Coord.cxx
+  Box.cxx
+  Board.cxx
+  Piece.cxx
+  StraightPiece.cxx
+  LPiece.cxx
+  GenericPiece.cxx
+  Pattern.cxx
+  PieceFactory.cxx
+  Face.cxx
+)
 
-
-FIND_PACKAGE(Qt4 REQUIRED)
-
-SET(VOXIGAME_CORE_LIB VoxigameCore)
-SET(VOXIGAME_EXE voxigame)
-
-ADD_SUBDIRECTORY(core)
-
-
-# GUI
-IF(BUILD_WITH_FRONTEND)
-  IF(QT_QTOPENGL_FOUND)
-    SET(QT_USE_QTOPENGL TRUE)
-    SET(QT_USE_QTXML    TRUE)
-    INCLUDE(${QT_USE_FILE})
-    ADD_DEFINITIONS(${QT_DEFINITIONS})
-    INCLUDE_DIRECTORIES(${QT_INCLUDES})
-
-    ADD_SUBDIRECTORY(frontend)
-  ENDIF(QT_QTOPENGL_FOUND)
-ENDIF(BUILD_WITH_FRONTEND)
-
-
-# Testing
-IF(BUILD_WITH_TESTS)
-  ENABLE_TESTING()
-  SET(QT_USE_QTTEST TRUE)
-  SET(QT_USE_QTXML TRUE)
-  INCLUDE(${QT_USE_FILE})
-
-  INCLUDE_DIRECTORIES(tests)
-  ADD_SUBDIRECTORY(tests)
-ENDIF(BUILD_WITH_TESTS)
+INCLUDE_DIRECTORIES(${QT_INCLUDES})
+ADD_LIBRARY(${VOXIGAME_CORE_LIB} ${VOXIGAME_CORE_SRCS})

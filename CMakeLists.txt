@@ -27,5 +27,7 @@ SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wunused -Wno-long-long -W
 
 list(APPEND CMAKE_MODULE_PATH "${Voxigame_SOURCE_DIR}")
 
+INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR}/include/)
+
 # recursive call
 ADD_SUBDIRECTORY(src)
