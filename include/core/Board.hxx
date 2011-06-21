@@ -181,13 +181,15 @@ public:
   /** open the current board loading it from a file */
   Board(const QString & filename) {
     cells = NULL;
-    load(filename);
+    if (!load(filename))
+      throw Exception("Cannot load file");
   }
 
   /** open the current board loading it from a file */
   Board(QFile & f) {
     cells = NULL;
-    load(f);
+    if (!load(f))
+      throw Exception("Cannot load file");
   }
 
   /** destructor */
