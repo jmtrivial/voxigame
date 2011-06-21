@@ -18,12 +18,15 @@
 #   along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 #
 
+FIND_PACKAGE(Qt4 COMPONENTS QtCore QtGui QtXml REQUIRED)
+
 SET(VG2SVG_EXE vg2svg)
 
 SET(VG2SVG_SRCS
   vg2svg.cxx
   )
 
+MESSAGE(${QT_LIBRARIES} test)
 ADD_EXECUTABLE(${VG2SVG_EXE} ${VG2SVG_SRCS})
 TARGET_LINK_LIBRARIES(${VG2SVG_EXE}
   ${VOXIGAME_CORE_LIB} ${QT_LIBRARIES}

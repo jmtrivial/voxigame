@@ -19,11 +19,78 @@
 
  *****************************************************************************/
 
+#include <QCoreApplication>
+#include <QStringList>
+#include <QTextStream>
+#include <QFile>
+
 #include "core/Board.hxx"
 
-int main(int, char** )
+int main(int argc, char** argv)
 {
 
-  // TODO: not yet implemented
+  QTextStream out(stdout);
+  QTextStream err(stderr);
+
+  QCoreApplication app(argc, argv);
+  QStringList args;
+
+  args = app.arguments();
+
+  if (args.size() <= 1) {
+    out << "Parameters required. See help (--help)" << endl;
+    return 1;
+  }
+  if (args.contains("--help") ||
+      args.contains("-h")) {
+    out << "Usage: vg2svg [parameters] INPUT OUTPUT" << endl;
+    out << endl;
+    out << " Parameters:" << endl;
+    out << "  -h, --help       Print this help message" << endl;
+    return 0;
+  }
+
+
+  QString input;
+  QString output;
+
+  // load parameters
+  for(unsigned int i = 1; i != (unsigned int) args.size(); ++i) {
+    const QString & s = args[i];
+    if (s[0] == '-') {
+      if ((s == "-h") || (s == "--help"))
+	continue;
+    }
+    else {
+      if (input == "")
+	input = s;
+      else if (output == "")
+	output = s;
+      else {
+	err << "Error: unknown parameter (" << s << ")" << endl;
+	err << "Abort." << endl;
+	return 1;
+      }
+    }
+  }
+
+  // load file
+  QFile ifile(input);
+  if (!ifile.exists()) {
+    err << "Error: input file not readable (" << input << ")" << endl;
+    err << "Abort." << endl;
+    return 2;
+  }
+  out << "Loading file (" << input << ")" << endl;
+  Board board;
+
+  if (!board.load(ifile)) {
+    err << "Error: cannot load input file (" << input << ")" << endl;
+    err << "Abort." << endl;
+    return 3;
+  }
+
+  // TODO: add conversion
+
   return 0;
 }
