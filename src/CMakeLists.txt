@@ -20,15 +20,22 @@
 
 OPTION(BUILD_WITH_FRONTEND "Build the Qt front-end for Voxigame" ON)
 OPTION(BUILD_WITH_TESTS    "Build the unit tests"                ON)
+OPTION(BUILD_WITH_TOOLS    "Build the tools"                     ON)
 
 
 FIND_PACKAGE(Qt4 REQUIRED)
+INCLUDE_DIRECTORIES(${QT_INCLUDES})
 
 SET(VOXIGAME_CORE_LIB VoxigameCore)
 SET(VOXIGAME_EXE voxigame)
 
 ADD_SUBDIRECTORY(core)
 
+
+# Tools
+IF(BUILD_WITH_TOOLS)
+  ADD_SUBDIRECTORY(tools)
+ENDIF(BUILD_WITH_TOOLS)
 
 # GUI
 IF(BUILD_WITH_FRONTEND)

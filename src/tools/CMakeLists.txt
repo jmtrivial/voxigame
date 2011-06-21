@@ -18,18 +18,13 @@
 #   along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-# add the files of the current library
-SET(VOXIGAME_CORE_SRCS
-  Coord.cxx
-  Box.cxx
-  Board.cxx
-  Piece.cxx
-  StraightPiece.cxx
-  LPiece.cxx
-  GenericPiece.cxx
-  Pattern.cxx
-  PieceFactory.cxx
-  Face.cxx
-)
+SET(VG2SVG_EXE vg2svg)
 
-ADD_LIBRARY(${VOXIGAME_CORE_LIB} ${VOXIGAME_CORE_SRCS})
+SET(VG2SVG_SRCS
+  vg2svg.cxx
+  )
+
+ADD_EXECUTABLE(${VG2SVG_EXE} ${VG2SVG_SRCS})
+TARGET_LINK_LIBRARIES(${VG2SVG_EXE}
+  ${VOXIGAME_CORE_LIB} ${QT_LIBRARIES}
+  )
