@@ -27,6 +27,7 @@
 #include "core/Piece.hxx"
 #include "core/StraightPiece.hxx"
 #include "core/GenericPiece.hxx"
+#include "core/LPiece.hxx"
 #include "core/Face.hxx"
 
 
@@ -83,5 +84,26 @@ private slots:
     qSort(pfaces);
 
     QVERIFY(faces == pfaces);
+  }
+
+  void testFaceAndEdges(void) {
+    {
+      const unsigned int size = 4;
+      StraightPiece p(size, Coord(0, 0, 0), Direction::Xplus, Angle::A0);
+      QPair<QList<Face>, QList<Edge> > facesAndEdges = p.getFacesAndEdges();
+
+      QVERIFY(facesAndEdges.first.size() == size * 4 + 2);
+      QVERIFY(facesAndEdges.second.size() == size * 4 + 8);
+    }
+
+    {
+      const unsigned int size1 = 4;
+      const unsigned int size2 = 4;
+      LPiece p(size1, size2, Coord(0, 0, 0), Direction::Xplus, Angle::A0);
+      QPair<QList<Face>, QList<Edge> > facesAndEdges = p.getFacesAndEdges();
+
+      QVERIFY(facesAndEdges.first.size() == (size1 + size2 - 2) * 4 + 6);
+      QVERIFY(facesAndEdges.second.size() == (size1 + size2 - 2) * 4 + 14);
+    }
   }
 };
