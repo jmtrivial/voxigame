@@ -19,14 +19,15 @@
 
  *****************************************************************************/
 
-#ifndef VOXIGAME_CORE_FACE_HXX
-#define VOXIGAME_CORE_FACE_HXX
+#ifndef VOXIGAME_CORE_EDGE_HXX
+#define VOXIGAME_CORE_EDGE_HXX
 
 #include "core/Coord.hxx"
-#include "core/Edge.hxx"
 
-/** a face is defined as an oriented surfel (i.e. a coordinate, and a direction) */
-class Face {
+/** an edge is defined as an oriented linel (i.e. a coordinate, and a direction).
+ The coordinate corresponds to a voxel (x, y, z), and the linel starts with the vertex at
+ coordinate (x + .5, y + .5, z + .5) */
+class Edge {
 public:
 
 protected:
@@ -39,22 +40,20 @@ protected:
 public:
 
   /** constructor */
-  Face(const Coord & c,
-        const Direction::Type & d)
+  Edge(const Coord & c,
+       const Direction::Type & d)
     : location(c),
       direction(d)
   {
     Q_ASSERT(direction != Direction::Static);
   }
 
-  /** copy construtor */
-  Face(const Face & p)
-    : location(p.location),
-      direction(p.direction)
-  {}
+  /** copy constructor */
+  Edge(const Edge & e) : location(e.location), direction(e.direction) {
+  }
 
   /** destructor */
-  virtual ~Face() {}
+  virtual ~Edge() {}
 
   /** accessor */
   inline const Coord & getLocation() const { return location; }
@@ -62,28 +61,34 @@ public:
   inline const Direction::Type & getDirection() const { return direction; }
 
   /** comparison operator */
-  bool operator==(const Face & face) const;
+  bool operator==(const Edge & edge) const;
 
   /** comparison operator used by ordering algorithms */
-  bool operator<(const Face & face) const;
+  bool operator<(const Edge & edge) const;
 
   /** return 0 if the two pieces are not in the same location,
       1 if they are equal, or -1 if they are in the same location but in
       the opposite direction */
-  int sameLocation(const Face & face) const;
+  int sameLocation(const Edge & edge) const;
 
 
-  /** invert the surfel */
-  Face & invert();
+  /** invert the linel */
+  Edge & invert();
 
-  /** get the inverted version of the current surfel */
-  inline Face getInvert() const {
-    Face result(*this);
+  /** get the inverted version of the current linel */
+  inline Edge getInvert() const {
+    Edge result(*this);
     return result.invert();
   }
 
-  /** get the list of corresponding edges, preserving the ordering */
-  QList<Edge> getEdges() const;
+  /** normalize the linel, i.e. return a linel with positive direction */
+  Edge & normalize();
+
+  /** get a normalized version of the current linel */
+  inline Edge getNormalize() const {
+    Edge result(*this);
+    return result.normalize();
+  }
 };
 
-#endif // VOXIGAME_CORE_FACE_HXX
+#endif // VOXIGAME_CORE_EDGE_HXX

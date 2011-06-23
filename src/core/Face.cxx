@@ -46,3 +46,50 @@ Face & Face::invert() {
 bool Face::operator<(const Face & face) const {
   return (location < face.location) || ((location == face.location) && (direction < face.direction));
 }
+
+
+QList<Edge> Face::getEdges() const {
+  if ((direction == Direction::Xminus) || (direction == Direction::Yminus) || (direction == Direction::Zminus)) {
+    Face f(getInvert());
+    QList<Edge> edges = f.getEdges();
+    for(QList<Edge>::iterator e = edges.begin(); e != edges.end(); ++e) {
+      (*e).invert();
+    }
+    return edges;
+  }
+  else {
+    QList<Edge> edges;
+    Direction::Type d[4];
+    Coord start = location;
+    switch(direction) {
+    case Direction::Xplus:
+      d[0] = Direction::Yminus;
+      d[1] = Direction::Zminus;
+      d[2] = Direction::Yplus;
+      d[3] = Direction::Zplus;
+      break;
+    case Direction::Yplus:
+      d[0] = Direction::Zminus;
+      d[1] = Direction::Xminus;
+      d[2] = Direction::Zplus;
+      d[3] = Direction::Xplus;
+      break;
+    case Direction::Zplus:
+      d[0] = Direction::Xminus;
+      d[1] = Direction::Yminus;
+      d[2] = Direction::Xplus;
+      d[3] = Direction::Yplus;
+      break;
+    default:
+      return QList<Edge>();
+      break;
+    }
+    for(unsigned char i = 0; i != 4; ++i) {
+      edges.push_back(Edge(start, d[i]));
+      start += d[i];
+    }
+    Q_ASSERT(edges.size() == 4);
+    Q_ASSERT(start == location);
+    return edges;
+  }
+}

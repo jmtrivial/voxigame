@@ -31,6 +31,7 @@ SET(VOXIGAME_CORE_SRCS
   Pattern.cxx
   PieceFactory.cxx
   Face.cxx
+  Edge.cxx
 )
 
 ADD_LIBRARY(${VOXIGAME_CORE_LIB} ${VOXIGAME_CORE_SRCS})
