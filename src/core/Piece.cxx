@@ -24,6 +24,7 @@
 #include <QDomDocument>
 #include <QDomElement>
 #include <QString>
+#include <QMap>
 
 Piece::Piece(const QDomElement & elem, const QString & name)
 {
@@ -186,6 +187,39 @@ QList<Face> Piece::getFaces() const {
 	result.erase(result.begin() + fr);
       }
     }
+
+  return result;
+}
+
+QPair<QList<Face>, QList<Edge> > Piece::getFacesAndEdges() const {
+  QPair<QList<Face>, QList<Edge> > result;
+
+  // first compute faces
+  result.first = getFaces();
+
+  // then compute all edges
+  QMap<Edge, QList<Face> > map;
+  foreach(const Face & face, result.first) {
+    QList<Edge> edges = face.getEdges();
+    for(QList<Edge>::const_iterator e = edges.begin(); e != edges.end(); ++e) {
+      map[(*e).getNormalize()].push_back(face);
+    }
+  }
+
+  // then get only the non-flat edges
+  for(QMap<Edge, QList<Face> >::iterator e = map.begin(); e != map.end(); ++e) {
+    if ((*e).size() == 2) {
+      const Face & f1 = (*e)[0];
+      const Face & f2 = (*e)[1];
+      // if the two adjacent faces are not oriented in the same direction, it corresponds to a non-flat edge
+      if ((f1.getDirection() != f2.getDirection()) && (f1.getDirection() != -f2.getDirection()))
+	result.second.push_back(e.key());
+    }
+    else {
+      Q_ASSERT((*e).size() > 2);
+      result.second.push_back(e.key());
+    }
+  }
 
   return result;
 }
