@@ -1,3 +1,4 @@
+
 /*****************************************************************************
     This file is part of Voxigame.
 
@@ -181,7 +182,7 @@ private:
 
   void addFooter(QGraphicsScene & page, unsigned int nb) const;
 
-  static float getRatioYoverX(const Box & box);
+  static float getScale(const Box & box);
 
   void drawBoardAndCaption(QGraphicsScene & scene,
 			   const QRectF & region, const QVector<QSharedPointer<Piece> > & oldpieces,

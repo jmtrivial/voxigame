@@ -27,9 +27,9 @@
 #include "core/export/Manual.hxx"
 
 
-const QPointF Manual::xunit(-.5, .5);
-const QPointF Manual::yunit(0., 1);
-const QPointF Manual::zunit(-1, 0.);
+const QPointF Manual::xunit(-.5, .3);
+const QPointF Manual::yunit(1., 0.);
+const QPointF Manual::zunit(0., -1.);
 
 
 Manual::Manual(const Board & b) : board(b), substep(false), nbcolumns(2),
@@ -210,8 +210,10 @@ Manual::DrawingSize Manual::getDrawingSize(const QMap<QSharedPointer<Piece>, uns
 					   const QRectF & region,
 					   float maxWidthCaptionText) const {
   // get board properties
-  const float ratioBoard = getRatioYoverX(board.getBox()) * region.width();
+  const float ratioBoard = getScale(board.getBox()) * region.width();
   QSizeF dBoard = getDrawingSize(board.getBox(), ratioBoard);
+  qDebug(QString::fromUtf8("on part d'une largeur de %1, on arrive à un ratio de %2, donc un dessins de %4").
+	 arg(region.width()).arg(ratioBoard).arg(dBoard.width()).toAscii());
 
   // estimate the size to draw the caption
   Box b;
@@ -225,9 +227,10 @@ Manual::DrawingSize Manual::getDrawingSize(const QMap<QSharedPointer<Piece>, uns
   dPiece.rwidth() += maxWidthCaptionText + epsilonmargin;
 
   // estimate the number of pieces to draw by line in the caption
-  unsigned int nbPieceByLine = floor(dPiece.width() / region.width());
+  unsigned int nbPieceByLine = floor(region.width() / dPiece.width());
   if (nbPieceByLine == 0) {
     nbPieceByLine = 1;
+    qWarning("Missing readjust");
     // TODO: readjust big pieces ?
   }
   // estimate the number of lines
@@ -238,7 +241,7 @@ Manual::DrawingSize Manual::getDrawingSize(const QMap<QSharedPointer<Piece>, uns
 
   if (optimalHeight > region.height()) {
     // we have to adjust the board and piece list size
-    qWarning("Missing an adjustment");
+    qWarning(QString("Missing an adjustment: %1 vs %2 (%3 groups)").arg(optimalHeight).arg(region.height()).arg(pgroup.size()).toAscii());
     // TODO: adjust the sizes according to the constraint
     return DrawingSize(ratioBoard, ratioPiece, nbPieceByLine, dPiece);
   }
@@ -271,11 +274,13 @@ void Manual::drawBoardAndCaption(QGraphicsScene & scene,
   // draw the board
   QRectF boardRect(region);
   boardRect.setBottom(boardRect.top() + heightBoard);
+  scene.addPolygon(QPolygonF(boardRect), penBoardFront);
   drawBoard(scene, boardRect, drawingSize.getBoardRatio(), oldpieces, newpieces, drawNewPieces);
 
   // draw the caption
   QRectF captionRect(region);
   captionRect.setTop(captionRect.top() + heightBoard);
+  scene.addPolygon(QPolygonF(captionRect), penBoardFront);
   drawCaption(scene, captionRect, drawingSize, pgroup);
 
 }
@@ -341,7 +346,26 @@ void Manual::drawBoard(QGraphicsScene & scene,
 	       getDrawingLocation(pp100, origin, ratio));
   scene.addLine(lineF, penBoardFront);
 
-  // TODO: draw front part
+  QLineF lineG(getDrawingLocation(p100, origin, ratio),
+	       getDrawingLocation(pp001, origin, ratio));
+  scene.addLine(lineG, penBoardFront);
+  QLineF lineH(getDrawingLocation(p001, origin, ratio),
+	       getDrawingLocation(pp010, origin, ratio));
+  scene.addLine(lineH, penBoardFront);
+  QLineF lineI(getDrawingLocation(p010, origin, ratio),
+	       getDrawingLocation(pp100, origin, ratio));
+  scene.addLine(lineI, penBoardFront);
+
+  QLineF lineJ(getDrawingLocation(p010, origin, ratio),
+	       getDrawingLocation(pp001, origin, ratio));
+  scene.addLine(lineJ, penBoardFront);
+  QLineF lineK(getDrawingLocation(p100, origin, ratio),
+	       getDrawingLocation(pp010, origin, ratio));
+  scene.addLine(lineK, penBoardFront);
+  QLineF lineL(getDrawingLocation(p001, origin, ratio),
+	       getDrawingLocation(pp100, origin, ratio));
+  scene.addLine(lineL, penBoardFront);
+
 }
 
 void Manual::drawCaption(QGraphicsScene & scene,
@@ -427,16 +451,16 @@ QSizeF Manual::getDrawingSize(const Box & box, float ratio) {
   return QSizeF((c2.x() - c1.x()) * ratio, (c1.y() - c2.y()) * ratio);
 }
 
-float Manual::getRatioYoverX(const Box & box) {
+float Manual::getScale(const Box & box) {
   QPointF c1 = xunit * (box.getSizeX() + 1);
   QPointF c2 = yunit * (box.getSizeY() + 1) + zunit * (box.getSizeZ() + 1);
 
   if ((c1.x() == c2.x()) || (c1.y() == c2.y()))
     throw Exception("Bad configuration");
-  Q_ASSERT(c1.x() > c2.x());
-  Q_ASSERT(c1.y() < c2.y());
+  Q_ASSERT(c1.x() < c2.x());
+  Q_ASSERT(c1.y() > c2.y());
 
-  return (c1.y() - c2.y()) / (c2.x() - c1.x());
+  return 1. / (c2.x() - c1.x());
 }
 
 
