@@ -29,7 +29,7 @@
 
 Manual::Manual(const Board & b) : board(b), substep(false), nbcolumns(2),
 				  level(0), maxLevel(10), id(0),
-				  author("Unknown"), date(QDate()), pageSize(210, 297),
+				  author("Unknown"), date(QDate::currentDate()), pageSize(210, 297),
 				  innermargin(15.), outermargin(7.), bottommargin(5.), topmargin(5.),
 				  columnmargin(5.), footerwidth(20), headererwidth(15.),
 				  blackpen(Qt::black, .5){
@@ -103,6 +103,15 @@ QSharedPointer<QGraphicsScene> Manual::createFirstPage() const {
 		       + "\nLevel: " + (level != 0 ? QString("%1 / %2").arg(level).arg(maxLevel) : QString("- / %2").arg(maxLevel))
 		       + "\nSize: " + QString::fromUtf8("%1 × %2 × %3").arg(board.getSizeX()).arg(board.getSizeY()).arg(board.getSizeZ()));
   (*first).addItem(text);
+
+  // write author and creation date
+  QGraphicsTextItem * text2 = new QGraphicsTextItem;
+  (*text2).setFont(font);
+
+  (*text2).setPlainText("Author: " + author +
+		       "\nCreation: " + date.toString("d.M.yyyy"));
+  (*text2).setPos(innermargin, pageSize.height() - footerwidth - (*text).boundingRect().height());
+  (*first).addItem(text2);
 
   // TODO
 

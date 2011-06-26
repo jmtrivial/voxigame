@@ -47,7 +47,8 @@ int main(int argc, char** argv)
     out << "Usage: vg2pdf [parameters] INPUT OUTPUT" << endl;
     out << endl;
     out << " Parameters:" << endl;
-    out << "  --id=I           id (must be != 0)" << endl;
+    out << "  -a, --author=A   Author" << endl;
+    out << "  -i, --id=I       id (must be != 0)" << endl;
     out << "  -l, --level=L    Level (maximum: 10)" << endl;
     out << "  -h, --help       Print this help message" << endl;
     return 0;
@@ -56,6 +57,7 @@ int main(int argc, char** argv)
 
   QString input;
   QString output;
+  QString author;
   unsigned int level = 0;
   unsigned int id = 0;
 
@@ -80,7 +82,7 @@ int main(int argc, char** argv)
 	  return 1;
 	}
       }
-      else if (s == "--id") {
+      else if ((s == "-i") || (s == "--id")) {
 	++i;
 	if (i == (unsigned int)args.size()) {
 	  err << "Error: no given id (" + s + ")" << endl;
@@ -94,6 +96,15 @@ int main(int argc, char** argv)
 	  err << "Abort." << endl;
 	  return 1;
 	}
+      }
+      else if ((s == "-a") || (s == "--author")) {
+	++i;
+	if (i == (unsigned int)args.size()) {
+	  err << "Error: no given author name (" + s + ")" << endl;
+	  err << "Abort." << endl;
+	  return 1;
+	}
+	author = args[i];
       }
       else {
 	err << "Error: unknown parameter (" << s << ")" << endl;
@@ -133,6 +144,7 @@ int main(int argc, char** argv)
   Manual manual(board);
   manual.setLevel(level);
   manual.setId(id);
+  manual.setAuthor(author);
 
   out << "Save file (" << output << ")" << endl;
   return manual.toPDF(output) ? 0 : 4;
