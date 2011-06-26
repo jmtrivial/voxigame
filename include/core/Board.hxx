@@ -198,6 +198,14 @@ public:
       delete[] cells;
   }
 
+  /** accessor */
+  inline unsigned int getSizeX() const { return box.getSizeX(); }
+
+  /** accessor */
+  inline unsigned int getSizeY() const { return box.getSizeY(); }
+
+  /** accessor */
+  inline unsigned int getSizeZ() const { return box.getSizeZ(); }
 
   /** add a new piece in the board. This function throws an exception if the configuration is not valid according to
       the requirements of the board. */

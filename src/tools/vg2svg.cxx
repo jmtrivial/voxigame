@@ -19,7 +19,7 @@
 
  *****************************************************************************/
 
-#include <QCoreApplication>
+#include <QApplication>
 #include <QStringList>
 #include <QTextStream>
 #include <QFile>
@@ -33,7 +33,7 @@ int main(int argc, char** argv)
   QTextStream out(stdout);
   QTextStream err(stderr);
 
-  QCoreApplication app(argc, argv);
+  QApplication app(argc, argv);
   QStringList args;
 
   args = app.arguments();
@@ -47,6 +47,7 @@ int main(int argc, char** argv)
     out << "Usage: vg2svg [parameters] INPUT PREFIX" << endl;
     out << endl;
     out << " Parameters:" << endl;
+    out << "  -l, --level=L    Level (maximum: 10)" << endl;
     out << "  -s, --suffix=S   Suffix (without extension)" << endl;
     out << "  -h, --help       Print this help message" << endl;
     return 0;
@@ -56,6 +57,7 @@ int main(int argc, char** argv)
   QString input;
   QString prefix;
   QString suffix;
+  unsigned int level = 0;
 
   // load parameters
   for(unsigned int i = 1; i != (unsigned int) args.size(); ++i) {
@@ -63,7 +65,7 @@ int main(int argc, char** argv)
     if (s[0] == '-') {
       if ((s == "-h") || (s == "--help"))
 	continue;
-      if ((s == "-s") || (s == "--suffix")) {
+      else if ((s == "-s") || (s == "--suffix")) {
 	++i;
 	if (i == (unsigned int)args.size()) {
 	  err << "Error: no given suffix (" + s + ")" << endl;
@@ -71,6 +73,26 @@ int main(int argc, char** argv)
 	  return 1;
 	}
 	suffix = args[i];
+      }
+      else if ((s == "-l") || (s == "--level")) {
+	++i;
+	if (i == (unsigned int)args.size()) {
+	  err << "Error: no given level (" + s + ")" << endl;
+	  err << "Abort." << endl;
+	  return 1;
+	}
+	bool ok;
+	level = args[i].toUInt(&ok);
+	if ((!ok) || level > 10) {
+	  err << "Error: Wrong level value (" + s + "). It should be an integer value between 1 and 10." << endl;
+	  err << "Abort." << endl;
+	  return 1;
+	}
+      }
+      else {
+	err << "Error: unknown parameter (" << s << ")" << endl;
+	err << "Abort." << endl;
+	return 1;
       }
     }
     else {
@@ -103,6 +125,7 @@ int main(int argc, char** argv)
   }
 
   Manual manual(board);
+  manual.setLevel(level);
 
   out << "Save file (" << prefix << "[...]" << suffix << ".svg)" << endl;
   return manual.toSVG(prefix, suffix + ".svg") ? 0 : 4;

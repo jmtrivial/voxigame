@@ -22,18 +22,73 @@
 #include <QPainter>
 #include <QPrinter>
 #include <QSvgGenerator>
+#include <QGraphicsTextItem>
+
 #include "core/export/Manual.hxx"
 
 
-Manual::Manual(const Board & b) : board(b), substep(false), nbcolumns(2) {
+Manual::Manual(const Board & b) : board(b), substep(false), nbcolumns(2),
+				  level(0), maxLevel(10),
+				  author("Unknown"), date(QDate()), pageSize(210, 297),
+				  innermargin(15.), outermargin(7.), bottommargin(5.), topmargin(5.),
+				  columnmargin(5.), footerwidth(20), headererwidth(15.),
+				  blackpen(Qt::black, .5) {
 
 }
 
-void Manual::createFirstPage() {
+void Manual::addFooter(QGraphicsScene & page, unsigned int nb) const {
+  // first draw line
+  bool even = nb % 2 == 0;
+  QLineF line(even ? outermargin : innermargin, pageSize.height() - footerwidth,
+	      pageSize.width() - (even ?  innermargin : outermargin), pageSize.height() - footerwidth);
+  page.addLine(line, QPen(Qt::black, .1));
   // TODO
 }
 
+QSharedPointer<QGraphicsScene> Manual::createFirstPage() const {
+  QSharedPointer<QGraphicsScene> first = QSharedPointer<QGraphicsScene>(new QGraphicsScene(QRectF(0, 0, pageSize.width(), pageSize.height())));
+
+  // draw title
+  QFont titleFont("DejaVu Sans", 16, QFont::Bold);
+  QGraphicsTextItem * title = new QGraphicsTextItem;
+  (*title).setPos(innermargin, headererwidth);
+  (*title).setPlainText("Voxigame");
+  (*title).setFont(titleFont);
+
+  (*first).addItem(title);
+  QRectF btitle = (*title).sceneBoundingRect();
+
+  QLineF linetitle(innermargin, btitle.bottom(),
+		   pageSize.width() - outermargin, btitle.bottom());
+  (*first).addLine(linetitle, QPen(Qt::black, 5));
+
+  linetitle = QLineF(btitle.right(), btitle.top(),
+		     btitle.right(), btitle.bottom());
+  (*first).addLine(linetitle, QPen(Qt::black, 1));
+
+
+  // information about the game
+  QGraphicsTextItem * text = new QGraphicsTextItem;
+  QFont font("DejaVu Sans", 4);
+  (*text).setFont(font);
+
+  // draw level and size
+  (*text).setPos(btitle.right(), btitle.top());
+  (*text).setPlainText("Level: " + (level != 0 ? QString("%1/%2").arg(level).arg(maxLevel) : "unknown")
+		       + "\nSize: " + QString::fromUtf8("%1×%2×%3").arg(board.getSizeX()).arg(board.getSizeY()).arg(board.getSizeZ()));
+  (*first).addItem(text);
+
+  // TODO
+
+  addFooter(*first, 1);
+  return first;
+}
+
 void Manual::generate() {
+  if (!pages.isEmpty())
+    pages.clear();
+
+  pages.push_back(createFirstPage());
   // TODO
 }
 
@@ -54,8 +109,9 @@ bool Manual::toPDF(const QString & filename) {
     return false;
 
   for(QVector<QSharedPointer<QGraphicsScene> >::iterator page = pages.begin(); page != pages.end(); ++page) {
+    if (page != pages.begin())
+      printer.newPage();
     (**page).render(&pdfPainter);
-    printer.newPage();
   }
 
   pdfPainter.end();
@@ -72,9 +128,8 @@ bool Manual::toSVG(const QString & prefix, const QString & suffix) {
     QString filename = prefix + QString("%1").arg(i, 4, 10, QChar('0'))+ suffix;
     gen.setFileName(filename);
     // see bug http://bugreports.qt.nokia.com/browse/QTBUG-7091 : cannot generate real A4 pages
-    gen.setSize(QSize(595, 841));
-    gen.setViewBox(QRect(0, 0, 595, 841));
-    gen.setResolution(72);
+    gen.setSize(pageSize);
+    gen.setResolution(90);
     gen.setTitle("Voxigame manual");
     QPainter svgPainter;
     if (!svgPainter.begin(&gen))

@@ -47,6 +47,7 @@ int main(int argc, char** argv)
     out << "Usage: vg2pdf [parameters] INPUT OUTPUT" << endl;
     out << endl;
     out << " Parameters:" << endl;
+    out << "  -l, --level=L    Level (maximum: 10)" << endl;
     out << "  -h, --help       Print this help message" << endl;
     return 0;
   }
@@ -54,6 +55,7 @@ int main(int argc, char** argv)
 
   QString input;
   QString output;
+  unsigned int level = 0;
 
   // load parameters
   for(unsigned int i = 1; i != (unsigned int) args.size(); ++i) {
@@ -61,6 +63,26 @@ int main(int argc, char** argv)
     if (s[0] == '-') {
       if ((s == "-h") || (s == "--help"))
 	continue;
+      else if ((s == "-l") || (s == "--level")) {
+	++i;
+	if (i == (unsigned int)args.size()) {
+	  err << "Error: no given level (" + s + ")" << endl;
+	  err << "Abort." << endl;
+	  return 1;
+	}
+	bool ok;
+	level = args[i].toUInt(&ok);
+	if ((!ok) || level > 10) {
+	  err << "Error: Wrong level value (" + s + "). It should be an integer value between 1 and 10." << endl;
+	  err << "Abort." << endl;
+	  return 1;
+	}
+      }
+      else {
+	err << "Error: unknown parameter (" << s << ")" << endl;
+	err << "Abort." << endl;
+	return 1;
+      }
     }
     else {
       if (input == "")
@@ -92,6 +114,7 @@ int main(int argc, char** argv)
   }
 
   Manual manual(board);
+  manual.setLevel(level);
 
   out << "Save file (" << output << ")" << endl;
   return manual.toPDF(output) ? 0 : 4;

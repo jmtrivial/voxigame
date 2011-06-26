@@ -27,6 +27,9 @@
 #include <QSharedPointer>
 #include <QString>
 #include <QGraphicsScene>
+#include <QDate>
+#include <QSize>
+#include <QPen>
 #include "core/Board.hxx"
 
 /** a class to generate manuals from a board */
@@ -44,9 +47,39 @@ private:
   /** number of columns per page */
   unsigned int nbcolumns;
 
-  void createFirstPage();
+  /** level. 0 means unknown */
+  unsigned int level;
+
+  /** maximum level. */
+  unsigned int maxLevel;
+
+  /** author */
+  QString author;
+
+  /** date */
+  QDate date;
+
+  /** page size */
+  QSize pageSize;
+
+  double innermargin;
+  double outermargin;
+  double bottommargin;
+  double topmargin;
+
+  double columnmargin;
+
+  double footerwidth;
+  double headererwidth;
+
+  /** black pen */
+  QPen blackpen;
+
+  QSharedPointer<QGraphicsScene> createFirstPage() const;
 
   void generate();
+
+  void addFooter(QGraphicsScene & page, unsigned int nb) const;
 
 public:
   /** constructor
@@ -67,6 +100,42 @@ public:
   */
   inline Manual & setNbColumns(unsigned int n = 2) {
     nbcolumns = n;
+    return *this;
+  }
+
+  /** Set level. If the maximal level is smaller than
+      the given one, the function adjust the maximal level.
+      \param n Level value (0 means unknown).
+  */
+  inline Manual & setLevel(unsigned int l = 0) {
+    if (maxLevel < l)
+      maxLevel = l;
+    level = l;
+    return *this;
+  }
+
+  /** modifier
+      \param n maximal level
+  */
+  inline Manual & setMaxLevel(int l = 10) {
+    maxLevel = l;
+    return *this;
+  }
+
+  /** modifier
+      \param a author
+  */
+  inline Manual & setAuthor(const QString & a = "Unknown") {
+    author = a;
+    return *this;
+  }
+
+
+  /** modifier
+      \param d Creation date
+  */
+  inline Manual & setDate(const QDate & d = QDate()) {
+    date = d;
     return *this;
   }
 
