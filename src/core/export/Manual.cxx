@@ -21,6 +21,7 @@
 
 #include <QPainter>
 #include <QPrinter>
+#include <QSvgGenerator>
 #include "core/export/Manual.hxx"
 
 
@@ -43,13 +44,20 @@ bool Manual::toPDF(const QString & filename) {
   QPrinter printer;
   printer.setOutputFormat(QPrinter::PdfFormat);
   printer.setOutputFileName(filename);
+  printer.setOutputFormat(QPrinter::PdfFormat);
+  printer.setPaperSize(QPrinter::A4);
+  printer.setOrientation(QPrinter::Portrait);
+  printer.setFullPage(true);
+
   QPainter pdfPainter;
   if (!pdfPainter.begin(&printer))
     return false;
 
   // see http://forum.qtfr.org/viewtopic.php?id=8179
-  // TODO scene.render(pdfPainter);
-  // pdfPainter.newPage()
+  for(QVector<QSharedPointer<QGraphicsScene> >::iterator page = pages.begin(); page != pages.end(); ++page) {
+    (**page).render(&pdfPainter);
+    printer.newPage();
+  }
 
   pdfPainter.end();
   return true;
@@ -59,6 +67,21 @@ bool Manual::toSVG(const QString & prefix, const QString & suffix) {
   if (pages.size() == 0)
     generate();
 
-  // TODO
+  short int i = 0;
+  for(QVector<QSharedPointer<QGraphicsScene> >::iterator page = pages.begin(); page != pages.end(); ++page, ++i) {
+    QSvgGenerator gen;
+    QString filename = prefix + QString("%1").arg(i, 4, 10, QChar('0'))+ suffix;
+    gen.setFileName(filename);
+    // see http://bugreports.qt.nokia.com/browse/QTBUG-7091
+    gen.setSize(QSize(595, 841));
+    gen.setViewBox(QRect(0, 0, 595, 841));
+    gen.setResolution(72);
+    gen.setTitle("Voxigame manual");
+    QPainter svgPainter;
+    if (!svgPainter.begin(&gen))
+      return false;
+    (**page).render(&svgPainter);
+    svgPainter.end();
+  }
   return true;
 }

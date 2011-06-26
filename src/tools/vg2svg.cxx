@@ -104,5 +104,6 @@ int main(int argc, char** argv)
 
   Manual manual(board);
 
+  out << "Save file (" << prefix << "[...]" << suffix << ".svg)" << endl;
   return manual.toSVG(prefix, suffix + ".svg") ? 0 : 4;
 }

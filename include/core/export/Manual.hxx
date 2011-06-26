@@ -24,6 +24,7 @@
 
 
 #include <QVector>
+#include <QSharedPointer>
 #include <QString>
 #include <QGraphicsScene>
 #include "core/Board.hxx"
@@ -32,7 +33,7 @@
 class Manual {
 private:
   /** pages of the manual */
-  QVector<QGraphicsScene> pages;
+  QVector<QSharedPointer<QGraphicsScene> > pages;
 
   /** the board described by the manual */
   const Board & board;

@@ -19,7 +19,7 @@
 
  *****************************************************************************/
 
-#include <QCoreApplication>
+#include <QApplication>
 #include <QStringList>
 #include <QTextStream>
 #include <QFile>
@@ -33,7 +33,7 @@ int main(int argc, char** argv)
   QTextStream out(stdout);
   QTextStream err(stderr);
 
-  QCoreApplication app(argc, argv);
+  QApplication app(argc, argv);
   QStringList args;
 
   args = app.arguments();
@@ -93,5 +93,6 @@ int main(int argc, char** argv)
 
   Manual manual(board);
 
+  out << "Save file (" << output << ")" << endl;
   return manual.toPDF(output) ? 0 : 4;
 }
