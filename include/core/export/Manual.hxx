@@ -53,6 +53,9 @@ private:
   /** maximum level. */
   unsigned int maxLevel;
 
+  /** id. */
+  unsigned int id;
+
   /** author */
   QString author;
 
@@ -117,8 +120,16 @@ public:
   /** modifier
       \param n maximal level
   */
-  inline Manual & setMaxLevel(int l = 10) {
+  inline Manual & setMaxLevel(unsigned int l = 10) {
     maxLevel = l;
+    return *this;
+  }
+
+  /** modifier
+      \param i id
+  */
+  inline Manual & setId(unsigned int i = 0) {
+    id = i;
     return *this;
   }
 

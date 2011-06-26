@@ -28,11 +28,11 @@
 
 
 Manual::Manual(const Board & b) : board(b), substep(false), nbcolumns(2),
-				  level(0), maxLevel(10),
+				  level(0), maxLevel(10), id(0),
 				  author("Unknown"), date(QDate()), pageSize(210, 297),
 				  innermargin(15.), outermargin(7.), bottommargin(5.), topmargin(5.),
 				  columnmargin(5.), footerwidth(20), headererwidth(15.),
-				  blackpen(Qt::black, .5) {
+				  blackpen(Qt::black, .5){
 
 }
 
@@ -41,8 +41,33 @@ void Manual::addFooter(QGraphicsScene & page, unsigned int nb) const {
   bool even = nb % 2 == 0;
   QLineF line(even ? outermargin : innermargin, pageSize.height() - footerwidth,
 	      pageSize.width() - (even ?  innermargin : outermargin), pageSize.height() - footerwidth);
-  page.addLine(line, QPen(Qt::black, .1));
-  // TODO
+  page.addLine(line, QPen(Qt::black, 1));
+
+  // text
+  QGraphicsTextItem * text = new QGraphicsTextItem;
+  QFont font("DejaVu Sans", 4);
+  (*text).setFont(font);
+  (*text).setPlainText(QString::fromUtf8("Voxigame — ") + QString("#%1 (").arg(id) +
+		       (level != 0 ? QString("%1 / %2").arg(level).arg(maxLevel) : QString("- / %2").arg(maxLevel)) + ")");
+
+  QGraphicsTextItem * npage = new QGraphicsTextItem;
+  (*npage).setFont(font);
+  (*npage).setPlainText(QString("page %1").arg(nb));
+
+  if (even) {
+    (*npage).setPos(outermargin, pageSize.height() - footerwidth);
+    page.addItem(npage);
+
+    (*text).setPos(pageSize.width() - (*text).boundingRect().width() - innermargin, pageSize.height() - footerwidth);
+    page.addItem(text);
+  }
+  else {
+    (*text).setPos(innermargin, pageSize.height() - footerwidth);
+    page.addItem(text);
+
+    (*npage).setPos(pageSize.width() - (*npage).boundingRect().width() - outermargin, pageSize.height() - footerwidth);
+    page.addItem(npage);
+  }
 }
 
 QSharedPointer<QGraphicsScene> Manual::createFirstPage() const {
@@ -74,8 +99,9 @@ QSharedPointer<QGraphicsScene> Manual::createFirstPage() const {
 
   // draw level and size
   (*text).setPos(btitle.right(), btitle.top());
-  (*text).setPlainText("Level: " + (level != 0 ? QString("%1/%2").arg(level).arg(maxLevel) : "unknown")
-		       + "\nSize: " + QString::fromUtf8("%1×%2×%3").arg(board.getSizeX()).arg(board.getSizeY()).arg(board.getSizeZ()));
+  (*text).setPlainText("Id: " + (id != 0 ? QString("#%1").arg(id) : "-")
+		       + "\nLevel: " + (level != 0 ? QString("%1 / %2").arg(level).arg(maxLevel) : QString("- / %2").arg(maxLevel))
+		       + "\nSize: " + QString::fromUtf8("%1 × %2 × %3").arg(board.getSizeX()).arg(board.getSizeY()).arg(board.getSizeZ()));
   (*first).addItem(text);
 
   // TODO

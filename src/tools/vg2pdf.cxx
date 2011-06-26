@@ -47,6 +47,7 @@ int main(int argc, char** argv)
     out << "Usage: vg2pdf [parameters] INPUT OUTPUT" << endl;
     out << endl;
     out << " Parameters:" << endl;
+    out << "  --id=I           id (must be != 0)" << endl;
     out << "  -l, --level=L    Level (maximum: 10)" << endl;
     out << "  -h, --help       Print this help message" << endl;
     return 0;
@@ -56,6 +57,7 @@ int main(int argc, char** argv)
   QString input;
   QString output;
   unsigned int level = 0;
+  unsigned int id = 0;
 
   // load parameters
   for(unsigned int i = 1; i != (unsigned int) args.size(); ++i) {
@@ -74,6 +76,21 @@ int main(int argc, char** argv)
 	level = args[i].toUInt(&ok);
 	if ((!ok) || level > 10) {
 	  err << "Error: Wrong level value (" + s + "). It should be an integer value between 1 and 10." << endl;
+	  err << "Abort." << endl;
+	  return 1;
+	}
+      }
+      else if (s == "--id") {
+	++i;
+	if (i == (unsigned int)args.size()) {
+	  err << "Error: no given id (" + s + ")" << endl;
+	  err << "Abort." << endl;
+	  return 1;
+	}
+	bool ok;
+	id = args[i].toUInt(&ok);
+	if (!ok) {
+	  err << "Error: Wrong id value (" + s + "). It should be a positive integer." << endl;
 	  err << "Abort." << endl;
 	  return 1;
 	}
@@ -115,6 +132,7 @@ int main(int argc, char** argv)
 
   Manual manual(board);
   manual.setLevel(level);
+  manual.setId(id);
 
   out << "Save file (" << output << ")" << endl;
   return manual.toPDF(output) ? 0 : 4;
