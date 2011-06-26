@@ -191,7 +191,7 @@ QList<Face> Piece::getFaces() const {
   return result;
 }
 
-QPair<QList<Face>, QList<Edge> > Piece::getFacesAndEdges() const {
+QPair<QList<Face>, QList<Edge> > Piece::getFacesAndEdges(bool removeFlatEdges) const {
   QPair<QList<Face>, QList<Edge> > result;
 
   // first compute faces
@@ -212,7 +212,7 @@ QPair<QList<Face>, QList<Edge> > Piece::getFacesAndEdges() const {
       const Face & f1 = (*e)[0];
       const Face & f2 = (*e)[1];
       // if the two adjacent faces are not oriented in the same direction, it corresponds to a non-flat edge
-      if ((f1.getDirection() != f2.getDirection()) && (f1.getDirection() != -f2.getDirection()))
+      if ((!removeFlatEdges) || ((f1.getDirection() != f2.getDirection()) && (f1.getDirection() != -f2.getDirection())))
 	result.second.push_back(e.key());
     }
     else {

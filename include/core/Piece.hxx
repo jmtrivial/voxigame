@@ -218,8 +218,8 @@ public:
   QList<Face> getFaces() const;
 
   /** return the set of oriented external faces of the current piece,
-   and edges of the object (two adjacent coplanar faces do not create an edge). */
-  QPair<QList<Face>, QList<Edge> > getFacesAndEdges() const;
+   and edges of the object (two adjacent coplanar faces do not create an edge if \p removeFlatEdges = true). */
+  QPair<QList<Face>, QList<Edge> > getFacesAndEdges(bool removeFlatEdges = true) const;
 
 
   /** group pieces by similarity */
