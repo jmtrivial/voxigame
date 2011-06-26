@@ -94,6 +94,11 @@ private slots:
 
       QVERIFY(facesAndEdges.first.size() == size * 4 + 2);
       QVERIFY(facesAndEdges.second.size() == size * 4 + 8);
+
+      QPair<QList<Face>, QList<Edge> > facesAndEdgesAll = p.getFacesAndEdges(false);
+
+      QVERIFY(facesAndEdgesAll.first.size() == size * 4 + 2);
+      QVERIFY(facesAndEdgesAll.second.size() == size * 8 + 4);
     }
 
     {
@@ -104,6 +109,11 @@ private slots:
 
       QVERIFY(facesAndEdges.first.size() == (size1 + size2 - 2) * 4 + 6);
       QVERIFY(facesAndEdges.second.size() == (size1 + size2 - 2) * 4 + 14);
+
+      QPair<QList<Face>, QList<Edge> > facesAndEdgesAll = p.getFacesAndEdges(false);
+
+      QVERIFY(facesAndEdgesAll.first.size() == (size1 + size2 - 2) * 4 + 6);
+      QVERIFY(facesAndEdgesAll.second.size() == (size1 + size2 - 1) * 8 + 4);
     }
   }
 };
