@@ -223,3 +223,41 @@ QPair<QList<Face>, QList<Edge> > Piece::getFacesAndEdges() const {
 
   return result;
 }
+
+
+bool Piece::isSimilar(const Piece & piece) const {
+  const unsigned int n = nbVoxels();
+  if (n != piece.nbVoxels())
+    return false;
+
+  for(unsigned int i = 0; i != n; ++i)
+    if (getLocalCoordById(i) != piece.getLocalCoordById(i))
+      return false;
+
+  return true;
+}
+
+
+QMap<QSharedPointer<Piece>, unsigned int>
+Piece::groupBySimilarity(const QVector<QSharedPointer<Piece> > & pieces) {
+  QMap<QSharedPointer<Piece>, unsigned int> result;
+
+  for(QVector<QSharedPointer<Piece> >::const_iterator piece = pieces.begin();
+      piece != pieces.end(); ++piece) {
+    bool found = false;
+    for(QMap<QSharedPointer<Piece>, unsigned int>::iterator p = result.begin();
+	p != result.end(); ++p)
+      if ((*(p.key())).isSimilar(**piece)) {
+	++(*p);
+	found = true;
+	break;
+      }
+    if (!found) {
+      QSharedPointer<Piece> local = QSharedPointer<Piece>((**piece).clone());
+      (*local).resetTransform();
+      result[local] = 1;
+    }
+  }
+
+  return result;
+}

@@ -22,6 +22,7 @@
 #ifndef VOXIGAME_CORE_PIECE_HXX
 #define VOXIGAME_CORE_PIECE_HXX
 
+#include<QSharedPointer>
 #include<QString>
 #include<QVector>
 #include<QSet>
@@ -190,11 +191,20 @@ public:
   /** apply the given transformation */
   Piece & transform(const Angle::Type & a, const Direction::Type & d, const Coord & t);
 
+  /** reset transformation */
+  inline Piece & resetTransform() {
+    return transform(Angle::A0, Direction::Xplus, Coord(0, 0, 0));
+  }
+
   /** generate an xml version of the piece */
   virtual QDomElement toXML(QDomDocument & doc) const;
 
-  /** return true if the objects are similar (same kind, location, orientation, etc. */
+  /** return true if the objects are equal (same kind, location, orientation, etc. */
   virtual bool operator==(const Piece & piece) const;
+
+  /** return true if the objects are similar (without transformation,
+      the two pieces have the same coords voxel by voxel) */
+  bool isSimilar(const Piece & piece) const;
 
   /** return true if the current piece is using the given location */
   inline bool isUsing(const Coord & c) const {
@@ -210,6 +220,10 @@ public:
   /** return the set of oriented external faces of the current piece,
    and edges of the object (two adjacent coplanar faces do not create an edge). */
   QPair<QList<Face>, QList<Edge> > getFacesAndEdges() const;
+
+
+  /** group pieces by similarity */
+  static QMap<QSharedPointer<Piece>, unsigned int> groupBySimilarity(const QVector<QSharedPointer<Piece> > & pieces);
 };
 
 #endif // VOXIGAME_CORE_PIECE_HXX
