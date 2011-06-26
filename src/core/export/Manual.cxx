@@ -53,7 +53,6 @@ bool Manual::toPDF(const QString & filename) {
   if (!pdfPainter.begin(&printer))
     return false;
 
-  // see http://forum.qtfr.org/viewtopic.php?id=8179
   for(QVector<QSharedPointer<QGraphicsScene> >::iterator page = pages.begin(); page != pages.end(); ++page) {
     (**page).render(&pdfPainter);
     printer.newPage();
@@ -72,7 +71,7 @@ bool Manual::toSVG(const QString & prefix, const QString & suffix) {
     QSvgGenerator gen;
     QString filename = prefix + QString("%1").arg(i, 4, 10, QChar('0'))+ suffix;
     gen.setFileName(filename);
-    // see http://bugreports.qt.nokia.com/browse/QTBUG-7091
+    // see bug http://bugreports.qt.nokia.com/browse/QTBUG-7091 : cannot generate real A4 pages
     gen.setSize(QSize(595, 841));
     gen.setViewBox(QRect(0, 0, 595, 841));
     gen.setResolution(72);
