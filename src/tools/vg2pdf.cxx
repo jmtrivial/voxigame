@@ -44,18 +44,16 @@ int main(int argc, char** argv)
   }
   if (args.contains("--help") ||
       args.contains("-h")) {
-    out << "Usage: vg2svg [parameters] INPUT PREFIX" << endl;
+    out << "Usage: vg2pdf [parameters] INPUT OUTPUT" << endl;
     out << endl;
     out << " Parameters:" << endl;
-    out << "  -s, --suffix=S   Suffix (without extension)" << endl;
     out << "  -h, --help       Print this help message" << endl;
     return 0;
   }
 
 
   QString input;
-  QString prefix;
-  QString suffix;
+  QString output;
 
   // load parameters
   for(unsigned int i = 1; i != (unsigned int) args.size(); ++i) {
@@ -63,21 +61,12 @@ int main(int argc, char** argv)
     if (s[0] == '-') {
       if ((s == "-h") || (s == "--help"))
 	continue;
-      if ((s == "-s") || (s == "--suffix")) {
-	++i;
-	if (i == (unsigned int)args.size()) {
-	  err << "Error: no given suffix (" + s + ")" << endl;
-	  err << "Abort." << endl;
-	  return 1;
-	}
-	suffix = args[i];
-      }
     }
     else {
       if (input == "")
 	input = s;
-      else if (prefix == "")
-	prefix = s;
+      else if (output == "")
+	output = s;
       else {
 	err << "Error: unknown parameter (" << s << ")" << endl;
 	err << "Abort." << endl;
@@ -104,5 +93,5 @@ int main(int argc, char** argv)
 
   Manual manual(board);
 
-  return manual.toSVG(prefix, suffix + ".svg") ? 0 : 4;
+  return manual.toPDF(output) ? 0 : 4;
 }
