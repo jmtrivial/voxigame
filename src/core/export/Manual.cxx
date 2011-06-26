@@ -99,7 +99,7 @@ QSharedPointer<QGraphicsScene> Manual::createFirstPage() const {
 
   // draw level and size
   (*text).setPos(btitle.right(), btitle.top());
-  (*text).setPlainText("Id: " + (id != 0 ? QString("#%1").arg(id) : "-")
+  (*text).setPlainText("Puzzle: " + (id != 0 ? QString("#%1").arg(id) : "-")
 		       + "\nLevel: " + (level != 0 ? QString("%1 / %2").arg(level).arg(maxLevel) : QString("- / %2").arg(maxLevel))
 		       + "\nSize: " + QString::fromUtf8("%1 × %2 × %3").arg(board.getSizeX()).arg(board.getSizeY()).arg(board.getSizeZ()));
   (*first).addItem(text);
