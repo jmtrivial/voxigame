@@ -47,8 +47,8 @@ void Manual::addFooter(QGraphicsScene & page, unsigned int nb) const {
   QGraphicsTextItem * text = new QGraphicsTextItem;
   QFont font("DejaVu Sans", 4);
   (*text).setFont(font);
-  (*text).setPlainText(QString::fromUtf8("Voxigame — ") + QString("#%1 (").arg(id) +
-		       (level != 0 ? QString("%1 / %2").arg(level).arg(maxLevel) : QString("- / %2").arg(maxLevel)) + ")");
+  (*text).setPlainText("Voxigame " + QString::fromUtf8("#%1 — level ").arg(id) +
+		       (level != 0 ? QString("%1 / %2").arg(level).arg(maxLevel) : QString("- / %2").arg(maxLevel)));
 
   QGraphicsTextItem * npage = new QGraphicsTextItem;
   (*npage).setFont(font);
