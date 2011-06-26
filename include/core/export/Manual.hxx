@@ -35,6 +35,11 @@
 /** a class to generate manuals from a board */
 class Manual {
 private:
+
+  static const QPointF xunit;
+  static const QPointF yunit;
+  static const QPointF zunit;
+
   /** pages of the manual */
   QVector<QSharedPointer<QGraphicsScene> > pages;
 
@@ -75,14 +80,135 @@ private:
   double footerwidth;
   double headererwidth;
 
-  /** black pen */
-  QPen blackpen;
+  double epsilonmargin;
+
+  QPen penNewObject;
+  QPen penOldObject;
+
+  QBrush brushNewObject;
+  QBrush brushOldObject;
+
+  /** a class that describe the drawing configuration of a board and an associated caption */
+  class DrawingSize {
+  private:
+    float boardSize;
+    float captionSize;
+    unsigned int nbRows;
+    float widthCaption;
+    float heightCaption;
+  public:
+    /** default constructor */
+    DrawingSize(float bs, float ps, unsigned int nbr, const QSizeF & sc) : boardSize(bs), captionSize(ps),
+									   nbRows(nbr), widthCaption(sc.width()),
+									   heightCaption(sc.height()) {
+    }
+    /** copy constructor */
+    DrawingSize(const DrawingSize & ds) : boardSize(ds.boardSize), captionSize(ds.captionSize),
+					  nbRows(ds.nbRows), widthCaption(ds.widthCaption),
+					  heightCaption(ds.heightCaption) {
+    }
+    /** accessor */
+    float getBoardRatio() const { return boardSize; }
+
+    /** accessor */
+    float getCaptionRatio() const { return captionSize; }
+
+    /** accessor */
+    unsigned int getNbRows() const { return nbRows; }
+
+    /** accessor */
+    float getCaptionCellWidth() const { return widthCaption; }
+
+    /** accessor */
+    float getCaptionLineHeight() const { return heightCaption; }
+
+  };
+
+  /** this class describe an object to be drawn (a face or an edge),
+      with a "new" status */
+  class DObject {
+  private:
+    const Face * face;
+    const Edge * edge;
+    bool newObj;
+  public:
+    /** default constructor */
+    DObject();
+    /** constructor */
+    DObject(const Face & f, bool n);
+    /** constructor */
+    DObject(const Edge & e, bool n);
+    /** copy constructor */
+    DObject(const DObject & dobj);
+    /** destructor */
+    ~DObject() { }
+
+    /** affectation operator */
+    DObject & operator=(const DObject & dobj);
+
+    /** accessor */
+    inline bool isFace() const { return face != NULL; }
+    /** accessor */
+    inline bool isEdge() const { return edge != NULL; }
+    /** accessor */
+    inline bool isNew() const { return newObj; }
+    /** accessor */
+    const Face & getFace() const {
+      Q_ASSERT(face != NULL);
+      return *face;
+    }
+    /** accessor */
+    const Edge & getEdge() const {
+      Q_ASSERT(edge != NULL);
+      return *edge;
+    }
+    /** accessor */
+    float getMiddleX() const;
+    /** accessor */
+    float getMiddleY() const;
+    /** accessor */
+    float getMiddleZ() const;
+
+    /** comparison operator for display */
+    bool operator<(const DObject & dobj) const;
+  };
 
   QSharedPointer<QGraphicsScene> createFirstPage() const;
 
   void generate();
 
   void addFooter(QGraphicsScene & page, unsigned int nb) const;
+
+  static float getRatioYoverX(const Box & box);
+
+  void drawBoardAndCaption(QGraphicsScene & scene,
+			   const QRectF & region, const QVector<QSharedPointer<Piece> > & oldpieces,
+			   const QVector<QSharedPointer<Piece> > & newpieces, bool drawNewPieces = true) const;
+
+  void drawInitialBoard(QGraphicsScene & scene,
+			const QRectF & region, const QVector<QSharedPointer<Piece> > & newpieces) const;
+
+  static QSizeF getDrawingSize(const Box & box, float ratio);
+
+  DrawingSize getDrawingSize(const QMap<QSharedPointer<Piece>, unsigned int> & pgroup,
+			     const QRectF & region, float maxWidthCaptionText) const;
+
+  void drawBoard(QGraphicsScene & scene,
+		 const QRectF & region, float ratio,
+		 const QVector<QSharedPointer<Piece> > & oldpieces,
+		 const QVector<QSharedPointer<Piece> > & newpieces, bool drawNewPieces) const;
+
+  void drawCaption(QGraphicsScene & scene,
+		   const QRectF & region, const DrawingSize & dsize,
+		   const QMap<QSharedPointer<Piece>, unsigned int> & pgroup) const;
+
+  void drawObjects(QGraphicsScene &scene, const QPointF & point, QVector<DObject> & fae, float ratio) const;
+
+  void drawObject(QGraphicsScene &scene, const QPointF & point, const DObject & object, float ratio) const;
+
+  static QPointF getDrawingLocation(const Coord & coord, const QPointF & point, float ratio);
+
+  static QPointF getTranslationFromOrigin(const Box & box, float ratio);
 
 public:
   /** constructor

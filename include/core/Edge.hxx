@@ -66,6 +66,13 @@ public:
   /** comparison operator used by ordering algorithms */
   bool operator<(const Edge & edge) const;
 
+  /** accessor */
+  float getMiddleX() const;
+  /** accessor */
+  float getMiddleY() const;
+  /** accessor */
+  float getMiddleZ() const;
+
   /** return 0 if the two pieces are not in the same location,
       1 if they are equal, or -1 if they are in the same location but in
       the opposite direction */

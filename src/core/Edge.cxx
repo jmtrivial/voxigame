@@ -53,3 +53,31 @@ Edge & Edge::normalize() {
   else
     return *this;
 }
+
+
+float Edge::getMiddleX() const {
+  if (direction == Direction::Xplus)
+    return location.getX() + 1;
+  else if (direction == Direction::Xminus)
+    return location.getX();
+  else
+    return location.getX() + .5;
+}
+
+float Edge::getMiddleY() const {
+  if (direction == Direction::Yplus)
+    return location.getY() + 1;
+  else if (direction == Direction::Yminus)
+    return location.getY();
+  else
+    return location.getY() + .5;
+}
+
+float Edge::getMiddleZ() const {
+  if (direction == Direction::Zplus)
+    return location.getZ() + 1;
+  else if (direction == Direction::Zminus)
+    return location.getZ();
+  else
+    return location.getZ() + .5;
+}

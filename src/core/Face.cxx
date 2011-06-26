@@ -47,7 +47,6 @@ bool Face::operator<(const Face & face) const {
   return (location < face.location) || ((location == face.location) && (direction < face.direction));
 }
 
-
 QList<Edge> Face::getEdges() const {
   if ((direction == Direction::Xminus) || (direction == Direction::Yminus) || (direction == Direction::Zminus)) {
     Face f(getInvert());
@@ -92,4 +91,31 @@ QList<Edge> Face::getEdges() const {
     Q_ASSERT(start == location);
     return edges;
   }
+}
+
+float Face::getMiddleX() const {
+  if (direction == Direction::Xplus)
+    return location.getX() + 0.5;
+  else if (direction == Direction::Xminus)
+    return location.getX() - 0.5;
+  else
+    return location.getX();
+}
+
+float Face::getMiddleY() const {
+  if (direction == Direction::Yplus)
+    return location.getY() + 0.5;
+  else if (direction == Direction::Yminus)
+    return location.getY() - 0.5;
+  else
+    return location.getY();
+}
+
+float Face::getMiddleZ() const {
+  if (direction == Direction::Zplus)
+    return location.getZ() + 0.5;
+  else if (direction == Direction::Zminus)
+    return location.getZ() - 0.5;
+  else
+    return location.getZ();
 }

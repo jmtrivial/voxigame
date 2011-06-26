@@ -61,6 +61,13 @@ public:
   /** accessor */
   inline const Direction::Type & getDirection() const { return direction; }
 
+  /** accessor */
+  float getMiddleX() const;
+  /** accessor */
+  float getMiddleY() const;
+  /** accessor */
+  float getMiddleZ() const;
+
   /** comparison operator */
   bool operator==(const Face & face) const;
 
@@ -84,6 +91,7 @@ public:
 
   /** get the list of corresponding edges, preserving the ordering */
   QList<Edge> getEdges() const;
+
 };
 
 #endif // VOXIGAME_CORE_FACE_HXX

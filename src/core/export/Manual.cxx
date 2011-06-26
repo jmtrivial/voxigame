@@ -27,12 +27,28 @@
 #include "core/export/Manual.hxx"
 
 
+const QPointF Manual::xunit(-.5, .5);
+const QPointF Manual::yunit(0., 1);
+const QPointF Manual::zunit(-1, 0.);
+
+
 Manual::Manual(const Board & b) : board(b), substep(false), nbcolumns(2),
 				  level(0), maxLevel(10), id(0),
 				  author("Unknown"), date(QDate::currentDate()), pageSize(210, 297),
 				  innermargin(15.), outermargin(7.), bottommargin(5.), topmargin(5.),
 				  columnmargin(5.), footerwidth(20), headererwidth(15.),
-				  blackpen(Qt::black, .5){
+				  epsilonmargin(1.),
+				  penNewObject(Qt::black, .5),
+				  penOldObject(Qt::darkGray, .5),
+				  brushNewObject(Qt::white),
+				  brushOldObject(Qt::lightGray) {
+  if (!board.isValid())
+    throw Exception("Cannot draw a non-valid board");
+  if (!board.validWindows())
+    throw Exception("Cannot draw a board with non-valid windows");
+  if ((board.getSizeX() == 0) || (board.getSizeY() == 0) ||
+      (board.getSizeZ() == 0))
+    throw Exception("Cannot draw a flat board");
 
 }
 
@@ -101,7 +117,9 @@ QSharedPointer<QGraphicsScene> Manual::createFirstPage() const {
   (*text).setPos(btitle.right(), btitle.top());
   (*text).setPlainText("Puzzle: " + (id != 0 ? QString("#%1").arg(id) : "-")
 		       + "\nLevel: " + (level != 0 ? QString("%1 / %2").arg(level).arg(maxLevel) : QString("- / %2").arg(maxLevel))
-		       + "\nSize: " + QString::fromUtf8("%1 × %2 × %3").arg(board.getSizeX()).arg(board.getSizeY()).arg(board.getSizeZ()));
+		       + "\nSize: " + QString::fromUtf8("%1 × %2 × %3").arg(board.getSizeX()).arg(board.getSizeY()).arg(board.getSizeZ())
+		       + "\n" + (board.isStaticAndValid() ? "" : "Non static")
+		       + (board.hasPathBetweenWindows() ? "" : " No available path"));
   (*first).addItem(text);
 
   // write author and creation date
@@ -113,7 +131,12 @@ QSharedPointer<QGraphicsScene> Manual::createFirstPage() const {
   (*text2).setPos(innermargin, pageSize.height() - footerwidth - (*text).boundingRect().height());
   (*first).addItem(text2);
 
-  // TODO
+
+  // then draw the puzzle
+  drawInitialBoard(*first,
+		   QRectF(innermargin, btitle.bottom() + columnmargin,
+			  pageSize.width() - outermargin, pageSize.height() - footerwidth - (*text).boundingRect().height() - columnmargin),
+		   board.getPieces());
 
   addFooter(*first, 1);
   return first;
@@ -173,4 +196,274 @@ bool Manual::toSVG(const QString & prefix, const QString & suffix) {
     svgPainter.end();
   }
   return true;
+}
+
+
+void Manual::drawInitialBoard(QGraphicsScene & scene, const QRectF & region, const QVector<QSharedPointer<Piece> > & newpieces) const {
+  drawBoardAndCaption(scene, region, QVector<QSharedPointer<Piece> >(), newpieces, false);
+}
+
+
+Manual::DrawingSize Manual::getDrawingSize(const QMap<QSharedPointer<Piece>, unsigned int> & pgroup,
+					   const QRectF & region,
+					   float maxWidthCaptionText) const {
+  // get board properties
+  const float ratioBoard = getRatioYoverX(board.getBox()) * region.width();
+  QSizeF dBoard = getDrawingSize(board.getBox(), ratioBoard);
+
+  // estimate the size to draw the caption
+  Box b;
+  if (!pgroup.isEmpty()) {
+    b = (*(pgroup.begin().key())).getBoundedBox();
+    for(QMap<QSharedPointer<Piece>, unsigned int>::const_iterator p = pgroup.begin() + 1; p != pgroup.end(); ++p)
+      b.add((*(p.key())).getBoundedBox());
+  }
+  float ratioPiece = ratioBoard;
+  QSizeF dPiece = getDrawingSize(b, ratioBoard);
+  dPiece.rwidth() += maxWidthCaptionText + epsilonmargin;
+
+  // estimate the number of pieces to draw by line in the caption
+  unsigned int nbPieceByLine = floor(dPiece.width() / region.width());
+  if (nbPieceByLine == 0) {
+    nbPieceByLine = 1;
+    // TODO: readjust big pieces ?
+  }
+  // estimate the number of lines
+  const unsigned int nbLines = ceil(pgroup.size() / nbPieceByLine);
+
+  // get the optimal height
+  float optimalHeight = dBoard.height() + nbLines * dPiece.height();
+
+  if (optimalHeight > region.height()) {
+    // we have to adjust the board and piece list size
+    qWarning("Missing an adjustment");
+    // TODO: adjust the sizes according to the constraint
+    return DrawingSize(ratioBoard, ratioPiece, nbPieceByLine, dPiece);
+  }
+  else {
+    return DrawingSize(ratioBoard, ratioPiece, nbPieceByLine, dPiece);
+  }
+}
+
+void Manual::drawBoardAndCaption(QGraphicsScene & scene,
+				 const QRectF & region, const QVector<QSharedPointer<Piece> > & oldpieces,
+				 const QVector<QSharedPointer<Piece> > & newpieces, bool drawNewPieces) const {
+  QMap<QSharedPointer<Piece>, unsigned int> pgroup = Piece::groupBySimilarity(newpieces);
+
+  unsigned int nbPieces = 0;
+  for(QMap<QSharedPointer<Piece>, unsigned int>::const_iterator p = pgroup.begin(); p != pgroup.end(); ++p)
+    if (nbPieces < (*p))
+      nbPieces = *p;
+
+
+  QGraphicsTextItem * text = new QGraphicsTextItem;
+  QFont font("DejaVu Sans", 4);
+  (*text).setFont(font);
+  (*text).setPlainText(QString::fromUtf8("× %1").arg(nbPieces));
+  const float maxWidthCaptionText = (*text).boundingRect().width();
+
+  // get the drawing sizes
+  DrawingSize drawingSize = getDrawingSize(pgroup, region, maxWidthCaptionText);
+  const float heightBoard = getDrawingSize(board.getBox(), drawingSize.getBoardRatio()).height();
+
+  // draw the board
+  QRectF boardRect(region);
+  boardRect.setBottom(boardRect.top() + heightBoard);
+  drawBoard(scene, boardRect, drawingSize.getBoardRatio(), oldpieces, newpieces, drawNewPieces);
+
+  // draw the caption
+  QRectF captionRect(region);
+  captionRect.setTop(captionRect.top() + heightBoard);
+  drawCaption(scene, captionRect, drawingSize, pgroup);
+
+}
+
+void Manual::drawBoard(QGraphicsScene & scene,
+		       const QRectF & region, float ratio,
+		       const QVector<QSharedPointer<Piece> > & oldpieces,
+		       const QVector<QSharedPointer<Piece> > & newpieces, bool drawNewPieces) const {
+  //const Box & box = board.getBox();
+  // TODO: draw back part
+
+  // create drawing objects
+  QVector<DObject> objects;
+  for(QVector<QSharedPointer<Piece> >::const_iterator p = oldpieces.begin(); p != oldpieces.end(); ++p) {
+    QPair<QList<Face>, QList<Edge> > fae = (**p).getFacesAndEdges();
+    for(QList<Face>::const_iterator f = fae.first.begin(); f != fae.first.end(); ++f)
+      objects.push_back(DObject(*f, false));
+    for(QList<Edge>::const_iterator e = fae.second.begin(); e != fae.second.end(); ++e)
+      objects.push_back(DObject(*e, false));
+  }
+
+  if (drawNewPieces)
+    for(QVector<QSharedPointer<Piece> >::const_iterator p = newpieces.begin(); p != newpieces.end(); ++p) {
+      QPair<QList<Face>, QList<Edge> > fae = (**p).getFacesAndEdges();
+      for(QList<Face>::const_iterator f = fae.first.begin(); f != fae.first.end(); ++f)
+	objects.push_back(DObject(*f, true));
+      for(QList<Edge>::const_iterator e = fae.second.begin(); e != fae.second.end(); ++e)
+      objects.push_back(DObject(*e, true));
+    }
+
+  // then draw it
+  QPointF origin(region.topLeft());
+  origin += getTranslationFromOrigin(board.getBox(), ratio);
+  drawObjects(scene, origin, objects, ratio);
+
+
+  // TODO: draw front part
+}
+
+void Manual::drawCaption(QGraphicsScene & scene,
+			 const QRectF & region, const DrawingSize & dsize,
+			 const QMap<QSharedPointer<Piece>, unsigned int> & pgroup) const {
+  float ypos = region.top();
+  unsigned int row = 0;
+
+  for (QMap<QSharedPointer<Piece>, unsigned int>::const_iterator piece = pgroup.begin(); piece != pgroup.end(); ++piece) {
+    QPair<QList<Face>, QList<Edge> > fae = (*(piece.key())).getFacesAndEdges(false);
+    QVector<DObject> objects;
+    for(QList<Face>::const_iterator f = fae.first.begin(); f != fae.first.end(); ++f)
+      objects.push_back(DObject(*f, true));
+    for(QList<Edge>::const_iterator e = fae.second.begin(); e != fae.second.end(); ++e)
+      objects.push_back(DObject(*e, true));
+
+    QPointF origin(region.left() + row * dsize.getCaptionCellWidth(), ypos);
+    origin += getTranslationFromOrigin((*(piece.key())).getBoundedBox(), dsize.getCaptionRatio());
+    drawObjects(scene, origin, objects, dsize.getCaptionRatio());
+
+    // TODO: add text
+
+    ++row;
+    if (row == dsize.getNbRows()) {
+      row = 0;
+      ypos += dsize.getCaptionLineHeight();
+    }
+  }
+
+}
+
+void Manual::drawObjects(QGraphicsScene &scene, const QPointF & point, QVector<DObject> & fae, float ratio) const {
+  qSort(fae.begin(), fae.end());
+
+  for(QVector<DObject>::const_iterator object = fae.begin(); object != fae.end(); ++object)
+    drawObject(scene, point, *object, ratio);
+
+}
+
+void Manual::drawObject(QGraphicsScene &scene, const QPointF & point, const DObject & object, float ratio) const {
+  if (object.isFace()) {
+
+    QList<Edge> edges = object.getFace().getEdges();
+    Q_ASSERT(edges.size() == 4);
+    QVector<QPointF> points;
+    for(QList<Edge>::const_iterator e = edges.begin(); e != edges.end(); ++e) {
+      CoordF p = CoordF((*e).getLocation()) + CoordF(.5, .5, .5);
+      points.push_back(getDrawingLocation(p, point, ratio));
+    }
+
+    QPolygonF polygon(points);
+
+    scene.addPolygon(polygon, QPen(), object.isNew() ? brushNewObject : brushOldObject);
+  }
+  else {
+    Q_ASSERT(object.isEdge());
+    CoordF p = CoordF(object.getEdge().getLocation()) + CoordF(.5, .5, .5);
+    QLineF line(getDrawingLocation(p, point, ratio),
+		getDrawingLocation(p + object.getEdge().getDirection(), point, ratio));
+    scene.addLine(line, object.isNew() ? penNewObject : penOldObject);
+  }
+}
+
+
+QPointF Manual::getTranslationFromOrigin(const Box & box, float ratio) {
+  QPointF result(0., 0.);
+  result -= ratio * xunit * (box.getSizeX() + 1);
+  result.ry() = 0.;
+  result -= ratio * zunit * (box.getSizeZ() + 1);
+  return result;
+}
+
+QPointF Manual::getDrawingLocation(const Coord & coord, const QPointF & point, float ratio) {
+  QPointF result(point);
+  result += ratio * (xunit * coord.getX() + yunit * coord.getY() + zunit * coord.getZ());
+  return result;
+}
+
+QSizeF Manual::getDrawingSize(const Box & box, float ratio) {
+  QPointF c1 = xunit * (box.getSizeX() + 1);
+  QPointF c2 = yunit * (box.getSizeY() + 1) + zunit * (box.getSizeZ() + 1);
+
+  return QSizeF((c2.x() - c1.x()) * ratio, (c1.y() - c2.y()) * ratio);
+}
+
+float Manual::getRatioYoverX(const Box & box) {
+  QPointF c1 = xunit * (box.getSizeX() + 1);
+  QPointF c2 = yunit * (box.getSizeY() + 1) + zunit * (box.getSizeZ() + 1);
+
+  if ((c1.x() == c2.x()) || (c1.y() == c2.y()))
+    throw Exception("Bad configuration");
+  Q_ASSERT(c1.x() > c2.x());
+  Q_ASSERT(c1.y() < c2.y());
+
+  return (c1.y() - c2.y()) / (c2.x() - c1.x());
+}
+
+
+Manual::DObject & Manual::DObject::operator=(const DObject & dobj) {
+  face = dobj.face;
+  edge = dobj.edge;
+  newObj = dobj.newObj;
+  return *this;
+}
+
+Manual::DObject::DObject() : face(NULL), edge(NULL), newObj(false) {
+}
+Manual::DObject::DObject(const Face & f, bool n) : face(&f), edge(NULL), newObj(n) {
+}
+Manual::DObject::DObject(const Edge & e, bool n) : face(NULL), edge(&e), newObj(n) {
+}
+Manual::DObject::DObject(const DObject & dobj) : face(dobj.face), edge(dobj.edge), newObj(dobj.newObj) {
+}
+
+
+float Manual::DObject::getMiddleX() const {
+  if (isFace())
+    return (*face).getMiddleX();
+  else {
+    Q_ASSERT(isEdge());
+    return (*edge).getMiddleX();
+  }
+}
+float Manual::DObject::getMiddleY() const {
+  if (isFace())
+    return (*face).getMiddleY();
+  else {
+    Q_ASSERT(isEdge());
+    return (*edge).getMiddleY();
+  }
+}
+float Manual::DObject::getMiddleZ() const {
+  if (isFace())
+    return (*face).getMiddleZ();
+  else {
+    Q_ASSERT(isEdge());
+    return (*edge).getMiddleZ();
+  }
+}
+
+
+bool Manual::DObject::operator<(const DObject & dobj) const {
+  if (getMiddleZ() < dobj.getMiddleZ())
+    return true;
+  else if (getMiddleZ() > dobj.getMiddleZ())
+    return false;
+  else {
+    if ((getMiddleY() < dobj.getMiddleY()) &&
+	(getMiddleZ() < dobj.getMiddleZ()))
+      return true;
+    if (isEdge())
+      return true;
+    else
+      return false;
+  }
 }

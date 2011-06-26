@@ -107,6 +107,11 @@ public:
     return *this;
   }
 
+  /** after adding the given box, the box is the bounded box of the two boxes */
+  inline Box & add(const Box & b) {
+    return add(b.corner1).add(b.corner2);
+  }
+
   /** transform the box using first a rotation arround axis Xplus with angle \p angle,
       then reorient the coordinate system along the main given direction, then apply a translation */
   Box & transform(const Angle::Type & angle,

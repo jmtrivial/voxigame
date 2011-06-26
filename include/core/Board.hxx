@@ -207,6 +207,14 @@ public:
   /** accessor */
   inline unsigned int getSizeZ() const { return box.getSizeZ(); }
 
+  /** accessor */
+  inline const Box & getBox() const { return box; }
+
+  /** accessor */
+  inline const QVector<QSharedPointer<Piece> > & getPieces() const {
+    return pieces;
+  }
+
   /** add a new piece in the board. This function throws an exception if the configuration is not valid according to
       the requirements of the board. */
   Board & addPiece(const Piece & b);
