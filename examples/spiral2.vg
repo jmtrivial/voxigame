@@ -1,0 +1,2125 @@
+<!DOCTYPE VoxigameBoard>
+<board allow_outside="false" allow_intersections="false">
+ <windows>
+  <window1 x="1" y="1" z="0"/>
+  <window2 x="1" y="1" z="47"/>
+ </windows>
+ <geometry>
+  <corner1 x="0" y="0" z="0"/>
+  <corner2 x="5" y="5" z="47"/>
+ </geometry>
+ <pieces>
+  <piece direction="-x" length="3" type="straight" angle="0">
+   <location x="2" y="0" z="1"/>
+  </piece>
+  <piece direction="-x" length="3" type="straight" angle="0">
+   <location x="2" y="0" z="0"/>
+  </piece>
+  <piece direction="y" length="2" type="straight" angle="0">
+   <location x="1" y="0" z="2"/>
+  </piece>
+  <piece direction="-z" length="3" type="straight" angle="0">
+   <location x="2" y="1" z="2"/>
+  </piece>
+  <piece direction="-z" length="3" type="straight" angle="0">
+   <location x="0" y="1" z="2"/>
+  </piece>
+  <piece direction="-z" length="2" type="straight" angle="0">
+   <location x="2" y="2" z="2"/>
+  </piece>
+  <piece direction="-x" length="2" type="straight" angle="0">
+   <location x="2" y="2" z="0"/>
+  </piece>
+  <piece direction="z" length="2" type="straight" angle="0">
+   <location x="0" y="2" z="0"/>
+  </piece>
+  <piece direction="x" length="2" type="straight" angle="0">
+   <location x="0" y="2" z="2"/>
+  </piece>
+  <piece direction="-z" length="1" type="straight" angle="0">
+   <location x="2" y="0" z="2"/>
+  </piece>
+  <piece direction="-z" length="1" type="straight" angle="0">
+   <location x="0" y="0" z="2"/>
+  </piece>
+  <piece direction="-z" length="3" type="straight" angle="0">
+   <location x="0" y="4" z="2"/>
+  </piece>
+  <piece direction="-z" length="3" type="straight" angle="0">
+   <location x="0" y="3" z="2"/>
+  </piece>
+  <piece direction="x" length="2" type="straight" angle="0">
+   <location x="0" y="5" z="1"/>
+  </piece>
+  <piece direction="-y" length="3" type="straight" angle="0">
+   <location x="1" y="5" z="2"/>
+  </piece>
+  <piece direction="-y" length="3" type="straight" angle="0">
+   <location x="1" y="5" z="0"/>
+  </piece>
+  <piece direction="-y" length="2" type="straight" angle="0">
+   <location x="2" y="5" z="2"/>
+  </piece>
+  <piece direction="-z" length="2" type="straight" angle="0">
+   <location x="2" y="3" z="2"/>
+  </piece>
+  <piece direction="y" length="2" type="straight" angle="0">
+   <location x="2" y="3" z="0"/>
+  </piece>
+  <piece direction="z" length="2" type="straight" angle="0">
+   <location x="2" y="5" z="0"/>
+  </piece>
+  <piece direction="-y" length="1" type="straight" angle="0">
+   <location x="0" y="5" z="2"/>
+  </piece>
+  <piece direction="-y" length="1" type="straight" angle="0">
+   <location x="0" y="5" z="0"/>
+  </piece>
+  <piece direction="-z" length="3" type="straight" angle="0">
+   <location x="4" y="5" z="2"/>
+  </piece>
+  <piece direction="-z" length="3" type="straight" angle="0">
+   <location x="3" y="5" z="2"/>
+  </piece>
+  <piece direction="-y" length="2" type="straight" angle="0">
+   <location x="5" y="5" z="1"/>
+  </piece>
+  <piece direction="-x" length="3" type="straight" angle="270">
+   <location x="5" y="4" z="2"/>
+  </piece>
+  <piece direction="-x" length="3" type="straight" angle="270">
+   <location x="5" y="4" z="0"/>
+  </piece>
+  <piece direction="-x" length="2" type="straight" angle="270">
+   <location x="5" y="3" z="2"/>
+  </piece>
+  <piece direction="-z" length="2" type="straight" angle="0">
+   <location x="3" y="3" z="2"/>
+  </piece>
+  <piece direction="x" length="2" type="straight" angle="270">
+   <location x="3" y="3" z="0"/>
+  </piece>
+  <piece direction="z" length="2" type="straight" angle="0">
+   <location x="5" y="3" z="0"/>
+  </piece>
+  <piece direction="-x" length="1" type="straight" angle="270">
+   <location x="5" y="5" z="2"/>
+  </piece>
+  <piece direction="-x" length="1" type="straight" angle="270">
+   <location x="5" y="5" z="0"/>
+  </piece>
+  <piece direction="-x" length="3" type="straight" angle="0">
+   <location x="5" y="1" z="0"/>
+  </piece>
+  <piece direction="-x" length="3" type="straight" angle="0">
+   <location x="5" y="2" z="0"/>
+  </piece>
+  <piece direction="z" length="2" type="straight" angle="0">
+   <location x="4" y="0" z="0"/>
+  </piece>
+  <piece direction="y" length="3" type="straight" angle="270">
+   <location x="5" y="0" z="1"/>
+  </piece>
+  <piece direction="y" length="3" type="straight" angle="270">
+   <location x="3" y="0" z="1"/>
+  </piece>
+  <piece direction="y" length="2" type="straight" angle="270">
+   <location x="5" y="0" z="2"/>
+  </piece>
+  <piece direction="-x" length="2" type="straight" angle="0">
+   <location x="5" y="2" z="2"/>
+  </piece>
+  <piece direction="-y" length="2" type="straight" angle="270">
+   <location x="3" y="2" z="2"/>
+  </piece>
+  <piece direction="x" length="2" type="straight" angle="0">
+   <location x="3" y="0" z="2"/>
+  </piece>
+  <piece direction="y" length="1" type="straight" angle="270">
+   <location x="5" y="0" z="0"/>
+  </piece>
+  <piece direction="y" length="1" type="straight" angle="270">
+   <location x="3" y="0" z="0"/>
+  </piece>
+  <piece direction="-y" length="3" type="straight" angle="0">
+   <location x="5" y="2" z="4"/>
+  </piece>
+  <piece direction="-y" length="3" type="straight" angle="0">
+   <location x="5" y="2" z="3"/>
+  </piece>
+  <piece direction="-x" length="2" type="straight" angle="0">
+   <location x="5" y="1" z="5"/>
+  </piece>
+  <piece direction="-z" length="3" type="straight" angle="270">
+   <location x="4" y="2" z="5"/>
+  </piece>
+  <piece direction="-z" length="3" type="straight" angle="270">
+   <location x="4" y="0" z="5"/>
+  </piece>
+  <piece direction="-z" length="2" type="straight" angle="270">
+   <location x="3" y="2" z="5"/>
+  </piece>
+  <piece direction="-y" length="2" type="straight" angle="0">
+   <location x="3" y="2" z="3"/>
+  </piece>
+  <piece direction="z" length="2" type="straight" angle="270">
+   <location x="3" y="0" z="3"/>
+  </piece>
+  <piece direction="y" length="2" type="straight" angle="0">
+   <location x="3" y="0" z="5"/>
+  </piece>
+  <piece direction="-z" length="1" type="straight" angle="270">
+   <location x="5" y="2" z="5"/>
+  </piece>
+  <piece direction="-z" length="1" type="straight" angle="270">
+   <location x="5" y="0" z="5"/>
+  </piece>
+  <piece direction="-z" length="3" type="straight" angle="0">
+   <location x="1" y="0" z="5"/>
+  </piece>
+  <piece direction="-z" length="3" type="straight" angle="0">
+   <location x="2" y="0" z="5"/>
+  </piece>
+  <piece direction="y" length="2" type="straight" angle="0">
+   <location x="0" y="0" z="4"/>
+  </piece>
+  <piece direction="x" length="3" type="straight" angle="270">
+   <location x="0" y="1" z="5"/>
+  </piece>
+  <piece direction="x" length="3" type="straight" angle="270">
+   <location x="0" y="1" z="3"/>
+  </piece>
+  <piece direction="x" length="2" type="straight" angle="270">
+   <location x="0" y="2" z="5"/>
+  </piece>
+  <piece direction="-z" length="2" type="straight" angle="0">
+   <location x="2" y="2" z="5"/>
+  </piece>
+  <piece direction="-x" length="2" type="straight" angle="270">
+   <location x="2" y="2" z="3"/>
+  </piece>
+  <piece direction="z" length="2" type="straight" angle="0">
+   <location x="0" y="2" z="3"/>
+  </piece>
+  <piece direction="x" length="1" type="straight" angle="270">
+   <location x="0" y="0" z="5"/>
+  </piece>
+  <piece direction="x" length="1" type="straight" angle="270">
+   <location x="0" y="0" z="3"/>
+  </piece>
+  <piece direction="-z" length="3" type="straight" angle="0">
+   <location x="0" y="4" z="5"/>
+  </piece>
+  <piece direction="-z" length="3" type="straight" angle="0">
+   <location x="0" y="3" z="5"/>
+  </piece>
+  <piece direction="x" length="2" type="straight" angle="0">
+   <location x="0" y="5" z="4"/>
+  </piece>
+  <piece direction="-y" length="3" type="straight" angle="0">
+   <location x="1" y="5" z="5"/>
+  </piece>
+  <piece direction="-y" length="3" type="straight" angle="0">
+   <location x="1" y="5" z="3"/>
+  </piece>
+  <piece direction="-y" length="2" type="straight" angle="0">
+   <location x="2" y="5" z="5"/>
+  </piece>
+  <piece direction="-z" length="2" type="straight" angle="0">
+   <location x="2" y="3" z="5"/>
+  </piece>
+  <piece direction="y" length="2" type="straight" angle="0">
+   <location x="2" y="3" z="3"/>
+  </piece>
+  <piece direction="z" length="2" type="straight" angle="0">
+   <location x="2" y="5" z="3"/>
+  </piece>
+  <piece direction="-y" length="1" type="straight" angle="0">
+   <location x="0" y="5" z="5"/>
+  </piece>
+  <piece direction="-y" length="1" type="straight" angle="0">
+   <location x="0" y="5" z="3"/>
+  </piece>
+  <piece direction="-y" length="3" type="straight" angle="0">
+   <location x="4" y="5" z="3"/>
+  </piece>
+  <piece direction="-y" length="3" type="straight" angle="0">
+   <location x="3" y="5" z="3"/>
+  </piece>
+  <piece direction="z" length="2" type="straight" angle="0">
+   <location x="5" y="4" z="3"/>
+  </piece>
+  <piece direction="-x" length="3" type="straight" angle="0">
+   <location x="5" y="5" z="4"/>
+  </piece>
+  <piece direction="-x" length="3" type="straight" angle="0">
+   <location x="5" y="3" z="4"/>
+  </piece>
+  <piece direction="-x" length="2" type="straight" angle="0">
+   <location x="5" y="5" z="5"/>
+  </piece>
+  <piece direction="-y" length="2" type="straight" angle="0">
+   <location x="3" y="5" z="5"/>
+  </piece>
+  <piece direction="x" length="2" type="straight" angle="0">
+   <location x="3" y="3" z="5"/>
+  </piece>
+  <piece direction="y" length="2" type="straight" angle="0">
+   <location x="5" y="3" z="5"/>
+  </piece>
+  <piece direction="-x" length="1" type="straight" angle="0">
+   <location x="5" y="5" z="3"/>
+  </piece>
+  <piece direction="-x" length="1" type="straight" angle="0">
+   <location x="5" y="3" z="3"/>
+  </piece>
+  <piece direction="x" length="3" type="straight" angle="0">
+   <location x="3" y="5" z="7"/>
+  </piece>
+  <piece direction="x" length="3" type="straight" angle="0">
+   <location x="3" y="5" z="6"/>
+  </piece>
+  <piece direction="-y" length="2" type="straight" angle="0">
+   <location x="4" y="5" z="8"/>
+  </piece>
+  <piece direction="-z" length="3" type="straight" angle="180">
+   <location x="3" y="4" z="8"/>
+  </piece>
+  <piece direction="-z" length="3" type="straight" angle="180">
+   <location x="5" y="4" z="8"/>
+  </piece>
+  <piece direction="-z" length="2" type="straight" angle="180">
+   <location x="3" y="3" z="8"/>
+  </piece>
+  <piece direction="x" length="2" type="straight" angle="0">
+   <location x="3" y="3" z="6"/>
+  </piece>
+  <piece direction="z" length="2" type="straight" angle="180">
+   <location x="5" y="3" z="6"/>
+  </piece>
+  <piece direction="-x" length="2" type="straight" angle="0">
+   <location x="5" y="3" z="8"/>
+  </piece>
+  <piece direction="-z" length="1" type="straight" angle="180">
+   <location x="3" y="5" z="8"/>
+  </piece>
+  <piece direction="-z" length="1" type="straight" angle="180">
+   <location x="5" y="5" z="8"/>
+  </piece>
+  <piece direction="-z" length="3" type="straight" angle="0">
+   <location x="5" y="1" z="8"/>
+  </piece>
+  <piece direction="-z" length="3" type="straight" angle="0">
+   <location x="5" y="2" z="8"/>
+  </piece>
+  <piece direction="-x" length="2" type="straight" angle="0">
+   <location x="5" y="0" z="7"/>
+  </piece>
+  <piece direction="y" length="3" type="straight" angle="180">
+   <location x="4" y="0" z="8"/>
+  </piece>
+  <piece direction="y" length="3" type="straight" angle="180">
+   <location x="4" y="0" z="6"/>
+  </piece>
+  <piece direction="y" length="2" type="straight" angle="180">
+   <location x="3" y="0" z="8"/>
+  </piece>
+  <piece direction="-z" length="2" type="straight" angle="0">
+   <location x="3" y="2" z="8"/>
+  </piece>
+  <piece direction="-y" length="2" type="straight" angle="180">
+   <location x="3" y="2" z="6"/>
+  </piece>
+  <piece direction="z" length="2" type="straight" angle="0">
+   <location x="3" y="0" z="6"/>
+  </piece>
+  <piece direction="y" length="1" type="straight" angle="180">
+   <location x="5" y="0" z="8"/>
+  </piece>
+  <piece direction="y" length="1" type="straight" angle="180">
+   <location x="5" y="0" z="6"/>
+  </piece>
+  <piece direction="-z" length="3" type="straight" angle="0">
+   <location x="1" y="0" z="8"/>
+  </piece>
+  <piece direction="-z" length="3" type="straight" angle="0">
+   <location x="2" y="0" z="8"/>
+  </piece>
+  <piece direction="y" length="2" type="straight" angle="0">
+   <location x="0" y="0" z="7"/>
+  </piece>
+  <piece direction="x" length="3" type="straight" angle="270">
+   <location x="0" y="1" z="8"/>
+  </piece>
+  <piece direction="x" length="3" type="straight" angle="270">
+   <location x="0" y="1" z="6"/>
+  </piece>
+  <piece direction="x" length="2" type="straight" angle="270">
+   <location x="0" y="2" z="8"/>
+  </piece>
+  <piece direction="-z" length="2" type="straight" angle="0">
+   <location x="2" y="2" z="8"/>
+  </piece>
+  <piece direction="-x" length="2" type="straight" angle="270">
+   <location x="2" y="2" z="6"/>
+  </piece>
+  <piece direction="z" length="2" type="straight" angle="0">
+   <location x="0" y="2" z="6"/>
+  </piece>
+  <piece direction="x" length="1" type="straight" angle="270">
+   <location x="0" y="0" z="8"/>
+  </piece>
+  <piece direction="x" length="1" type="straight" angle="270">
+   <location x="0" y="0" z="6"/>
+  </piece>
+  <piece direction="x" length="3" type="straight" angle="0">
+   <location x="0" y="4" z="6"/>
+  </piece>
+  <piece direction="x" length="3" type="straight" angle="0">
+   <location x="0" y="3" z="6"/>
+  </piece>
+  <piece direction="z" length="2" type="straight" angle="0">
+   <location x="1" y="5" z="6"/>
+  </piece>
+  <piece direction="-y" length="3" type="straight" angle="90">
+   <location x="0" y="5" z="7"/>
+  </piece>
+  <piece direction="-y" length="3" type="straight" angle="90">
+   <location x="2" y="5" z="7"/>
+  </piece>
+  <piece direction="-y" length="2" type="straight" angle="90">
+   <location x="0" y="5" z="8"/>
+  </piece>
+  <piece direction="x" length="2" type="straight" angle="0">
+   <location x="0" y="3" z="8"/>
+  </piece>
+  <piece direction="y" length="2" type="straight" angle="90">
+   <location x="2" y="3" z="8"/>
+  </piece>
+  <piece direction="-x" length="2" type="straight" angle="0">
+   <location x="2" y="5" z="8"/>
+  </piece>
+  <piece direction="-y" length="1" type="straight" angle="90">
+   <location x="0" y="5" z="6"/>
+  </piece>
+  <piece direction="-y" length="1" type="straight" angle="90">
+   <location x="2" y="5" z="6"/>
+  </piece>
+  <piece direction="y" length="3" type="straight" angle="0">
+   <location x="0" y="3" z="10"/>
+  </piece>
+  <piece direction="y" length="3" type="straight" angle="0">
+   <location x="0" y="3" z="9"/>
+  </piece>
+  <piece direction="x" length="2" type="straight" angle="0">
+   <location x="0" y="4" z="11"/>
+  </piece>
+  <piece direction="-z" length="3" type="straight" angle="90">
+   <location x="1" y="3" z="11"/>
+  </piece>
+  <piece direction="-z" length="3" type="straight" angle="90">
+   <location x="1" y="5" z="11"/>
+  </piece>
+  <piece direction="-z" length="2" type="straight" angle="90">
+   <location x="2" y="3" z="11"/>
+  </piece>
+  <piece direction="y" length="2" type="straight" angle="0">
+   <location x="2" y="3" z="9"/>
+  </piece>
+  <piece direction="z" length="2" type="straight" angle="90">
+   <location x="2" y="5" z="9"/>
+  </piece>
+  <piece direction="-y" length="2" type="straight" angle="0">
+   <location x="2" y="5" z="11"/>
+  </piece>
+  <piece direction="-z" length="1" type="straight" angle="90">
+   <location x="0" y="3" z="11"/>
+  </piece>
+  <piece direction="-z" length="1" type="straight" angle="90">
+   <location x="0" y="5" z="11"/>
+  </piece>
+  <piece direction="-z" length="3" type="straight" angle="0">
+   <location x="4" y="5" z="11"/>
+  </piece>
+  <piece direction="-z" length="3" type="straight" angle="0">
+   <location x="3" y="5" z="11"/>
+  </piece>
+  <piece direction="-y" length="2" type="straight" angle="0">
+   <location x="5" y="5" z="10"/>
+  </piece>
+  <piece direction="-x" length="3" type="straight" angle="270">
+   <location x="5" y="4" z="11"/>
+  </piece>
+  <piece direction="-x" length="3" type="straight" angle="270">
+   <location x="5" y="4" z="9"/>
+  </piece>
+  <piece direction="-x" length="2" type="straight" angle="270">
+   <location x="5" y="3" z="11"/>
+  </piece>
+  <piece direction="-z" length="2" type="straight" angle="0">
+   <location x="3" y="3" z="11"/>
+  </piece>
+  <piece direction="x" length="2" type="straight" angle="270">
+   <location x="3" y="3" z="9"/>
+  </piece>
+  <piece direction="z" length="2" type="straight" angle="0">
+   <location x="5" y="3" z="9"/>
+  </piece>
+  <piece direction="-x" length="1" type="straight" angle="270">
+   <location x="5" y="5" z="11"/>
+  </piece>
+  <piece direction="-x" length="1" type="straight" angle="270">
+   <location x="5" y="5" z="9"/>
+  </piece>
+  <piece direction="-z" length="3" type="straight" angle="0">
+   <location x="5" y="1" z="11"/>
+  </piece>
+  <piece direction="-z" length="3" type="straight" angle="0">
+   <location x="5" y="2" z="11"/>
+  </piece>
+  <piece direction="-x" length="2" type="straight" angle="0">
+   <location x="5" y="0" z="10"/>
+  </piece>
+  <piece direction="y" length="3" type="straight" angle="180">
+   <location x="4" y="0" z="11"/>
+  </piece>
+  <piece direction="y" length="3" type="straight" angle="180">
+   <location x="4" y="0" z="9"/>
+  </piece>
+  <piece direction="y" length="2" type="straight" angle="180">
+   <location x="3" y="0" z="11"/>
+  </piece>
+  <piece direction="-z" length="2" type="straight" angle="0">
+   <location x="3" y="2" z="11"/>
+  </piece>
+  <piece direction="-y" length="2" type="straight" angle="180">
+   <location x="3" y="2" z="9"/>
+  </piece>
+  <piece direction="z" length="2" type="straight" angle="0">
+   <location x="3" y="0" z="9"/>
+  </piece>
+  <piece direction="y" length="1" type="straight" angle="180">
+   <location x="5" y="0" z="11"/>
+  </piece>
+  <piece direction="y" length="1" type="straight" angle="180">
+   <location x="5" y="0" z="9"/>
+  </piece>
+  <piece direction="y" length="3" type="straight" angle="0">
+   <location x="1" y="0" z="9"/>
+  </piece>
+  <piece direction="y" length="3" type="straight" angle="0">
+   <location x="2" y="0" z="9"/>
+  </piece>
+  <piece direction="z" length="2" type="straight" angle="0">
+   <location x="0" y="1" z="9"/>
+  </piece>
+  <piece direction="x" length="3" type="straight" angle="0">
+   <location x="0" y="0" z="10"/>
+  </piece>
+  <piece direction="x" length="3" type="straight" angle="0">
+   <location x="0" y="2" z="10"/>
+  </piece>
+  <piece direction="x" length="2" type="straight" angle="0">
+   <location x="0" y="0" z="11"/>
+  </piece>
+  <piece direction="y" length="2" type="straight" angle="0">
+   <location x="2" y="0" z="11"/>
+  </piece>
+  <piece direction="-x" length="2" type="straight" angle="0">
+   <location x="2" y="2" z="11"/>
+  </piece>
+  <piece direction="-y" length="2" type="straight" angle="0">
+   <location x="0" y="2" z="11"/>
+  </piece>
+  <piece direction="x" length="1" type="straight" angle="0">
+   <location x="0" y="0" z="9"/>
+  </piece>
+  <piece direction="x" length="1" type="straight" angle="0">
+   <location x="0" y="2" z="9"/>
+  </piece>
+  <piece direction="-x" length="3" type="straight" angle="0">
+   <location x="2" y="0" z="13"/>
+  </piece>
+  <piece direction="-x" length="3" type="straight" angle="0">
+   <location x="2" y="0" z="12"/>
+  </piece>
+  <piece direction="y" length="2" type="straight" angle="0">
+   <location x="1" y="0" z="14"/>
+  </piece>
+  <piece direction="-z" length="3" type="straight" angle="0">
+   <location x="2" y="1" z="14"/>
+  </piece>
+  <piece direction="-z" length="3" type="straight" angle="0">
+   <location x="0" y="1" z="14"/>
+  </piece>
+  <piece direction="-z" length="2" type="straight" angle="0">
+   <location x="2" y="2" z="14"/>
+  </piece>
+  <piece direction="-x" length="2" type="straight" angle="0">
+   <location x="2" y="2" z="12"/>
+  </piece>
+  <piece direction="z" length="2" type="straight" angle="0">
+   <location x="0" y="2" z="12"/>
+  </piece>
+  <piece direction="x" length="2" type="straight" angle="0">
+   <location x="0" y="2" z="14"/>
+  </piece>
+  <piece direction="-z" length="1" type="straight" angle="0">
+   <location x="2" y="0" z="14"/>
+  </piece>
+  <piece direction="-z" length="1" type="straight" angle="0">
+   <location x="0" y="0" z="14"/>
+  </piece>
+  <piece direction="-z" length="3" type="straight" angle="0">
+   <location x="0" y="4" z="14"/>
+  </piece>
+  <piece direction="-z" length="3" type="straight" angle="0">
+   <location x="0" y="3" z="14"/>
+  </piece>
+  <piece direction="x" length="2" type="straight" angle="0">
+   <location x="0" y="5" z="13"/>
+  </piece>
+  <piece direction="-y" length="3" type="straight" angle="0">
+   <location x="1" y="5" z="14"/>
+  </piece>
+  <piece direction="-y" length="3" type="straight" angle="0">
+   <location x="1" y="5" z="12"/>
+  </piece>
+  <piece direction="-y" length="2" type="straight" angle="0">
+   <location x="2" y="5" z="14"/>
+  </piece>
+  <piece direction="-z" length="2" type="straight" angle="0">
+   <location x="2" y="3" z="14"/>
+  </piece>
+  <piece direction="y" length="2" type="straight" angle="0">
+   <location x="2" y="3" z="12"/>
+  </piece>
+  <piece direction="z" length="2" type="straight" angle="0">
+   <location x="2" y="5" z="12"/>
+  </piece>
+  <piece direction="-y" length="1" type="straight" angle="0">
+   <location x="0" y="5" z="14"/>
+  </piece>
+  <piece direction="-y" length="1" type="straight" angle="0">
+   <location x="0" y="5" z="12"/>
+  </piece>
+  <piece direction="-z" length="3" type="straight" angle="0">
+   <location x="4" y="5" z="14"/>
+  </piece>
+  <piece direction="-z" length="3" type="straight" angle="0">
+   <location x="3" y="5" z="14"/>
+  </piece>
+  <piece direction="-y" length="2" type="straight" angle="0">
+   <location x="5" y="5" z="13"/>
+  </piece>
+  <piece direction="-x" length="3" type="straight" angle="270">
+   <location x="5" y="4" z="14"/>
+  </piece>
+  <piece direction="-x" length="3" type="straight" angle="270">
+   <location x="5" y="4" z="12"/>
+  </piece>
+  <piece direction="-x" length="2" type="straight" angle="270">
+   <location x="5" y="3" z="14"/>
+  </piece>
+  <piece direction="-z" length="2" type="straight" angle="0">
+   <location x="3" y="3" z="14"/>
+  </piece>
+  <piece direction="x" length="2" type="straight" angle="270">
+   <location x="3" y="3" z="12"/>
+  </piece>
+  <piece direction="z" length="2" type="straight" angle="0">
+   <location x="5" y="3" z="12"/>
+  </piece>
+  <piece direction="-x" length="1" type="straight" angle="270">
+   <location x="5" y="5" z="14"/>
+  </piece>
+  <piece direction="-x" length="1" type="straight" angle="270">
+   <location x="5" y="5" z="12"/>
+  </piece>
+  <piece direction="-x" length="3" type="straight" angle="0">
+   <location x="5" y="1" z="12"/>
+  </piece>
+  <piece direction="-x" length="3" type="straight" angle="0">
+   <location x="5" y="2" z="12"/>
+  </piece>
+  <piece direction="z" length="2" type="straight" angle="0">
+   <location x="4" y="0" z="12"/>
+  </piece>
+  <piece direction="y" length="3" type="straight" angle="270">
+   <location x="5" y="0" z="13"/>
+  </piece>
+  <piece direction="y" length="3" type="straight" angle="270">
+   <location x="3" y="0" z="13"/>
+  </piece>
+  <piece direction="y" length="2" type="straight" angle="270">
+   <location x="5" y="0" z="14"/>
+  </piece>
+  <piece direction="-x" length="2" type="straight" angle="0">
+   <location x="5" y="2" z="14"/>
+  </piece>
+  <piece direction="-y" length="2" type="straight" angle="270">
+   <location x="3" y="2" z="14"/>
+  </piece>
+  <piece direction="x" length="2" type="straight" angle="0">
+   <location x="3" y="0" z="14"/>
+  </piece>
+  <piece direction="y" length="1" type="straight" angle="270">
+   <location x="5" y="0" z="12"/>
+  </piece>
+  <piece direction="y" length="1" type="straight" angle="270">
+   <location x="3" y="0" z="12"/>
+  </piece>
+  <piece direction="-y" length="3" type="straight" angle="0">
+   <location x="5" y="2" z="16"/>
+  </piece>
+  <piece direction="-y" length="3" type="straight" angle="0">
+   <location x="5" y="2" z="15"/>
+  </piece>
+  <piece direction="-x" length="2" type="straight" angle="0">
+   <location x="5" y="1" z="17"/>
+  </piece>
+  <piece direction="-z" length="3" type="straight" angle="270">
+   <location x="4" y="2" z="17"/>
+  </piece>
+  <piece direction="-z" length="3" type="straight" angle="270">
+   <location x="4" y="0" z="17"/>
+  </piece>
+  <piece direction="-z" length="2" type="straight" angle="270">
+   <location x="3" y="2" z="17"/>
+  </piece>
+  <piece direction="-y" length="2" type="straight" angle="0">
+   <location x="3" y="2" z="15"/>
+  </piece>
+  <piece direction="z" length="2" type="straight" angle="270">
+   <location x="3" y="0" z="15"/>
+  </piece>
+  <piece direction="y" length="2" type="straight" angle="0">
+   <location x="3" y="0" z="17"/>
+  </piece>
+  <piece direction="-z" length="1" type="straight" angle="270">
+   <location x="5" y="2" z="17"/>
+  </piece>
+  <piece direction="-z" length="1" type="straight" angle="270">
+   <location x="5" y="0" z="17"/>
+  </piece>
+  <piece direction="-z" length="3" type="straight" angle="0">
+   <location x="1" y="0" z="17"/>
+  </piece>
+  <piece direction="-z" length="3" type="straight" angle="0">
+   <location x="2" y="0" z="17"/>
+  </piece>
+  <piece direction="y" length="2" type="straight" angle="0">
+   <location x="0" y="0" z="16"/>
+  </piece>
+  <piece direction="x" length="3" type="straight" angle="270">
+   <location x="0" y="1" z="17"/>
+  </piece>
+  <piece direction="x" length="3" type="straight" angle="270">
+   <location x="0" y="1" z="15"/>
+  </piece>
+  <piece direction="x" length="2" type="straight" angle="270">
+   <location x="0" y="2" z="17"/>
+  </piece>
+  <piece direction="-z" length="2" type="straight" angle="0">
+   <location x="2" y="2" z="17"/>
+  </piece>
+  <piece direction="-x" length="2" type="straight" angle="270">
+   <location x="2" y="2" z="15"/>
+  </piece>
+  <piece direction="z" length="2" type="straight" angle="0">
+   <location x="0" y="2" z="15"/>
+  </piece>
+  <piece direction="x" length="1" type="straight" angle="270">
+   <location x="0" y="0" z="17"/>
+  </piece>
+  <piece direction="x" length="1" type="straight" angle="270">
+   <location x="0" y="0" z="15"/>
+  </piece>
+  <piece direction="-z" length="3" type="straight" angle="0">
+   <location x="0" y="4" z="17"/>
+  </piece>
+  <piece direction="-z" length="3" type="straight" angle="0">
+   <location x="0" y="3" z="17"/>
+  </piece>
+  <piece direction="x" length="2" type="straight" angle="0">
+   <location x="0" y="5" z="16"/>
+  </piece>
+  <piece direction="-y" length="3" type="straight" angle="0">
+   <location x="1" y="5" z="17"/>
+  </piece>
+  <piece direction="-y" length="3" type="straight" angle="0">
+   <location x="1" y="5" z="15"/>
+  </piece>
+  <piece direction="-y" length="2" type="straight" angle="0">
+   <location x="2" y="5" z="17"/>
+  </piece>
+  <piece direction="-z" length="2" type="straight" angle="0">
+   <location x="2" y="3" z="17"/>
+  </piece>
+  <piece direction="y" length="2" type="straight" angle="0">
+   <location x="2" y="3" z="15"/>
+  </piece>
+  <piece direction="z" length="2" type="straight" angle="0">
+   <location x="2" y="5" z="15"/>
+  </piece>
+  <piece direction="-y" length="1" type="straight" angle="0">
+   <location x="0" y="5" z="17"/>
+  </piece>
+  <piece direction="-y" length="1" type="straight" angle="0">
+   <location x="0" y="5" z="15"/>
+  </piece>
+  <piece direction="-y" length="3" type="straight" angle="0">
+   <location x="4" y="5" z="15"/>
+  </piece>
+  <piece direction="-y" length="3" type="straight" angle="0">
+   <location x="3" y="5" z="15"/>
+  </piece>
+  <piece direction="z" length="2" type="straight" angle="0">
+   <location x="5" y="4" z="15"/>
+  </piece>
+  <piece direction="-x" length="3" type="straight" angle="0">
+   <location x="5" y="5" z="16"/>
+  </piece>
+  <piece direction="-x" length="3" type="straight" angle="0">
+   <location x="5" y="3" z="16"/>
+  </piece>
+  <piece direction="-x" length="2" type="straight" angle="0">
+   <location x="5" y="5" z="17"/>
+  </piece>
+  <piece direction="-y" length="2" type="straight" angle="0">
+   <location x="3" y="5" z="17"/>
+  </piece>
+  <piece direction="x" length="2" type="straight" angle="0">
+   <location x="3" y="3" z="17"/>
+  </piece>
+  <piece direction="y" length="2" type="straight" angle="0">
+   <location x="5" y="3" z="17"/>
+  </piece>
+  <piece direction="-x" length="1" type="straight" angle="0">
+   <location x="5" y="5" z="15"/>
+  </piece>
+  <piece direction="-x" length="1" type="straight" angle="0">
+   <location x="5" y="3" z="15"/>
+  </piece>
+  <piece direction="x" length="3" type="straight" angle="0">
+   <location x="3" y="5" z="19"/>
+  </piece>
+  <piece direction="x" length="3" type="straight" angle="0">
+   <location x="3" y="5" z="18"/>
+  </piece>
+  <piece direction="-y" length="2" type="straight" angle="0">
+   <location x="4" y="5" z="20"/>
+  </piece>
+  <piece direction="-z" length="3" type="straight" angle="180">
+   <location x="3" y="4" z="20"/>
+  </piece>
+  <piece direction="-z" length="3" type="straight" angle="180">
+   <location x="5" y="4" z="20"/>
+  </piece>
+  <piece direction="-z" length="2" type="straight" angle="180">
+   <location x="3" y="3" z="20"/>
+  </piece>
+  <piece direction="x" length="2" type="straight" angle="0">
+   <location x="3" y="3" z="18"/>
+  </piece>
+  <piece direction="z" length="2" type="straight" angle="180">
+   <location x="5" y="3" z="18"/>
+  </piece>
+  <piece direction="-x" length="2" type="straight" angle="0">
+   <location x="5" y="3" z="20"/>
+  </piece>
+  <piece direction="-z" length="1" type="straight" angle="180">
+   <location x="3" y="5" z="20"/>
+  </piece>
+  <piece direction="-z" length="1" type="straight" angle="180">
+   <location x="5" y="5" z="20"/>
+  </piece>
+  <piece direction="-z" length="3" type="straight" angle="0">
+   <location x="5" y="1" z="20"/>
+  </piece>
+  <piece direction="-z" length="3" type="straight" angle="0">
+   <location x="5" y="2" z="20"/>
+  </piece>
+  <piece direction="-x" length="2" type="straight" angle="0">
+   <location x="5" y="0" z="19"/>
+  </piece>
+  <piece direction="y" length="3" type="straight" angle="180">
+   <location x="4" y="0" z="20"/>
+  </piece>
+  <piece direction="y" length="3" type="straight" angle="180">
+   <location x="4" y="0" z="18"/>
+  </piece>
+  <piece direction="y" length="2" type="straight" angle="180">
+   <location x="3" y="0" z="20"/>
+  </piece>
+  <piece direction="-z" length="2" type="straight" angle="0">
+   <location x="3" y="2" z="20"/>
+  </piece>
+  <piece direction="-y" length="2" type="straight" angle="180">
+   <location x="3" y="2" z="18"/>
+  </piece>
+  <piece direction="z" length="2" type="straight" angle="0">
+   <location x="3" y="0" z="18"/>
+  </piece>
+  <piece direction="y" length="1" type="straight" angle="180">
+   <location x="5" y="0" z="20"/>
+  </piece>
+  <piece direction="y" length="1" type="straight" angle="180">
+   <location x="5" y="0" z="18"/>
+  </piece>
+  <piece direction="-z" length="3" type="straight" angle="0">
+   <location x="1" y="0" z="20"/>
+  </piece>
+  <piece direction="-z" length="3" type="straight" angle="0">
+   <location x="2" y="0" z="20"/>
+  </piece>
+  <piece direction="y" length="2" type="straight" angle="0">
+   <location x="0" y="0" z="19"/>
+  </piece>
+  <piece direction="x" length="3" type="straight" angle="270">
+   <location x="0" y="1" z="20"/>
+  </piece>
+  <piece direction="x" length="3" type="straight" angle="270">
+   <location x="0" y="1" z="18"/>
+  </piece>
+  <piece direction="x" length="2" type="straight" angle="270">
+   <location x="0" y="2" z="20"/>
+  </piece>
+  <piece direction="-z" length="2" type="straight" angle="0">
+   <location x="2" y="2" z="20"/>
+  </piece>
+  <piece direction="-x" length="2" type="straight" angle="270">
+   <location x="2" y="2" z="18"/>
+  </piece>
+  <piece direction="z" length="2" type="straight" angle="0">
+   <location x="0" y="2" z="18"/>
+  </piece>
+  <piece direction="x" length="1" type="straight" angle="270">
+   <location x="0" y="0" z="20"/>
+  </piece>
+  <piece direction="x" length="1" type="straight" angle="270">
+   <location x="0" y="0" z="18"/>
+  </piece>
+  <piece direction="x" length="3" type="straight" angle="0">
+   <location x="0" y="4" z="18"/>
+  </piece>
+  <piece direction="x" length="3" type="straight" angle="0">
+   <location x="0" y="3" z="18"/>
+  </piece>
+  <piece direction="z" length="2" type="straight" angle="0">
+   <location x="1" y="5" z="18"/>
+  </piece>
+  <piece direction="-y" length="3" type="straight" angle="90">
+   <location x="0" y="5" z="19"/>
+  </piece>
+  <piece direction="-y" length="3" type="straight" angle="90">
+   <location x="2" y="5" z="19"/>
+  </piece>
+  <piece direction="-y" length="2" type="straight" angle="90">
+   <location x="0" y="5" z="20"/>
+  </piece>
+  <piece direction="x" length="2" type="straight" angle="0">
+   <location x="0" y="3" z="20"/>
+  </piece>
+  <piece direction="y" length="2" type="straight" angle="90">
+   <location x="2" y="3" z="20"/>
+  </piece>
+  <piece direction="-x" length="2" type="straight" angle="0">
+   <location x="2" y="5" z="20"/>
+  </piece>
+  <piece direction="-y" length="1" type="straight" angle="90">
+   <location x="0" y="5" z="18"/>
+  </piece>
+  <piece direction="-y" length="1" type="straight" angle="90">
+   <location x="2" y="5" z="18"/>
+  </piece>
+  <piece direction="y" length="3" type="straight" angle="0">
+   <location x="0" y="3" z="22"/>
+  </piece>
+  <piece direction="y" length="3" type="straight" angle="0">
+   <location x="0" y="3" z="21"/>
+  </piece>
+  <piece direction="x" length="2" type="straight" angle="0">
+   <location x="0" y="4" z="23"/>
+  </piece>
+  <piece direction="-z" length="3" type="straight" angle="90">
+   <location x="1" y="3" z="23"/>
+  </piece>
+  <piece direction="-z" length="3" type="straight" angle="90">
+   <location x="1" y="5" z="23"/>
+  </piece>
+  <piece direction="-z" length="2" type="straight" angle="90">
+   <location x="2" y="3" z="23"/>
+  </piece>
+  <piece direction="y" length="2" type="straight" angle="0">
+   <location x="2" y="3" z="21"/>
+  </piece>
+  <piece direction="z" length="2" type="straight" angle="90">
+   <location x="2" y="5" z="21"/>
+  </piece>
+  <piece direction="-y" length="2" type="straight" angle="0">
+   <location x="2" y="5" z="23"/>
+  </piece>
+  <piece direction="-z" length="1" type="straight" angle="90">
+   <location x="0" y="3" z="23"/>
+  </piece>
+  <piece direction="-z" length="1" type="straight" angle="90">
+   <location x="0" y="5" z="23"/>
+  </piece>
+  <piece direction="-z" length="3" type="straight" angle="0">
+   <location x="4" y="5" z="23"/>
+  </piece>
+  <piece direction="-z" length="3" type="straight" angle="0">
+   <location x="3" y="5" z="23"/>
+  </piece>
+  <piece direction="-y" length="2" type="straight" angle="0">
+   <location x="5" y="5" z="22"/>
+  </piece>
+  <piece direction="-x" length="3" type="straight" angle="270">
+   <location x="5" y="4" z="23"/>
+  </piece>
+  <piece direction="-x" length="3" type="straight" angle="270">
+   <location x="5" y="4" z="21"/>
+  </piece>
+  <piece direction="-x" length="2" type="straight" angle="270">
+   <location x="5" y="3" z="23"/>
+  </piece>
+  <piece direction="-z" length="2" type="straight" angle="0">
+   <location x="3" y="3" z="23"/>
+  </piece>
+  <piece direction="x" length="2" type="straight" angle="270">
+   <location x="3" y="3" z="21"/>
+  </piece>
+  <piece direction="z" length="2" type="straight" angle="0">
+   <location x="5" y="3" z="21"/>
+  </piece>
+  <piece direction="-x" length="1" type="straight" angle="270">
+   <location x="5" y="5" z="23"/>
+  </piece>
+  <piece direction="-x" length="1" type="straight" angle="270">
+   <location x="5" y="5" z="21"/>
+  </piece>
+  <piece direction="-z" length="3" type="straight" angle="0">
+   <location x="5" y="1" z="23"/>
+  </piece>
+  <piece direction="-z" length="3" type="straight" angle="0">
+   <location x="5" y="2" z="23"/>
+  </piece>
+  <piece direction="-x" length="2" type="straight" angle="0">
+   <location x="5" y="0" z="22"/>
+  </piece>
+  <piece direction="y" length="3" type="straight" angle="180">
+   <location x="4" y="0" z="23"/>
+  </piece>
+  <piece direction="y" length="3" type="straight" angle="180">
+   <location x="4" y="0" z="21"/>
+  </piece>
+  <piece direction="y" length="2" type="straight" angle="180">
+   <location x="3" y="0" z="23"/>
+  </piece>
+  <piece direction="-z" length="2" type="straight" angle="0">
+   <location x="3" y="2" z="23"/>
+  </piece>
+  <piece direction="-y" length="2" type="straight" angle="180">
+   <location x="3" y="2" z="21"/>
+  </piece>
+  <piece direction="z" length="2" type="straight" angle="0">
+   <location x="3" y="0" z="21"/>
+  </piece>
+  <piece direction="y" length="1" type="straight" angle="180">
+   <location x="5" y="0" z="23"/>
+  </piece>
+  <piece direction="y" length="1" type="straight" angle="180">
+   <location x="5" y="0" z="21"/>
+  </piece>
+  <piece direction="y" length="3" type="straight" angle="0">
+   <location x="1" y="0" z="21"/>
+  </piece>
+  <piece direction="y" length="3" type="straight" angle="0">
+   <location x="2" y="0" z="21"/>
+  </piece>
+  <piece direction="z" length="2" type="straight" angle="0">
+   <location x="0" y="1" z="21"/>
+  </piece>
+  <piece direction="x" length="3" type="straight" angle="0">
+   <location x="0" y="0" z="22"/>
+  </piece>
+  <piece direction="x" length="3" type="straight" angle="0">
+   <location x="0" y="2" z="22"/>
+  </piece>
+  <piece direction="x" length="2" type="straight" angle="0">
+   <location x="0" y="0" z="23"/>
+  </piece>
+  <piece direction="y" length="2" type="straight" angle="0">
+   <location x="2" y="0" z="23"/>
+  </piece>
+  <piece direction="-x" length="2" type="straight" angle="0">
+   <location x="2" y="2" z="23"/>
+  </piece>
+  <piece direction="-y" length="2" type="straight" angle="0">
+   <location x="0" y="2" z="23"/>
+  </piece>
+  <piece direction="x" length="1" type="straight" angle="0">
+   <location x="0" y="0" z="21"/>
+  </piece>
+  <piece direction="x" length="1" type="straight" angle="0">
+   <location x="0" y="2" z="21"/>
+  </piece>
+  <piece direction="-x" length="3" type="straight" angle="0">
+   <location x="2" y="0" z="25"/>
+  </piece>
+  <piece direction="-x" length="3" type="straight" angle="0">
+   <location x="2" y="0" z="24"/>
+  </piece>
+  <piece direction="y" length="2" type="straight" angle="0">
+   <location x="1" y="0" z="26"/>
+  </piece>
+  <piece direction="-z" length="3" type="straight" angle="0">
+   <location x="2" y="1" z="26"/>
+  </piece>
+  <piece direction="-z" length="3" type="straight" angle="0">
+   <location x="0" y="1" z="26"/>
+  </piece>
+  <piece direction="-z" length="2" type="straight" angle="0">
+   <location x="2" y="2" z="26"/>
+  </piece>
+  <piece direction="-x" length="2" type="straight" angle="0">
+   <location x="2" y="2" z="24"/>
+  </piece>
+  <piece direction="z" length="2" type="straight" angle="0">
+   <location x="0" y="2" z="24"/>
+  </piece>
+  <piece direction="x" length="2" type="straight" angle="0">
+   <location x="0" y="2" z="26"/>
+  </piece>
+  <piece direction="-z" length="1" type="straight" angle="0">
+   <location x="2" y="0" z="26"/>
+  </piece>
+  <piece direction="-z" length="1" type="straight" angle="0">
+   <location x="0" y="0" z="26"/>
+  </piece>
+  <piece direction="-z" length="3" type="straight" angle="0">
+   <location x="0" y="4" z="26"/>
+  </piece>
+  <piece direction="-z" length="3" type="straight" angle="0">
+   <location x="0" y="3" z="26"/>
+  </piece>
+  <piece direction="x" length="2" type="straight" angle="0">
+   <location x="0" y="5" z="25"/>
+  </piece>
+  <piece direction="-y" length="3" type="straight" angle="0">
+   <location x="1" y="5" z="26"/>
+  </piece>
+  <piece direction="-y" length="3" type="straight" angle="0">
+   <location x="1" y="5" z="24"/>
+  </piece>
+  <piece direction="-y" length="2" type="straight" angle="0">
+   <location x="2" y="5" z="26"/>
+  </piece>
+  <piece direction="-z" length="2" type="straight" angle="0">
+   <location x="2" y="3" z="26"/>
+  </piece>
+  <piece direction="y" length="2" type="straight" angle="0">
+   <location x="2" y="3" z="24"/>
+  </piece>
+  <piece direction="z" length="2" type="straight" angle="0">
+   <location x="2" y="5" z="24"/>
+  </piece>
+  <piece direction="-y" length="1" type="straight" angle="0">
+   <location x="0" y="5" z="26"/>
+  </piece>
+  <piece direction="-y" length="1" type="straight" angle="0">
+   <location x="0" y="5" z="24"/>
+  </piece>
+  <piece direction="-z" length="3" type="straight" angle="0">
+   <location x="4" y="5" z="26"/>
+  </piece>
+  <piece direction="-z" length="3" type="straight" angle="0">
+   <location x="3" y="5" z="26"/>
+  </piece>
+  <piece direction="-y" length="2" type="straight" angle="0">
+   <location x="5" y="5" z="25"/>
+  </piece>
+  <piece direction="-x" length="3" type="straight" angle="270">
+   <location x="5" y="4" z="26"/>
+  </piece>
+  <piece direction="-x" length="3" type="straight" angle="270">
+   <location x="5" y="4" z="24"/>
+  </piece>
+  <piece direction="-x" length="2" type="straight" angle="270">
+   <location x="5" y="3" z="26"/>
+  </piece>
+  <piece direction="-z" length="2" type="straight" angle="0">
+   <location x="3" y="3" z="26"/>
+  </piece>
+  <piece direction="x" length="2" type="straight" angle="270">
+   <location x="3" y="3" z="24"/>
+  </piece>
+  <piece direction="z" length="2" type="straight" angle="0">
+   <location x="5" y="3" z="24"/>
+  </piece>
+  <piece direction="-x" length="1" type="straight" angle="270">
+   <location x="5" y="5" z="26"/>
+  </piece>
+  <piece direction="-x" length="1" type="straight" angle="270">
+   <location x="5" y="5" z="24"/>
+  </piece>
+  <piece direction="-x" length="3" type="straight" angle="0">
+   <location x="5" y="1" z="24"/>
+  </piece>
+  <piece direction="-x" length="3" type="straight" angle="0">
+   <location x="5" y="2" z="24"/>
+  </piece>
+  <piece direction="z" length="2" type="straight" angle="0">
+   <location x="4" y="0" z="24"/>
+  </piece>
+  <piece direction="y" length="3" type="straight" angle="270">
+   <location x="5" y="0" z="25"/>
+  </piece>
+  <piece direction="y" length="3" type="straight" angle="270">
+   <location x="3" y="0" z="25"/>
+  </piece>
+  <piece direction="y" length="2" type="straight" angle="270">
+   <location x="5" y="0" z="26"/>
+  </piece>
+  <piece direction="-x" length="2" type="straight" angle="0">
+   <location x="5" y="2" z="26"/>
+  </piece>
+  <piece direction="-y" length="2" type="straight" angle="270">
+   <location x="3" y="2" z="26"/>
+  </piece>
+  <piece direction="x" length="2" type="straight" angle="0">
+   <location x="3" y="0" z="26"/>
+  </piece>
+  <piece direction="y" length="1" type="straight" angle="270">
+   <location x="5" y="0" z="24"/>
+  </piece>
+  <piece direction="y" length="1" type="straight" angle="270">
+   <location x="3" y="0" z="24"/>
+  </piece>
+  <piece direction="-y" length="3" type="straight" angle="0">
+   <location x="5" y="2" z="28"/>
+  </piece>
+  <piece direction="-y" length="3" type="straight" angle="0">
+   <location x="5" y="2" z="27"/>
+  </piece>
+  <piece direction="-x" length="2" type="straight" angle="0">
+   <location x="5" y="1" z="29"/>
+  </piece>
+  <piece direction="-z" length="3" type="straight" angle="270">
+   <location x="4" y="2" z="29"/>
+  </piece>
+  <piece direction="-z" length="3" type="straight" angle="270">
+   <location x="4" y="0" z="29"/>
+  </piece>
+  <piece direction="-z" length="2" type="straight" angle="270">
+   <location x="3" y="2" z="29"/>
+  </piece>
+  <piece direction="-y" length="2" type="straight" angle="0">
+   <location x="3" y="2" z="27"/>
+  </piece>
+  <piece direction="z" length="2" type="straight" angle="270">
+   <location x="3" y="0" z="27"/>
+  </piece>
+  <piece direction="y" length="2" type="straight" angle="0">
+   <location x="3" y="0" z="29"/>
+  </piece>
+  <piece direction="-z" length="1" type="straight" angle="270">
+   <location x="5" y="2" z="29"/>
+  </piece>
+  <piece direction="-z" length="1" type="straight" angle="270">
+   <location x="5" y="0" z="29"/>
+  </piece>
+  <piece direction="-z" length="3" type="straight" angle="0">
+   <location x="1" y="0" z="29"/>
+  </piece>
+  <piece direction="-z" length="3" type="straight" angle="0">
+   <location x="2" y="0" z="29"/>
+  </piece>
+  <piece direction="y" length="2" type="straight" angle="0">
+   <location x="0" y="0" z="28"/>
+  </piece>
+  <piece direction="x" length="3" type="straight" angle="270">
+   <location x="0" y="1" z="29"/>
+  </piece>
+  <piece direction="x" length="3" type="straight" angle="270">
+   <location x="0" y="1" z="27"/>
+  </piece>
+  <piece direction="x" length="2" type="straight" angle="270">
+   <location x="0" y="2" z="29"/>
+  </piece>
+  <piece direction="-z" length="2" type="straight" angle="0">
+   <location x="2" y="2" z="29"/>
+  </piece>
+  <piece direction="-x" length="2" type="straight" angle="270">
+   <location x="2" y="2" z="27"/>
+  </piece>
+  <piece direction="z" length="2" type="straight" angle="0">
+   <location x="0" y="2" z="27"/>
+  </piece>
+  <piece direction="x" length="1" type="straight" angle="270">
+   <location x="0" y="0" z="29"/>
+  </piece>
+  <piece direction="x" length="1" type="straight" angle="270">
+   <location x="0" y="0" z="27"/>
+  </piece>
+  <piece direction="-z" length="3" type="straight" angle="0">
+   <location x="0" y="4" z="29"/>
+  </piece>
+  <piece direction="-z" length="3" type="straight" angle="0">
+   <location x="0" y="3" z="29"/>
+  </piece>
+  <piece direction="x" length="2" type="straight" angle="0">
+   <location x="0" y="5" z="28"/>
+  </piece>
+  <piece direction="-y" length="3" type="straight" angle="0">
+   <location x="1" y="5" z="29"/>
+  </piece>
+  <piece direction="-y" length="3" type="straight" angle="0">
+   <location x="1" y="5" z="27"/>
+  </piece>
+  <piece direction="-y" length="2" type="straight" angle="0">
+   <location x="2" y="5" z="29"/>
+  </piece>
+  <piece direction="-z" length="2" type="straight" angle="0">
+   <location x="2" y="3" z="29"/>
+  </piece>
+  <piece direction="y" length="2" type="straight" angle="0">
+   <location x="2" y="3" z="27"/>
+  </piece>
+  <piece direction="z" length="2" type="straight" angle="0">
+   <location x="2" y="5" z="27"/>
+  </piece>
+  <piece direction="-y" length="1" type="straight" angle="0">
+   <location x="0" y="5" z="29"/>
+  </piece>
+  <piece direction="-y" length="1" type="straight" angle="0">
+   <location x="0" y="5" z="27"/>
+  </piece>
+  <piece direction="-y" length="3" type="straight" angle="0">
+   <location x="4" y="5" z="27"/>
+  </piece>
+  <piece direction="-y" length="3" type="straight" angle="0">
+   <location x="3" y="5" z="27"/>
+  </piece>
+  <piece direction="z" length="2" type="straight" angle="0">
+   <location x="5" y="4" z="27"/>
+  </piece>
+  <piece direction="-x" length="3" type="straight" angle="0">
+   <location x="5" y="5" z="28"/>
+  </piece>
+  <piece direction="-x" length="3" type="straight" angle="0">
+   <location x="5" y="3" z="28"/>
+  </piece>
+  <piece direction="-x" length="2" type="straight" angle="0">
+   <location x="5" y="5" z="29"/>
+  </piece>
+  <piece direction="-y" length="2" type="straight" angle="0">
+   <location x="3" y="5" z="29"/>
+  </piece>
+  <piece direction="x" length="2" type="straight" angle="0">
+   <location x="3" y="3" z="29"/>
+  </piece>
+  <piece direction="y" length="2" type="straight" angle="0">
+   <location x="5" y="3" z="29"/>
+  </piece>
+  <piece direction="-x" length="1" type="straight" angle="0">
+   <location x="5" y="5" z="27"/>
+  </piece>
+  <piece direction="-x" length="1" type="straight" angle="0">
+   <location x="5" y="3" z="27"/>
+  </piece>
+  <piece direction="x" length="3" type="straight" angle="0">
+   <location x="3" y="5" z="31"/>
+  </piece>
+  <piece direction="x" length="3" type="straight" angle="0">
+   <location x="3" y="5" z="30"/>
+  </piece>
+  <piece direction="-y" length="2" type="straight" angle="0">
+   <location x="4" y="5" z="32"/>
+  </piece>
+  <piece direction="-z" length="3" type="straight" angle="180">
+   <location x="3" y="4" z="32"/>
+  </piece>
+  <piece direction="-z" length="3" type="straight" angle="180">
+   <location x="5" y="4" z="32"/>
+  </piece>
+  <piece direction="-z" length="2" type="straight" angle="180">
+   <location x="3" y="3" z="32"/>
+  </piece>
+  <piece direction="x" length="2" type="straight" angle="0">
+   <location x="3" y="3" z="30"/>
+  </piece>
+  <piece direction="z" length="2" type="straight" angle="180">
+   <location x="5" y="3" z="30"/>
+  </piece>
+  <piece direction="-x" length="2" type="straight" angle="0">
+   <location x="5" y="3" z="32"/>
+  </piece>
+  <piece direction="-z" length="1" type="straight" angle="180">
+   <location x="3" y="5" z="32"/>
+  </piece>
+  <piece direction="-z" length="1" type="straight" angle="180">
+   <location x="5" y="5" z="32"/>
+  </piece>
+  <piece direction="-z" length="3" type="straight" angle="0">
+   <location x="5" y="1" z="32"/>
+  </piece>
+  <piece direction="-z" length="3" type="straight" angle="0">
+   <location x="5" y="2" z="32"/>
+  </piece>
+  <piece direction="-x" length="2" type="straight" angle="0">
+   <location x="5" y="0" z="31"/>
+  </piece>
+  <piece direction="y" length="3" type="straight" angle="180">
+   <location x="4" y="0" z="32"/>
+  </piece>
+  <piece direction="y" length="3" type="straight" angle="180">
+   <location x="4" y="0" z="30"/>
+  </piece>
+  <piece direction="y" length="2" type="straight" angle="180">
+   <location x="3" y="0" z="32"/>
+  </piece>
+  <piece direction="-z" length="2" type="straight" angle="0">
+   <location x="3" y="2" z="32"/>
+  </piece>
+  <piece direction="-y" length="2" type="straight" angle="180">
+   <location x="3" y="2" z="30"/>
+  </piece>
+  <piece direction="z" length="2" type="straight" angle="0">
+   <location x="3" y="0" z="30"/>
+  </piece>
+  <piece direction="y" length="1" type="straight" angle="180">
+   <location x="5" y="0" z="32"/>
+  </piece>
+  <piece direction="y" length="1" type="straight" angle="180">
+   <location x="5" y="0" z="30"/>
+  </piece>
+  <piece direction="-z" length="3" type="straight" angle="0">
+   <location x="1" y="0" z="32"/>
+  </piece>
+  <piece direction="-z" length="3" type="straight" angle="0">
+   <location x="2" y="0" z="32"/>
+  </piece>
+  <piece direction="y" length="2" type="straight" angle="0">
+   <location x="0" y="0" z="31"/>
+  </piece>
+  <piece direction="x" length="3" type="straight" angle="270">
+   <location x="0" y="1" z="32"/>
+  </piece>
+  <piece direction="x" length="3" type="straight" angle="270">
+   <location x="0" y="1" z="30"/>
+  </piece>
+  <piece direction="x" length="2" type="straight" angle="270">
+   <location x="0" y="2" z="32"/>
+  </piece>
+  <piece direction="-z" length="2" type="straight" angle="0">
+   <location x="2" y="2" z="32"/>
+  </piece>
+  <piece direction="-x" length="2" type="straight" angle="270">
+   <location x="2" y="2" z="30"/>
+  </piece>
+  <piece direction="z" length="2" type="straight" angle="0">
+   <location x="0" y="2" z="30"/>
+  </piece>
+  <piece direction="x" length="1" type="straight" angle="270">
+   <location x="0" y="0" z="32"/>
+  </piece>
+  <piece direction="x" length="1" type="straight" angle="270">
+   <location x="0" y="0" z="30"/>
+  </piece>
+  <piece direction="x" length="3" type="straight" angle="0">
+   <location x="0" y="4" z="30"/>
+  </piece>
+  <piece direction="x" length="3" type="straight" angle="0">
+   <location x="0" y="3" z="30"/>
+  </piece>
+  <piece direction="z" length="2" type="straight" angle="0">
+   <location x="1" y="5" z="30"/>
+  </piece>
+  <piece direction="-y" length="3" type="straight" angle="90">
+   <location x="0" y="5" z="31"/>
+  </piece>
+  <piece direction="-y" length="3" type="straight" angle="90">
+   <location x="2" y="5" z="31"/>
+  </piece>
+  <piece direction="-y" length="2" type="straight" angle="90">
+   <location x="0" y="5" z="32"/>
+  </piece>
+  <piece direction="x" length="2" type="straight" angle="0">
+   <location x="0" y="3" z="32"/>
+  </piece>
+  <piece direction="y" length="2" type="straight" angle="90">
+   <location x="2" y="3" z="32"/>
+  </piece>
+  <piece direction="-x" length="2" type="straight" angle="0">
+   <location x="2" y="5" z="32"/>
+  </piece>
+  <piece direction="-y" length="1" type="straight" angle="90">
+   <location x="0" y="5" z="30"/>
+  </piece>
+  <piece direction="-y" length="1" type="straight" angle="90">
+   <location x="2" y="5" z="30"/>
+  </piece>
+  <piece direction="y" length="3" type="straight" angle="0">
+   <location x="0" y="3" z="34"/>
+  </piece>
+  <piece direction="y" length="3" type="straight" angle="0">
+   <location x="0" y="3" z="33"/>
+  </piece>
+  <piece direction="x" length="2" type="straight" angle="0">
+   <location x="0" y="4" z="35"/>
+  </piece>
+  <piece direction="-z" length="3" type="straight" angle="90">
+   <location x="1" y="3" z="35"/>
+  </piece>
+  <piece direction="-z" length="3" type="straight" angle="90">
+   <location x="1" y="5" z="35"/>
+  </piece>
+  <piece direction="-z" length="2" type="straight" angle="90">
+   <location x="2" y="3" z="35"/>
+  </piece>
+  <piece direction="y" length="2" type="straight" angle="0">
+   <location x="2" y="3" z="33"/>
+  </piece>
+  <piece direction="z" length="2" type="straight" angle="90">
+   <location x="2" y="5" z="33"/>
+  </piece>
+  <piece direction="-y" length="2" type="straight" angle="0">
+   <location x="2" y="5" z="35"/>
+  </piece>
+  <piece direction="-z" length="1" type="straight" angle="90">
+   <location x="0" y="3" z="35"/>
+  </piece>
+  <piece direction="-z" length="1" type="straight" angle="90">
+   <location x="0" y="5" z="35"/>
+  </piece>
+  <piece direction="-z" length="3" type="straight" angle="0">
+   <location x="4" y="5" z="35"/>
+  </piece>
+  <piece direction="-z" length="3" type="straight" angle="0">
+   <location x="3" y="5" z="35"/>
+  </piece>
+  <piece direction="-y" length="2" type="straight" angle="0">
+   <location x="5" y="5" z="34"/>
+  </piece>
+  <piece direction="-x" length="3" type="straight" angle="270">
+   <location x="5" y="4" z="35"/>
+  </piece>
+  <piece direction="-x" length="3" type="straight" angle="270">
+   <location x="5" y="4" z="33"/>
+  </piece>
+  <piece direction="-x" length="2" type="straight" angle="270">
+   <location x="5" y="3" z="35"/>
+  </piece>
+  <piece direction="-z" length="2" type="straight" angle="0">
+   <location x="3" y="3" z="35"/>
+  </piece>
+  <piece direction="x" length="2" type="straight" angle="270">
+   <location x="3" y="3" z="33"/>
+  </piece>
+  <piece direction="z" length="2" type="straight" angle="0">
+   <location x="5" y="3" z="33"/>
+  </piece>
+  <piece direction="-x" length="1" type="straight" angle="270">
+   <location x="5" y="5" z="35"/>
+  </piece>
+  <piece direction="-x" length="1" type="straight" angle="270">
+   <location x="5" y="5" z="33"/>
+  </piece>
+  <piece direction="-z" length="3" type="straight" angle="0">
+   <location x="5" y="1" z="35"/>
+  </piece>
+  <piece direction="-z" length="3" type="straight" angle="0">
+   <location x="5" y="2" z="35"/>
+  </piece>
+  <piece direction="-x" length="2" type="straight" angle="0">
+   <location x="5" y="0" z="34"/>
+  </piece>
+  <piece direction="y" length="3" type="straight" angle="180">
+   <location x="4" y="0" z="35"/>
+  </piece>
+  <piece direction="y" length="3" type="straight" angle="180">
+   <location x="4" y="0" z="33"/>
+  </piece>
+  <piece direction="y" length="2" type="straight" angle="180">
+   <location x="3" y="0" z="35"/>
+  </piece>
+  <piece direction="-z" length="2" type="straight" angle="0">
+   <location x="3" y="2" z="35"/>
+  </piece>
+  <piece direction="-y" length="2" type="straight" angle="180">
+   <location x="3" y="2" z="33"/>
+  </piece>
+  <piece direction="z" length="2" type="straight" angle="0">
+   <location x="3" y="0" z="33"/>
+  </piece>
+  <piece direction="y" length="1" type="straight" angle="180">
+   <location x="5" y="0" z="35"/>
+  </piece>
+  <piece direction="y" length="1" type="straight" angle="180">
+   <location x="5" y="0" z="33"/>
+  </piece>
+  <piece direction="y" length="3" type="straight" angle="0">
+   <location x="1" y="0" z="33"/>
+  </piece>
+  <piece direction="y" length="3" type="straight" angle="0">
+   <location x="2" y="0" z="33"/>
+  </piece>
+  <piece direction="z" length="2" type="straight" angle="0">
+   <location x="0" y="1" z="33"/>
+  </piece>
+  <piece direction="x" length="3" type="straight" angle="0">
+   <location x="0" y="0" z="34"/>
+  </piece>
+  <piece direction="x" length="3" type="straight" angle="0">
+   <location x="0" y="2" z="34"/>
+  </piece>
+  <piece direction="x" length="2" type="straight" angle="0">
+   <location x="0" y="0" z="35"/>
+  </piece>
+  <piece direction="y" length="2" type="straight" angle="0">
+   <location x="2" y="0" z="35"/>
+  </piece>
+  <piece direction="-x" length="2" type="straight" angle="0">
+   <location x="2" y="2" z="35"/>
+  </piece>
+  <piece direction="-y" length="2" type="straight" angle="0">
+   <location x="0" y="2" z="35"/>
+  </piece>
+  <piece direction="x" length="1" type="straight" angle="0">
+   <location x="0" y="0" z="33"/>
+  </piece>
+  <piece direction="x" length="1" type="straight" angle="0">
+   <location x="0" y="2" z="33"/>
+  </piece>
+  <piece direction="-x" length="3" type="straight" angle="0">
+   <location x="2" y="0" z="37"/>
+  </piece>
+  <piece direction="-x" length="3" type="straight" angle="0">
+   <location x="2" y="0" z="36"/>
+  </piece>
+  <piece direction="y" length="2" type="straight" angle="0">
+   <location x="1" y="0" z="38"/>
+  </piece>
+  <piece direction="-z" length="3" type="straight" angle="0">
+   <location x="2" y="1" z="38"/>
+  </piece>
+  <piece direction="-z" length="3" type="straight" angle="0">
+   <location x="0" y="1" z="38"/>
+  </piece>
+  <piece direction="-z" length="2" type="straight" angle="0">
+   <location x="2" y="2" z="38"/>
+  </piece>
+  <piece direction="-x" length="2" type="straight" angle="0">
+   <location x="2" y="2" z="36"/>
+  </piece>
+  <piece direction="z" length="2" type="straight" angle="0">
+   <location x="0" y="2" z="36"/>
+  </piece>
+  <piece direction="x" length="2" type="straight" angle="0">
+   <location x="0" y="2" z="38"/>
+  </piece>
+  <piece direction="-z" length="1" type="straight" angle="0">
+   <location x="2" y="0" z="38"/>
+  </piece>
+  <piece direction="-z" length="1" type="straight" angle="0">
+   <location x="0" y="0" z="38"/>
+  </piece>
+  <piece direction="-z" length="3" type="straight" angle="0">
+   <location x="0" y="4" z="38"/>
+  </piece>
+  <piece direction="-z" length="3" type="straight" angle="0">
+   <location x="0" y="3" z="38"/>
+  </piece>
+  <piece direction="x" length="2" type="straight" angle="0">
+   <location x="0" y="5" z="37"/>
+  </piece>
+  <piece direction="-y" length="3" type="straight" angle="0">
+   <location x="1" y="5" z="38"/>
+  </piece>
+  <piece direction="-y" length="3" type="straight" angle="0">
+   <location x="1" y="5" z="36"/>
+  </piece>
+  <piece direction="-y" length="2" type="straight" angle="0">
+   <location x="2" y="5" z="38"/>
+  </piece>
+  <piece direction="-z" length="2" type="straight" angle="0">
+   <location x="2" y="3" z="38"/>
+  </piece>
+  <piece direction="y" length="2" type="straight" angle="0">
+   <location x="2" y="3" z="36"/>
+  </piece>
+  <piece direction="z" length="2" type="straight" angle="0">
+   <location x="2" y="5" z="36"/>
+  </piece>
+  <piece direction="-y" length="1" type="straight" angle="0">
+   <location x="0" y="5" z="38"/>
+  </piece>
+  <piece direction="-y" length="1" type="straight" angle="0">
+   <location x="0" y="5" z="36"/>
+  </piece>
+  <piece direction="-z" length="3" type="straight" angle="0">
+   <location x="4" y="5" z="38"/>
+  </piece>
+  <piece direction="-z" length="3" type="straight" angle="0">
+   <location x="3" y="5" z="38"/>
+  </piece>
+  <piece direction="-y" length="2" type="straight" angle="0">
+   <location x="5" y="5" z="37"/>
+  </piece>
+  <piece direction="-x" length="3" type="straight" angle="270">
+   <location x="5" y="4" z="38"/>
+  </piece>
+  <piece direction="-x" length="3" type="straight" angle="270">
+   <location x="5" y="4" z="36"/>
+  </piece>
+  <piece direction="-x" length="2" type="straight" angle="270">
+   <location x="5" y="3" z="38"/>
+  </piece>
+  <piece direction="-z" length="2" type="straight" angle="0">
+   <location x="3" y="3" z="38"/>
+  </piece>
+  <piece direction="x" length="2" type="straight" angle="270">
+   <location x="3" y="3" z="36"/>
+  </piece>
+  <piece direction="z" length="2" type="straight" angle="0">
+   <location x="5" y="3" z="36"/>
+  </piece>
+  <piece direction="-x" length="1" type="straight" angle="270">
+   <location x="5" y="5" z="38"/>
+  </piece>
+  <piece direction="-x" length="1" type="straight" angle="270">
+   <location x="5" y="5" z="36"/>
+  </piece>
+  <piece direction="-x" length="3" type="straight" angle="0">
+   <location x="5" y="1" z="36"/>
+  </piece>
+  <piece direction="-x" length="3" type="straight" angle="0">
+   <location x="5" y="2" z="36"/>
+  </piece>
+  <piece direction="z" length="2" type="straight" angle="0">
+   <location x="4" y="0" z="36"/>
+  </piece>
+  <piece direction="y" length="3" type="straight" angle="270">
+   <location x="5" y="0" z="37"/>
+  </piece>
+  <piece direction="y" length="3" type="straight" angle="270">
+   <location x="3" y="0" z="37"/>
+  </piece>
+  <piece direction="y" length="2" type="straight" angle="270">
+   <location x="5" y="0" z="38"/>
+  </piece>
+  <piece direction="-x" length="2" type="straight" angle="0">
+   <location x="5" y="2" z="38"/>
+  </piece>
+  <piece direction="-y" length="2" type="straight" angle="270">
+   <location x="3" y="2" z="38"/>
+  </piece>
+  <piece direction="x" length="2" type="straight" angle="0">
+   <location x="3" y="0" z="38"/>
+  </piece>
+  <piece direction="y" length="1" type="straight" angle="270">
+   <location x="5" y="0" z="36"/>
+  </piece>
+  <piece direction="y" length="1" type="straight" angle="270">
+   <location x="3" y="0" z="36"/>
+  </piece>
+  <piece direction="-y" length="3" type="straight" angle="0">
+   <location x="5" y="2" z="40"/>
+  </piece>
+  <piece direction="-y" length="3" type="straight" angle="0">
+   <location x="5" y="2" z="39"/>
+  </piece>
+  <piece direction="-x" length="2" type="straight" angle="0">
+   <location x="5" y="1" z="41"/>
+  </piece>
+  <piece direction="-z" length="3" type="straight" angle="270">
+   <location x="4" y="2" z="41"/>
+  </piece>
+  <piece direction="-z" length="3" type="straight" angle="270">
+   <location x="4" y="0" z="41"/>
+  </piece>
+  <piece direction="-z" length="2" type="straight" angle="270">
+   <location x="3" y="2" z="41"/>
+  </piece>
+  <piece direction="-y" length="2" type="straight" angle="0">
+   <location x="3" y="2" z="39"/>
+  </piece>
+  <piece direction="z" length="2" type="straight" angle="270">
+   <location x="3" y="0" z="39"/>
+  </piece>
+  <piece direction="y" length="2" type="straight" angle="0">
+   <location x="3" y="0" z="41"/>
+  </piece>
+  <piece direction="-z" length="1" type="straight" angle="270">
+   <location x="5" y="2" z="41"/>
+  </piece>
+  <piece direction="-z" length="1" type="straight" angle="270">
+   <location x="5" y="0" z="41"/>
+  </piece>
+  <piece direction="-z" length="3" type="straight" angle="0">
+   <location x="1" y="0" z="41"/>
+  </piece>
+  <piece direction="-z" length="3" type="straight" angle="0">
+   <location x="2" y="0" z="41"/>
+  </piece>
+  <piece direction="y" length="2" type="straight" angle="0">
+   <location x="0" y="0" z="40"/>
+  </piece>
+  <piece direction="x" length="3" type="straight" angle="270">
+   <location x="0" y="1" z="41"/>
+  </piece>
+  <piece direction="x" length="3" type="straight" angle="270">
+   <location x="0" y="1" z="39"/>
+  </piece>
+  <piece direction="x" length="2" type="straight" angle="270">
+   <location x="0" y="2" z="41"/>
+  </piece>
+  <piece direction="-z" length="2" type="straight" angle="0">
+   <location x="2" y="2" z="41"/>
+  </piece>
+  <piece direction="-x" length="2" type="straight" angle="270">
+   <location x="2" y="2" z="39"/>
+  </piece>
+  <piece direction="z" length="2" type="straight" angle="0">
+   <location x="0" y="2" z="39"/>
+  </piece>
+  <piece direction="x" length="1" type="straight" angle="270">
+   <location x="0" y="0" z="41"/>
+  </piece>
+  <piece direction="x" length="1" type="straight" angle="270">
+   <location x="0" y="0" z="39"/>
+  </piece>
+  <piece direction="-z" length="3" type="straight" angle="0">
+   <location x="0" y="4" z="41"/>
+  </piece>
+  <piece direction="-z" length="3" type="straight" angle="0">
+   <location x="0" y="3" z="41"/>
+  </piece>
+  <piece direction="x" length="2" type="straight" angle="0">
+   <location x="0" y="5" z="40"/>
+  </piece>
+  <piece direction="-y" length="3" type="straight" angle="0">
+   <location x="1" y="5" z="41"/>
+  </piece>
+  <piece direction="-y" length="3" type="straight" angle="0">
+   <location x="1" y="5" z="39"/>
+  </piece>
+  <piece direction="-y" length="2" type="straight" angle="0">
+   <location x="2" y="5" z="41"/>
+  </piece>
+  <piece direction="-z" length="2" type="straight" angle="0">
+   <location x="2" y="3" z="41"/>
+  </piece>
+  <piece direction="y" length="2" type="straight" angle="0">
+   <location x="2" y="3" z="39"/>
+  </piece>
+  <piece direction="z" length="2" type="straight" angle="0">
+   <location x="2" y="5" z="39"/>
+  </piece>
+  <piece direction="-y" length="1" type="straight" angle="0">
+   <location x="0" y="5" z="41"/>
+  </piece>
+  <piece direction="-y" length="1" type="straight" angle="0">
+   <location x="0" y="5" z="39"/>
+  </piece>
+  <piece direction="-y" length="3" type="straight" angle="0">
+   <location x="4" y="5" z="39"/>
+  </piece>
+  <piece direction="-y" length="3" type="straight" angle="0">
+   <location x="3" y="5" z="39"/>
+  </piece>
+  <piece direction="z" length="2" type="straight" angle="0">
+   <location x="5" y="4" z="39"/>
+  </piece>
+  <piece direction="-x" length="3" type="straight" angle="0">
+   <location x="5" y="5" z="40"/>
+  </piece>
+  <piece direction="-x" length="3" type="straight" angle="0">
+   <location x="5" y="3" z="40"/>
+  </piece>
+  <piece direction="-x" length="2" type="straight" angle="0">
+   <location x="5" y="5" z="41"/>
+  </piece>
+  <piece direction="-y" length="2" type="straight" angle="0">
+   <location x="3" y="5" z="41"/>
+  </piece>
+  <piece direction="x" length="2" type="straight" angle="0">
+   <location x="3" y="3" z="41"/>
+  </piece>
+  <piece direction="y" length="2" type="straight" angle="0">
+   <location x="5" y="3" z="41"/>
+  </piece>
+  <piece direction="-x" length="1" type="straight" angle="0">
+   <location x="5" y="5" z="39"/>
+  </piece>
+  <piece direction="-x" length="1" type="straight" angle="0">
+   <location x="5" y="3" z="39"/>
+  </piece>
+  <piece direction="x" length="3" type="straight" angle="0">
+   <location x="3" y="5" z="43"/>
+  </piece>
+  <piece direction="x" length="3" type="straight" angle="0">
+   <location x="3" y="5" z="42"/>
+  </piece>
+  <piece direction="-y" length="2" type="straight" angle="0">
+   <location x="4" y="5" z="44"/>
+  </piece>
+  <piece direction="-z" length="3" type="straight" angle="180">
+   <location x="3" y="4" z="44"/>
+  </piece>
+  <piece direction="-z" length="3" type="straight" angle="180">
+   <location x="5" y="4" z="44"/>
+  </piece>
+  <piece direction="-z" length="2" type="straight" angle="180">
+   <location x="3" y="3" z="44"/>
+  </piece>
+  <piece direction="x" length="2" type="straight" angle="0">
+   <location x="3" y="3" z="42"/>
+  </piece>
+  <piece direction="z" length="2" type="straight" angle="180">
+   <location x="5" y="3" z="42"/>
+  </piece>
+  <piece direction="-x" length="2" type="straight" angle="0">
+   <location x="5" y="3" z="44"/>
+  </piece>
+  <piece direction="-z" length="1" type="straight" angle="180">
+   <location x="3" y="5" z="44"/>
+  </piece>
+  <piece direction="-z" length="1" type="straight" angle="180">
+   <location x="5" y="5" z="44"/>
+  </piece>
+  <piece direction="-z" length="3" type="straight" angle="0">
+   <location x="5" y="1" z="44"/>
+  </piece>
+  <piece direction="-z" length="3" type="straight" angle="0">
+   <location x="5" y="2" z="44"/>
+  </piece>
+  <piece direction="-x" length="2" type="straight" angle="0">
+   <location x="5" y="0" z="43"/>
+  </piece>
+  <piece direction="y" length="3" type="straight" angle="180">
+   <location x="4" y="0" z="44"/>
+  </piece>
+  <piece direction="y" length="3" type="straight" angle="180">
+   <location x="4" y="0" z="42"/>
+  </piece>
+  <piece direction="y" length="2" type="straight" angle="180">
+   <location x="3" y="0" z="44"/>
+  </piece>
+  <piece direction="-z" length="2" type="straight" angle="0">
+   <location x="3" y="2" z="44"/>
+  </piece>
+  <piece direction="-y" length="2" type="straight" angle="180">
+   <location x="3" y="2" z="42"/>
+  </piece>
+  <piece direction="z" length="2" type="straight" angle="0">
+   <location x="3" y="0" z="42"/>
+  </piece>
+  <piece direction="y" length="1" type="straight" angle="180">
+   <location x="5" y="0" z="44"/>
+  </piece>
+  <piece direction="y" length="1" type="straight" angle="180">
+   <location x="5" y="0" z="42"/>
+  </piece>
+  <piece direction="-z" length="3" type="straight" angle="0">
+   <location x="1" y="0" z="44"/>
+  </piece>
+  <piece direction="-z" length="3" type="straight" angle="0">
+   <location x="2" y="0" z="44"/>
+  </piece>
+  <piece direction="y" length="2" type="straight" angle="0">
+   <location x="0" y="0" z="43"/>
+  </piece>
+  <piece direction="x" length="3" type="straight" angle="270">
+   <location x="0" y="1" z="44"/>
+  </piece>
+  <piece direction="x" length="3" type="straight" angle="270">
+   <location x="0" y="1" z="42"/>
+  </piece>
+  <piece direction="x" length="2" type="straight" angle="270">
+   <location x="0" y="2" z="44"/>
+  </piece>
+  <piece direction="-z" length="2" type="straight" angle="0">
+   <location x="2" y="2" z="44"/>
+  </piece>
+  <piece direction="-x" length="2" type="straight" angle="270">
+   <location x="2" y="2" z="42"/>
+  </piece>
+  <piece direction="z" length="2" type="straight" angle="0">
+   <location x="0" y="2" z="42"/>
+  </piece>
+  <piece direction="x" length="1" type="straight" angle="270">
+   <location x="0" y="0" z="44"/>
+  </piece>
+  <piece direction="x" length="1" type="straight" angle="270">
+   <location x="0" y="0" z="42"/>
+  </piece>
+  <piece direction="x" length="3" type="straight" angle="0">
+   <location x="0" y="4" z="42"/>
+  </piece>
+  <piece direction="x" length="3" type="straight" angle="0">
+   <location x="0" y="3" z="42"/>
+  </piece>
+  <piece direction="z" length="2" type="straight" angle="0">
+   <location x="1" y="5" z="42"/>
+  </piece>
+  <piece direction="-y" length="3" type="straight" angle="90">
+   <location x="0" y="5" z="43"/>
+  </piece>
+  <piece direction="-y" length="3" type="straight" angle="90">
+   <location x="2" y="5" z="43"/>
+  </piece>
+  <piece direction="-y" length="2" type="straight" angle="90">
+   <location x="0" y="5" z="44"/>
+  </piece>
+  <piece direction="x" length="2" type="straight" angle="0">
+   <location x="0" y="3" z="44"/>
+  </piece>
+  <piece direction="y" length="2" type="straight" angle="90">
+   <location x="2" y="3" z="44"/>
+  </piece>
+  <piece direction="-x" length="2" type="straight" angle="0">
+   <location x="2" y="5" z="44"/>
+  </piece>
+  <piece direction="-y" length="1" type="straight" angle="90">
+   <location x="0" y="5" z="42"/>
+  </piece>
+  <piece direction="-y" length="1" type="straight" angle="90">
+   <location x="2" y="5" z="42"/>
+  </piece>
+  <piece direction="y" length="3" type="straight" angle="0">
+   <location x="0" y="3" z="46"/>
+  </piece>
+  <piece direction="y" length="3" type="straight" angle="0">
+   <location x="0" y="3" z="45"/>
+  </piece>
+  <piece direction="x" length="2" type="straight" angle="0">
+   <location x="0" y="4" z="47"/>
+  </piece>
+  <piece direction="-z" length="3" type="straight" angle="90">
+   <location x="1" y="3" z="47"/>
+  </piece>
+  <piece direction="-z" length="3" type="straight" angle="90">
+   <location x="1" y="5" z="47"/>
+  </piece>
+  <piece direction="-z" length="2" type="straight" angle="90">
+   <location x="2" y="3" z="47"/>
+  </piece>
+  <piece direction="y" length="2" type="straight" angle="0">
+   <location x="2" y="3" z="45"/>
+  </piece>
+  <piece direction="z" length="2" type="straight" angle="90">
+   <location x="2" y="5" z="45"/>
+  </piece>
+  <piece direction="-y" length="2" type="straight" angle="0">
+   <location x="2" y="5" z="47"/>
+  </piece>
+  <piece direction="-z" length="1" type="straight" angle="90">
+   <location x="0" y="3" z="47"/>
+  </piece>
+  <piece direction="-z" length="1" type="straight" angle="90">
+   <location x="0" y="5" z="47"/>
+  </piece>
+  <piece direction="-z" length="3" type="straight" angle="0">
+   <location x="4" y="5" z="47"/>
+  </piece>
+  <piece direction="-z" length="3" type="straight" angle="0">
+   <location x="3" y="5" z="47"/>
+  </piece>
+  <piece direction="-y" length="2" type="straight" angle="0">
+   <location x="5" y="5" z="46"/>
+  </piece>
+  <piece direction="-x" length="3" type="straight" angle="270">
+   <location x="5" y="4" z="47"/>
+  </piece>
+  <piece direction="-x" length="3" type="straight" angle="270">
+   <location x="5" y="4" z="45"/>
+  </piece>
+  <piece direction="-x" length="2" type="straight" angle="270">
+   <location x="5" y="3" z="47"/>
+  </piece>
+  <piece direction="-z" length="2" type="straight" angle="0">
+   <location x="3" y="3" z="47"/>
+  </piece>
+  <piece direction="x" length="2" type="straight" angle="270">
+   <location x="3" y="3" z="45"/>
+  </piece>
+  <piece direction="z" length="2" type="straight" angle="0">
+   <location x="5" y="3" z="45"/>
+  </piece>
+  <piece direction="-x" length="1" type="straight" angle="270">
+   <location x="5" y="5" z="47"/>
+  </piece>
+  <piece direction="-x" length="1" type="straight" angle="270">
+   <location x="5" y="5" z="45"/>
+  </piece>
+  <piece direction="-z" length="3" type="straight" angle="0">
+   <location x="5" y="1" z="47"/>
+  </piece>
+  <piece direction="-z" length="3" type="straight" angle="0">
+   <location x="5" y="2" z="47"/>
+  </piece>
+  <piece direction="-x" length="2" type="straight" angle="0">
+   <location x="5" y="0" z="46"/>
+  </piece>
+  <piece direction="y" length="3" type="straight" angle="180">
+   <location x="4" y="0" z="47"/>
+  </piece>
+  <piece direction="y" length="3" type="straight" angle="180">
+   <location x="4" y="0" z="45"/>
+  </piece>
+  <piece direction="y" length="2" type="straight" angle="180">
+   <location x="3" y="0" z="47"/>
+  </piece>
+  <piece direction="-z" length="2" type="straight" angle="0">
+   <location x="3" y="2" z="47"/>
+  </piece>
+  <piece direction="-y" length="2" type="straight" angle="180">
+   <location x="3" y="2" z="45"/>
+  </piece>
+  <piece direction="z" length="2" type="straight" angle="0">
+   <location x="3" y="0" z="45"/>
+  </piece>
+  <piece direction="y" length="1" type="straight" angle="180">
+   <location x="5" y="0" z="47"/>
+  </piece>
+  <piece direction="y" length="1" type="straight" angle="180">
+   <location x="5" y="0" z="45"/>
+  </piece>
+  <piece direction="y" length="3" type="straight" angle="0">
+   <location x="1" y="0" z="45"/>
+  </piece>
+  <piece direction="y" length="3" type="straight" angle="0">
+   <location x="2" y="0" z="45"/>
+  </piece>
+  <piece direction="z" length="2" type="straight" angle="0">
+   <location x="0" y="1" z="45"/>
+  </piece>
+  <piece direction="x" length="3" type="straight" angle="0">
+   <location x="0" y="0" z="46"/>
+  </piece>
+  <piece direction="x" length="3" type="straight" angle="0">
+   <location x="0" y="2" z="46"/>
+  </piece>
+  <piece direction="x" length="2" type="straight" angle="0">
+   <location x="0" y="0" z="47"/>
+  </piece>
+  <piece direction="y" length="2" type="straight" angle="0">
+   <location x="2" y="0" z="47"/>
+  </piece>
+  <piece direction="-x" length="2" type="straight" angle="0">
+   <location x="2" y="2" z="47"/>
+  </piece>
+  <piece direction="-y" length="2" type="straight" angle="0">
+   <location x="0" y="2" z="47"/>
+  </piece>
+  <piece direction="x" length="1" type="straight" angle="0">
+   <location x="0" y="0" z="45"/>
+  </piece>
+  <piece direction="x" length="1" type="straight" angle="0">
+   <location x="0" y="2" z="45"/>
+  </piece>
+ </pieces>
+</board>
