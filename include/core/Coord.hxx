@@ -25,9 +25,10 @@
 #include <cmath>
 #include <QVector>
 #include <QString>
-class QTextStream;
-class QDomDocument;
-class QDomElement;
+#include <QTextStream>
+#include <QDomDocument>
+#include <QDomElement>
+#include "core/Exception.hxx"
 
 
 namespace Direction {
@@ -94,35 +95,37 @@ namespace Angle {
 /**
    A class to describe discrete 3D coordinates
  */
-class Coord {
+template <typename T>
+class CoordT {
 private:
-  int x;
-  int y;
-  int z;
+  T x;
+  T y;
+  T z;
 public:
   /** constructor */
-  Coord(int cx = 0, int cy = 0, int cz = 0) : x(cx), y(cy), z(cz) {
+  CoordT(T cx = 0, T cy = 0, T cz = 0) : x(cx), y(cy), z(cz) {
   }
   /** copy constructor */
-  Coord(const Coord & c) : x(c.x), y(c.y), z(c.z) {
+  template <class S>
+  CoordT(const CoordT<S> & c) : x(c.getX()), y(c.getY()), z(c.getZ()) {
   }
   /** accessor */
-  inline int getX() const { return x; }
+  inline T getX() const { return x; }
   /** accessor */
-  inline int getY() const { return y; }
+  inline T getY() const { return y; }
   /** accessor */
-  inline int getZ() const { return z; }
+  inline T getZ() const { return z; }
 
   /** modifier */
-  inline Coord & setX(int v) { x = v; return *this; }
+  inline CoordT & setX(T v) { x = v; return *this; }
   /** modifier */
-  inline Coord & setY(int v) { y = v; return *this; }
+  inline CoordT & setY(T v) { y = v; return *this; }
   /** modifier */
-  inline Coord & setZ(int v) { z = v; return *this; }
+  inline CoordT & setZ(T v) { z = v; return *this; }
 
 
   /** affectation */
-  Coord & operator=(const Coord & c) {
+  CoordT & operator=(const CoordT & c) {
     x = c.x;
     y = c.y;
     z = c.z;
@@ -130,36 +133,36 @@ public:
   }
 
   /** comparator */
-  inline bool operator==(const Coord & c) const {
+  inline bool operator==(const CoordT & c) const {
     return x == c.x && y == c.y && z == c.z;
   }
 
   /** comparator */
-  inline bool operator !=(const Coord & c) const {
+  inline bool operator !=(const CoordT & c) const {
     return x != c.x || y != c.y || z != c.z;
   }
 
   /** comparison operator used by ordering algorithms */
-  inline bool operator<(const Coord & c) const {
+  inline bool operator<(const CoordT & c) const {
     return ((x < c.x) ||
 	    ((x == c.x) && ((y < c.y) ||
 			    ((y == c.y) && (z < c.z)))));
   }
 
   /** translation */
-  inline Coord & operator +=(const Coord & coord) {
+  inline CoordT & operator +=(const CoordT & coord) {
     return addX(coord.x).addY(coord.y).addZ(coord.z);
   }
 
   /** translation along x */
-  inline Coord & addX(int v) { x += v; return *this; }
+  inline CoordT & addX(T v) { x += v; return *this; }
   /** translation along y */
-  inline Coord & addY(int v) { y += v; return *this; }
+  inline CoordT & addY(T v) { y += v; return *this; }
   /** translation along z */
-  inline Coord & addZ(int v) { z += v; return *this; }
+  inline CoordT & addZ(T v) { z += v; return *this; }
 
   /** translate the current point in the given direction, with a distance of \p t */
-  Coord & translate(const Direction::Type & direction, unsigned int t = 1) {
+  CoordT & translate(const Direction::Type & direction, unsigned int t = 1) {
     if (direction == Direction::Xplus)
       addX(t);
     else if (direction == Direction::Xminus)
@@ -176,44 +179,43 @@ public:
   }
 
   /** translation operator */
-  inline Coord & operator+=(const Direction::Type & direction) {
+  inline CoordT & operator+=(const Direction::Type & direction) {
     return translate(direction);
   }
 
   /** create a new object by translation */
-  inline Coord getTranslate(const Direction::Type & direction,
-                           unsigned int t = 1) const
-  {
-    Coord result(*this);
+  inline CoordT getTranslate(const Direction::Type & direction,
+			     unsigned int t = 1) const {
+    CoordT result(*this);
     return result.translate(direction, t);
   }
 
   /** transform the point using first a rotation arround axis Xplus with angle \p angle,
       then reorient the coordinate system along the main given direction, then apply a translation */
-  Coord & transform(const Angle::Type & angle, const Direction::Type & direction = Direction::Xplus, const Coord & translation = Coord(0, 0, 0));
+  CoordT & transform(const Angle::Type & angle, const Direction::Type & direction = Direction::Xplus, const CoordT & translation = CoordT(0, 0, 0));
 
   /** create a new point from the current one using first a rotation arround axis Xplus with angle \p angle,
       then reorient the coordinate system along the main given direction, then apply a translation */
-  inline Coord getTransform(const Angle::Type & angle, const Direction::Type & direction = Direction::Xplus, const Coord & translation = Coord(0, 0, 0)) const {
-    Coord r(*this);
+  inline CoordT getTransform(const Angle::Type & angle, const Direction::Type & direction = Direction::Xplus, const CoordT & translation = CoordT(0, 0, 0)) const {
+    CoordT r(*this);
     return r.transform(angle, direction, translation);
   }
 
   /** translation by 1 in the given direction */
-  inline Coord operator+(const Direction::Type & direction) const {
-    Coord r(*this);
+  inline CoordT operator+(const Direction::Type & direction) const {
+    CoordT r(*this);
     return r.translate(direction);
   }
 
   /** translation operator */
-  inline Coord operator+(const Coord & vector) const {
-    Coord r(*this);
+  inline CoordT operator+(const CoordT & vector) const {
+    CoordT r(*this);
     r += vector;
     return r;
   }
 
   /** compute the distance between two discrete points */
-  double distance(const Coord & c) const {
+  double distance(const CoordT & c) const {
     return sqrt((x - c.x) * (x - c.x) +
 		(y - c.y) * (y - c.y) +
 		(z - c.z) * (z - c.z));
@@ -223,16 +225,119 @@ public:
   QDomElement toXML(QDomDocument & doc, const QString & name = "coord") const;
 
   /** set coord values using an XML element */
-  inline Coord & operator=(const QDomElement & elem) {
+  inline CoordT & operator=(const QDomElement & elem) {
     return fromXML(elem);
   }
 
   /** set coord values using an XML element */
-  Coord & fromXML(const QDomElement & elem, const QString & name = "coord");
+  CoordT & fromXML(const QDomElement & elem, const QString & name = "coord");
 
 };
 
-QTextStream & operator<<(QTextStream & f, const Coord & p);
+typedef CoordT<int> Coord;
+
+typedef CoordT<float> CoordF;
+
+template <typename T>
+QTextStream & operator<<(QTextStream & f, const CoordT<T> & p);
+
+
+template <typename T>
+QTextStream & operator<<(QTextStream & f, const CoordT<T> & p) {
+  f << QString("(%1, %2, %3)").arg(p.getX()).arg(p.getY()).arg(p.getZ());
+  return f;
+}
+
+
+template <typename T>
+QDomElement CoordT<T>::toXML(QDomDocument & doc, const QString & name) const {
+  QDomElement b = doc.createElement(name);
+  b.setAttribute("x", QString().setNum(getX()));
+  b.setAttribute("y", QString().setNum(getY()));
+  b.setAttribute("z", QString().setNum(getZ()));
+  return b;
+}
+
+
+template <typename T>
+CoordT<T> & CoordT<T>::fromXML(const QDomElement & elem, const QString & name) {
+  if (elem.isNull())
+    throw Exception("NULL Dom element");
+  if (elem.tagName() != name)
+    throw Exception("Bad name");
+
+  bool ok;
+  QString sx = elem.attribute("x");
+  T cx = sx.toUInt(&ok);
+  if (!ok) throw Exception("Bad coordinate description");
+  QString sy = elem.attribute("y");
+  T cy = sy.toUInt(&ok);
+  if (!ok) throw Exception("Bad coordinate description");
+  QString sz = elem.attribute("z");
+  T cz = sz.toUInt(&ok);
+  if (!ok) throw Exception("Bad coordinate description");
+
+  return setX(cx).setY(cy).setZ(cz);
+}
+
+
+template <typename T>
+CoordT<T> & CoordT<T>::transform(const Angle::Type & angle,
+				 const Direction::Type & direction,
+				 const CoordT & translation)
+{
+  // first apply rotation (counterclockwise)
+  {
+    const T y_ = getY();
+    const T z_ = getZ();
+    switch(angle)  {
+    case Angle::A90:
+      setY(-z_).setZ(y_);
+      break;
+    case Angle::A180:
+      setY(-y_).setZ(-z_);
+      break;
+    case Angle::A270:
+      setY(z_).setZ(-y_);
+      break;
+    case Angle::A0:
+    default:
+      break;
+    }
+  }
+
+  // then apply direction
+  {
+    const T x_ = getX();
+    const T y_ = getY();
+    const T z_ = getZ();
+    switch(direction)  {
+    case Direction::Yplus:
+      setX(z_).setY(x_).setZ(y_);
+      break;
+    case Direction::Yminus:
+      setX(z_).setY(-x_).setZ(-y_);
+      break;
+    case Direction::Zplus:
+      setX(y_).setY(z).setZ(x_);
+      break;
+    case Direction::Zminus:
+      setX(-y_).setY(z).setZ(-x_);
+      break;
+    case Direction::Xminus:
+      setX(-x_).setY(-y).setZ(z_);
+      break;
+    case Direction::Xplus:
+    default:
+      break;
+    }
+  }
+
+  // finally, translation
+  (*this) += translation;
+
+  return *this;
+}
 
 
 #endif // VOXIGAME_CORE_COORD_HXX

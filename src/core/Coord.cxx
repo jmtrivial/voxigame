@@ -20,11 +20,7 @@
  *****************************************************************************/
 
 #include "core/Coord.hxx"
-#include "core/Exception.hxx"
 
-#include <QTextStream>
-#include <QDomDocument>
-#include <QDomElement>
 
 
 namespace Direction {
@@ -255,95 +251,3 @@ Angle fromString(const QString & s) {
 } // namespace Angle
 
 
-QTextStream & operator<<(QTextStream & f, const Coord & p) {
-  f << "(" << p.getX() << ", " << p.getY() << ", " << p.getZ() << ")";
-  return f;
-}
-
-
-QDomElement Coord::toXML(QDomDocument & doc, const QString & name) const {
-  QDomElement b = doc.createElement(name);
-  b.setAttribute("x", QString().setNum(getX()));
-  b.setAttribute("y", QString().setNum(getY()));
-  b.setAttribute("z", QString().setNum(getZ()));
-  return b;
-}
-
-
-Coord & Coord::fromXML(const QDomElement & elem, const QString & name) {
-  if (elem.isNull())
-    throw Exception("NULL Dom element");
-  if (elem.tagName() != name)
-    throw Exception("Bad name");
-
-  bool ok;
-  QString sx = elem.attribute("x");
-  int cx = sx.toUInt(&ok);
-  if (!ok) throw Exception("Bad coordinate description");
-  QString sy = elem.attribute("y");
-  int cy = sy.toUInt(&ok);
-  if (!ok) throw Exception("Bad coordinate description");
-  QString sz = elem.attribute("z");
-  int cz = sz.toUInt(&ok);
-  if (!ok) throw Exception("Bad coordinate description");
-
-  return setX(cx).setY(cy).setZ(cz);
-}
-
-
-Coord & Coord::transform(const Angle::Type & angle,
-                         const Direction::Type & direction,
-                         const Coord & translation)
-{
-  // first apply rotation (counterclockwise)
-  {
-    const double y_ = getY();
-    const double z_ = getZ();
-    switch(angle)  {
-    case Angle::A90:
-      setY(-z_).setZ(y_);
-      break;
-    case Angle::A180:
-      setY(-y_).setZ(-z_);
-      break;
-    case Angle::A270:
-      setY(z_).setZ(-y_);
-      break;
-    case Angle::A0:
-    default:
-      break;
-    }
-  }
-
-  // then apply direction
-  {
-    const double x_ = getX();
-    const double y_ = getY();
-    const double z_ = getZ();
-    switch(direction)  {
-    case Direction::Yplus:
-      setX(z_).setY(x_).setZ(y_);
-      break;
-    case Direction::Yminus:
-      setX(z_).setY(-x_).setZ(-y_);
-      break;
-    case Direction::Zplus:
-      setX(y_).setY(z).setZ(x_);
-      break;
-    case Direction::Zminus:
-      setX(-y_).setY(z).setZ(-x_);
-      break;
-    case Direction::Xminus:
-      setX(-x_).setY(-y).setZ(z_);
-      break;
-    case Direction::Xplus:
-    default:
-      break;
-    }
-  }
-
-  // finally, translation
-  (*this) += translation;
-
-  return *this;
-}
