@@ -40,6 +40,8 @@ Manual::Manual(const Board & b) : board(b), substep(false), nbcolumns(2),
 				  epsilonmargin(1.),
 				  penNewObject(Qt::black, .5),
 				  penOldObject(Qt::darkGray, .5),
+				  penBoardBack(Qt::gray, .5, Qt::DashDotLine),
+				  penBoardFront(Qt::gray, .5),
 				  brushNewObject(Qt::white),
 				  brushOldObject(Qt::lightGray) {
   if (!board.isValid())
@@ -282,8 +284,24 @@ void Manual::drawBoard(QGraphicsScene & scene,
 		       const QRectF & region, float ratio,
 		       const QVector<QSharedPointer<Piece> > & oldpieces,
 		       const QVector<QSharedPointer<Piece> > & newpieces, bool drawNewPieces) const {
-  //const Box & box = board.getBox();
-  // TODO: draw back part
+  QPointF origin(region.topLeft());
+  const Box & box = board.getBox();
+  origin += getTranslationFromOrigin(box, ratio);
+
+  CoordF p000(-.5, -.5, -.5);
+  CoordF p001(-.5, -.5, box.getSizeZ() + .5);
+  CoordF p010(-.5, box.getSizeY() + .5, -.5);
+  CoordF p100(box.getSizeX() + .5, -.5, -.5);
+
+  QLineF lineA(getDrawingLocation(p000, origin, ratio),
+	       getDrawingLocation(p001, origin, ratio));
+  scene.addLine(lineA, penBoardBack);
+  QLineF lineB(getDrawingLocation(p000, origin, ratio),
+	       getDrawingLocation(p010, origin, ratio));
+  scene.addLine(lineB, penBoardBack);
+  QLineF lineC(getDrawingLocation(p000, origin, ratio),
+	       getDrawingLocation(p100, origin, ratio));
+  scene.addLine(lineC, penBoardBack);
 
   // create drawing objects
   QVector<DObject> objects;
@@ -305,10 +323,23 @@ void Manual::drawBoard(QGraphicsScene & scene,
     }
 
   // then draw it
-  QPointF origin(region.topLeft());
-  origin += getTranslationFromOrigin(board.getBox(), ratio);
   drawObjects(scene, origin, objects, ratio);
 
+
+  CoordF pp000(box.getSizeX() + .5, box.getSizeY() + .5, box.getSizeZ() + .5);
+  CoordF pp001(box.getSizeX() + .5, box.getSizeY() + .5, -.5);
+  CoordF pp010(box.getSizeX() + .5, - .5, box.getSizeZ() + .5);
+  CoordF pp100(- .5, box.getSizeY() + .5, box.getSizeZ() + .5);
+
+  QLineF lineD(getDrawingLocation(pp000, origin, ratio),
+	       getDrawingLocation(pp001, origin, ratio));
+  scene.addLine(lineD, penBoardFront);
+  QLineF lineE(getDrawingLocation(pp000, origin, ratio),
+	       getDrawingLocation(pp010, origin, ratio));
+  scene.addLine(lineE, penBoardFront);
+  QLineF lineF(getDrawingLocation(pp000, origin, ratio),
+	       getDrawingLocation(pp100, origin, ratio));
+  scene.addLine(lineF, penBoardFront);
 
   // TODO: draw front part
 }

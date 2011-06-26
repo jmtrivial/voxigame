@@ -84,6 +84,8 @@ private:
 
   QPen penNewObject;
   QPen penOldObject;
+  QPen penBoardBack;
+  QPen penBoardFront;
 
   QBrush brushNewObject;
   QBrush brushOldObject;
