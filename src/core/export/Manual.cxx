@@ -27,8 +27,8 @@
 #include "core/export/Manual.hxx"
 
 
-const QPointF Manual::xunit(-.5, .3);
-const QPointF Manual::yunit(1., 0.);
+const QPointF Manual::xunit(1., 0.);
+const QPointF Manual::yunit(.5, -.3);
 const QPointF Manual::zunit(0., -1.);
 
 
@@ -38,10 +38,10 @@ Manual::Manual(const Board & b) : board(b), substep(false), nbcolumns(2),
 				  innermargin(15.), outermargin(7.), bottommargin(5.), topmargin(5.),
 				  columnmargin(5.), footerwidth(20), headererwidth(15.),
 				  epsilonmargin(1.),
-				  penNewObject(Qt::black, .5),
-				  penOldObject(Qt::darkGray, .5),
-				  penBoardBack(Qt::gray, .5, Qt::DashDotLine),
-				  penBoardFront(Qt::gray, .5),
+				  penNewObject(Qt::black, .5, Qt::SolidLine, Qt::RoundCap),
+				  penOldObject(Qt::darkGray, .5, Qt::SolidLine, Qt::RoundCap),
+				  penBoardBack(Qt::gray, .5, Qt::DashLine, Qt::RoundCap),
+				  penBoardFront(Qt::gray, .5, Qt::SolidLine, Qt::RoundCap),
 				  brushNewObject(Qt::white),
 				  brushOldObject(Qt::lightGray) {
   if (!board.isValid())
@@ -136,8 +136,8 @@ QSharedPointer<QGraphicsScene> Manual::createFirstPage() const {
 
   // then draw the puzzle
   drawInitialBoard(*first,
-		   QRectF(innermargin, btitle.bottom() + columnmargin,
-			  pageSize.width() - outermargin, pageSize.height() - footerwidth - (*text).boundingRect().height() - columnmargin),
+		   QRectF(QPointF(innermargin, btitle.bottom() + columnmargin),
+			  QPointF(pageSize.width() - outermargin, pageSize.height() - footerwidth - (*text).boundingRect().height() - columnmargin)),
 		   board.getPieces());
 
   addFooter(*first, 1);
@@ -149,7 +149,9 @@ void Manual::generate() {
     pages.clear();
 
   pages.push_back(createFirstPage());
+
   // TODO
+  qWarning("Only first page generated.");
 }
 
 bool Manual::toPDF(const QString & filename) {
@@ -212,8 +214,6 @@ Manual::DrawingSize Manual::getDrawingSize(const QMap<QSharedPointer<Piece>, uns
   // get board properties
   const float ratioBoard = getScale(board.getBox()) * region.width();
   QSizeF dBoard = getDrawingSize(board.getBox(), ratioBoard);
-  qDebug(QString::fromUtf8("on part d'une largeur de %1, on arrive à un ratio de %2, donc un dessins de %4").
-	 arg(region.width()).arg(ratioBoard).arg(dBoard.width()).toAscii());
 
   // estimate the size to draw the caption
   Box b;
@@ -241,7 +241,7 @@ Manual::DrawingSize Manual::getDrawingSize(const QMap<QSharedPointer<Piece>, uns
 
   if (optimalHeight > region.height()) {
     // we have to adjust the board and piece list size
-    qWarning(QString("Missing an adjustment: %1 vs %2 (%3 groups)").arg(optimalHeight).arg(region.height()).arg(pgroup.size()).toAscii());
+    qWarning("Missing an adjustment: %f vs %f (%d groups)", optimalHeight, region.height(), pgroup.size());
     // TODO: adjust the sizes according to the constraint
     return DrawingSize(ratioBoard, ratioPiece, nbPieceByLine, dPiece);
   }
@@ -274,13 +274,11 @@ void Manual::drawBoardAndCaption(QGraphicsScene & scene,
   // draw the board
   QRectF boardRect(region);
   boardRect.setBottom(boardRect.top() + heightBoard);
-  scene.addPolygon(QPolygonF(boardRect), penBoardFront);
   drawBoard(scene, boardRect, drawingSize.getBoardRatio(), oldpieces, newpieces, drawNewPieces);
 
   // draw the caption
   QRectF captionRect(region);
   captionRect.setTop(captionRect.top() + heightBoard);
-  scene.addPolygon(QPolygonF(captionRect), penBoardFront);
   drawCaption(scene, captionRect, drawingSize, pgroup);
 
 }
@@ -291,21 +289,25 @@ void Manual::drawBoard(QGraphicsScene & scene,
 		       const QVector<QSharedPointer<Piece> > & newpieces, bool drawNewPieces) const {
   QPointF origin(region.topLeft());
   const Box & box = board.getBox();
-  origin += getTranslationFromOrigin(box, ratio);
+  origin += getOrigin(box, ratio);
 
   CoordF p000(-.5, -.5, -.5);
   CoordF p001(-.5, -.5, box.getSizeZ() + .5);
   CoordF p010(-.5, box.getSizeY() + .5, -.5);
   CoordF p100(box.getSizeX() + .5, -.5, -.5);
+  CoordF pp000(box.getSizeX() + .5, box.getSizeY() + .5, box.getSizeZ() + .5);
+  CoordF pp001(box.getSizeX() + .5, box.getSizeY() + .5, -.5);
+  CoordF pp010(box.getSizeX() + .5, - .5, box.getSizeZ() + .5);
+  CoordF pp100(- .5, box.getSizeY() + .5, box.getSizeZ() + .5);
 
-  QLineF lineA(getDrawingLocation(p000, origin, ratio),
-	       getDrawingLocation(p001, origin, ratio));
+  QLineF lineA(getDrawingLocation(p010, origin, ratio),
+	       getDrawingLocation(p000, origin, ratio));
   scene.addLine(lineA, penBoardBack);
-  QLineF lineB(getDrawingLocation(p000, origin, ratio),
-	       getDrawingLocation(p010, origin, ratio));
+  QLineF lineB(getDrawingLocation(p010, origin, ratio),
+	       getDrawingLocation(pp001, origin, ratio));
   scene.addLine(lineB, penBoardBack);
-  QLineF lineC(getDrawingLocation(p000, origin, ratio),
-	       getDrawingLocation(p100, origin, ratio));
+  QLineF lineC(getDrawingLocation(p010, origin, ratio),
+	       getDrawingLocation(pp100, origin, ratio));
   scene.addLine(lineC, penBoardBack);
 
   // create drawing objects
@@ -331,39 +333,34 @@ void Manual::drawBoard(QGraphicsScene & scene,
   drawObjects(scene, origin, objects, ratio);
 
 
-  CoordF pp000(box.getSizeX() + .5, box.getSizeY() + .5, box.getSizeZ() + .5);
-  CoordF pp001(box.getSizeX() + .5, box.getSizeY() + .5, -.5);
-  CoordF pp010(box.getSizeX() + .5, - .5, box.getSizeZ() + .5);
-  CoordF pp100(- .5, box.getSizeY() + .5, box.getSizeZ() + .5);
-
-  QLineF lineD(getDrawingLocation(pp000, origin, ratio),
-	       getDrawingLocation(pp001, origin, ratio));
+  QLineF lineD(getDrawingLocation(pp010, origin, ratio),
+  	       getDrawingLocation(pp000, origin, ratio));
   scene.addLine(lineD, penBoardFront);
-  QLineF lineE(getDrawingLocation(pp000, origin, ratio),
-	       getDrawingLocation(pp010, origin, ratio));
+  QLineF lineE(getDrawingLocation(pp010, origin, ratio),
+  	       getDrawingLocation(p001, origin, ratio));
   scene.addLine(lineE, penBoardFront);
-  QLineF lineF(getDrawingLocation(pp000, origin, ratio),
-	       getDrawingLocation(pp100, origin, ratio));
+  QLineF lineF(getDrawingLocation(pp010, origin, ratio),
+  	       getDrawingLocation(p100, origin, ratio));
   scene.addLine(lineF, penBoardFront);
 
-  QLineF lineG(getDrawingLocation(p100, origin, ratio),
-	       getDrawingLocation(pp001, origin, ratio));
+  QLineF lineG(getDrawingLocation(pp001, origin, ratio),
+  	       getDrawingLocation(p100, origin, ratio));
   scene.addLine(lineG, penBoardFront);
-  QLineF lineH(getDrawingLocation(p001, origin, ratio),
-	       getDrawingLocation(pp010, origin, ratio));
+  QLineF lineH(getDrawingLocation(pp001, origin, ratio),
+  	       getDrawingLocation(pp000, origin, ratio));
   scene.addLine(lineH, penBoardFront);
-  QLineF lineI(getDrawingLocation(p010, origin, ratio),
-	       getDrawingLocation(pp100, origin, ratio));
+  QLineF lineI(getDrawingLocation(p100, origin, ratio),
+  	       getDrawingLocation(p000, origin, ratio));
   scene.addLine(lineI, penBoardFront);
 
-  QLineF lineJ(getDrawingLocation(p010, origin, ratio),
-	       getDrawingLocation(pp001, origin, ratio));
+  QLineF lineJ(getDrawingLocation(p000, origin, ratio),
+  	       getDrawingLocation(p001, origin, ratio));
   scene.addLine(lineJ, penBoardFront);
-  QLineF lineK(getDrawingLocation(p100, origin, ratio),
-	       getDrawingLocation(pp010, origin, ratio));
+  QLineF lineK(getDrawingLocation(p001, origin, ratio),
+  	       getDrawingLocation(pp100, origin, ratio));
   scene.addLine(lineK, penBoardFront);
-  QLineF lineL(getDrawingLocation(p001, origin, ratio),
-	       getDrawingLocation(pp100, origin, ratio));
+  QLineF lineL(getDrawingLocation(pp100, origin, ratio),
+  	       getDrawingLocation(pp000, origin, ratio));
   scene.addLine(lineL, penBoardFront);
 
 }
@@ -383,9 +380,10 @@ void Manual::drawCaption(QGraphicsScene & scene,
       objects.push_back(DObject(*e, true));
 
     QPointF origin(region.left() + row * dsize.getCaptionCellWidth(), ypos);
-    origin += getTranslationFromOrigin((*(piece.key())).getBoundedBox(), dsize.getCaptionRatio());
+    origin += getOrigin((*(piece.key())).getBoundedBox(), dsize.getCaptionRatio());
     drawObjects(scene, origin, objects, dsize.getCaptionRatio());
 
+    qWarning("Missing text");
     // TODO: add text
 
     ++row;
@@ -430,11 +428,11 @@ void Manual::drawObject(QGraphicsScene &scene, const QPointF & point, const DObj
 }
 
 
-QPointF Manual::getTranslationFromOrigin(const Box & box, float ratio) {
+QPointF Manual::getOrigin(const Box & box, float ratio) {
   QPointF result(0., 0.);
-  result -= ratio * xunit * (box.getSizeX() + 1);
-  result.ry() = 0.;
-  result -= ratio * zunit * (box.getSizeZ() + 1);
+  result -= ratio * yunit * (box.getSizeY());
+  result.rx() = 0.;
+  result -= ratio * zunit * (box.getSizeZ());
   return result;
 }
 
@@ -445,15 +443,18 @@ QPointF Manual::getDrawingLocation(const Coord & coord, const QPointF & point, f
 }
 
 QSizeF Manual::getDrawingSize(const Box & box, float ratio) {
-  QPointF c1 = xunit * (box.getSizeX() + 1);
-  QPointF c2 = yunit * (box.getSizeY() + 1) + zunit * (box.getSizeZ() + 1);
+  QPointF c1(0., 0.);
+  QPointF c2 = xunit * box.getSizeX() + yunit * box.getSizeY() + zunit * box.getSizeZ();
+
+  Q_ASSERT(c1.x() < c2.x());
+  Q_ASSERT(c1.y() > c2.y());
 
   return QSizeF((c2.x() - c1.x()) * ratio, (c1.y() - c2.y()) * ratio);
 }
 
 float Manual::getScale(const Box & box) {
-  QPointF c1 = xunit * (box.getSizeX() + 1);
-  QPointF c2 = yunit * (box.getSizeY() + 1) + zunit * (box.getSizeZ() + 1);
+  QPointF c1(0., 0.);
+  QPointF c2 = xunit * box.getSizeX() + yunit * box.getSizeY() + zunit * box.getSizeZ();
 
   if ((c1.x() == c2.x()) || (c1.y() == c2.y()))
     throw Exception("Bad configuration");
@@ -513,10 +514,10 @@ bool Manual::DObject::operator<(const DObject & dobj) const {
   else if (getMiddleZ() > dobj.getMiddleZ())
     return false;
   else {
-    if ((getMiddleY() < dobj.getMiddleY()) &&
-	(getMiddleZ() < dobj.getMiddleZ()))
+    if (getMiddleY() > dobj.getMiddleY()) {
       return true;
-    if (isEdge())
+    }
+    else if (isEdge())
       return true;
     else
       return false;

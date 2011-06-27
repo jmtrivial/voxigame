@@ -211,7 +211,7 @@ private:
 
   static QPointF getDrawingLocation(const Coord & coord, const QPointF & point, float ratio);
 
-  static QPointF getTranslationFromOrigin(const Box & box, float ratio);
+  static QPointF getOrigin(const Box & box, float ratio);
 
 public:
   /** constructor
