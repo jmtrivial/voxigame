@@ -54,6 +54,11 @@ private:
   /** location of the output window */
   Coord window2;
 
+  /** face of the input window */
+  Direction::Type face1;
+  /** face of the input window */
+  Direction::Type face2;
+
   inline QVector<QSharedPointer<Piece> > & getCell(unsigned int px, unsigned int py, unsigned int pz) {
     return getCell(Coord(px, py, pz));
   }
@@ -78,7 +83,9 @@ private:
   /** add the given piece in the corresponding cells */
   void addInCells(QSharedPointer<Piece> & p);
 
-
+  /** assuming that the point is a voxel in the border of the box, it
+      returns a direction corresponding to the outside */
+  Direction::Type getBorderSide(const Coord & point) const;
 public:
 
   class iterator {
@@ -172,10 +179,13 @@ public:
       @param z Size in z direction
       @param w1 The input cell
       @param w2 The output cell
+      @param f1 The input face of the input cell
+      @param f2 The output face of the output cell
       @param aI Allow intersection between pieces
       @param aO Allow pieces outside of the board */
   Board(unsigned int x = 1, unsigned int y = 1, unsigned int z = 1,
 	const Coord & w1 = Coord(0, 0, 0), const Coord & w2 = Coord(0, 0, 0),
+	const Direction::Type & f1 = Direction::Static, const Direction::Type & f2 = Direction::Static,
 	bool aI = false, bool aO = false);
 
   /** open the current board loading it from a file */
@@ -316,6 +326,12 @@ public:
 
   /** return true if the internal description of the board is valid */
   bool checkInternalMemoryState() const;
+
+  /** return the face corresponding to the input */
+  inline Face getWindowFace1() const { return Face(window1, face1); }
+
+  /** return the face corresponding to the output */
+  inline Face getWindowFace2() const { return Face(window2, face2); }
 };
 
 #endif // VOXIGAME_CORE_BOARD_HXX

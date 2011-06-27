@@ -28,20 +28,46 @@
 
 
 Board::Board(unsigned int x, unsigned int y, unsigned int z,
-             const Coord & w1, const Coord & w2, bool aI, bool aO)
+             const Coord & w1, const Coord & w2,
+	     const Direction::Type & f1, const Direction::Type & f2,
+	     bool aI, bool aO)
   : box(x, y, z),
     allowIntersections(aI),
     allowOutside(aO),
-    window1(w1), window2(w2)
+    window1(w1), window2(w2),
+    face1(f1), face2(f2)
 {
   Q_ASSERT((x > 0) && (y > 0) && (z > 0));
   cells = new QVector<QSharedPointer<Piece> >[x * y * z];
   if (!box.inBorder(w1)) {
     qWarning("Warning: the input window is not in the border of the board");
   }
+  else if (f1 == Direction::Static) {
+    face1 = getBorderSide(w1);
+  }
   if (!box.inBorder(w2)) {
     qWarning("Warning: the output window is not in the border of the board");
   }
+  else if (f2 == Direction::Static) {
+    face2 = getBorderSide(w2);
+  }
+}
+
+Direction::Type Board::getBorderSide(const Coord & point) const {
+  if (point.getX() == box.getCorner1().getX())
+    return Direction::Xminus;
+  else if (point.getX() == box.getCorner2().getX())
+    return Direction::Xplus;
+  else if (point.getY() == box.getCorner1().getY())
+    return Direction::Yminus;
+  else if (point.getY() == box.getCorner2().getY())
+    return Direction::Yplus;
+  else if (point.getZ() == box.getCorner1().getZ())
+    return Direction::Zminus;
+  else if (point.getZ() == box.getCorner2().getZ())
+    return Direction::Zplus;
+  else
+    return Direction::Static;
 }
 
 
@@ -267,8 +293,15 @@ QDomElement Board::toXML(QDomDocument & doc, const QString & name) const {
 
   QDomElement ws = doc.createElement("windows");
   b.appendChild(ws);
-  ws.appendChild(window1.toXML(doc, "window1"));
-  ws.appendChild(window2.toXML(doc, "window2"));
+
+  QDomElement ww1 = window1.toXML(doc, "window1");
+  if (face1 != Direction::Static)
+    ww1.setAttribute("direction", Direction::toString(face1));
+  ws.appendChild(ww1);
+  QDomElement ww2 = window2.toXML(doc, "window2");
+  if (face2 != Direction::Static)
+    ww2.setAttribute("direction", Direction::toString(face2));
+  ws.appendChild(ww2);
 
   QDomElement g = box.toXML(doc, "geometry");
   b.appendChild(g);
@@ -419,10 +452,18 @@ bool Board::load(QDomDocument & elem, const QString & name) {
 	  QDomElement e2 = n2.toElement();
 	  if(!e2.isNull()) {
 	    try {
-	      if (e2.tagName() == "window1")
+	      if (e2.tagName() == "window1") {
 		w1.fromXML(e2, "window1");
-	      else if (e2.tagName() == "window2")
+		if (e2.hasAttribute("direction")) {
+		  face1 = Direction::fromString(e2.attribute("direction"));
+		}
+	      }
+	      else if (e2.tagName() == "window2") {
 		w2.fromXML(e2, "window2");
+		if (e2.hasAttribute("direction")) {
+		  face2 = Direction::fromString(e2.attribute("direction"));
+		}
+	      }
 	      else
 		return false;
 	    }
