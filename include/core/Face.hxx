@@ -56,6 +56,12 @@ public:
   /** destructor */
   virtual ~Face() {}
 
+  inline Face & operator=(const Face & f) {
+    location = f.location;
+    direction = f.direction;
+    return *this;
+  }
+
   /** accessor */
   inline const Coord & getLocation() const { return location; }
   /** accessor */
