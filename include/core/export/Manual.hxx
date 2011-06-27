@@ -91,40 +91,57 @@ private:
   QBrush brushNewObject;
   QBrush brushOldObject;
 
-  /** a class that describe the drawing configuration of a board and an associated caption */
-  class DrawingSize {
+  /** a class that describe the layout of a board and an associated caption */
+  class LayoutBoardAndCaption {
   private:
-    float boardSize;
-    float captionSize;
-    unsigned int nbRows;
-    float widthCaption;
-    float heightCaption;
+    float boardScale;
+    float captionScale;
+    unsigned int nbColumns;
+    QSizeF boardSize;
+    QSizeF captionSize;
+    unsigned int fontSize;
+    QSizeF region;
+    float epsilon;
+    float epsilonCaption;
   public:
-    /** default constructor */
-    DrawingSize(float bs, float ps, unsigned int nbr, const QSizeF & sc) : boardSize(bs), captionSize(ps),
-									   nbRows(nbr), widthCaption(sc.width()),
-									   heightCaption(sc.height()) {
+    /** default constructor
+	\param region The target region
+	\param br Board ratio (y/x)
+	\param pr Piece ratio in caption (y/x)
+	\param bnu Board unit (number of units in the X direction)
+	\param pnu Piece unit in caption (number of units in the X direction)
+	\param nbc Number of pieces in the caption
+	\param nbmax Maximal number of similar pieces
+     */
+    LayoutBoardAndCaption(const QSizeF & r,
+			  float br, float pr,
+			  float bnu, float pnu,
+			  unsigned int nbc,
+			  unsigned int nbmax,
+			  float epsilon_,
+			  float epsilonCaption_);
+
+    /** accessor */
+    inline float getBoardScale() const { return boardScale; }
+
+    /** accessor */
+    inline float getCaptionScale() const { return captionScale; }
+
+    /** return the rectangle where the board will be drawn.
+	\param origin top-left corner of the global region */
+    inline QRectF getBoardRect(const QPointF & origin) const {
+      QPointF point(origin);
+      point.rx() += (region.width() - boardSize.width()) / 2;
+      return QRectF(point, boardSize);
     }
-    /** copy constructor */
-    DrawingSize(const DrawingSize & ds) : boardSize(ds.boardSize), captionSize(ds.captionSize),
-					  nbRows(ds.nbRows), widthCaption(ds.widthCaption),
-					  heightCaption(ds.heightCaption) {
-    }
-    /** accessor */
-    float getBoardRatio() const { return boardSize; }
 
-    /** accessor */
-    float getCaptionRatio() const { return captionSize; }
+    /** return the rectangle where the id-st caption will be drawn.
+	\param origin top-left corner of the global region
+	\param id Id of the caption line */
+    QRectF getCaptionRect(const QPointF & origin, unsigned int id) const;
 
-    /** accessor */
-    unsigned int getNbRows() const { return nbRows; }
-
-    /** accessor */
-    float getCaptionCellWidth() const { return widthCaption; }
-
-    /** accessor */
-    float getCaptionLineHeight() const { return heightCaption; }
-
+    /** return the estimated font size for the captions */
+    inline unsigned int getFontSize() const { return fontSize; }
   };
 
   /** this class describe an object to be drawn (a face or an edge),
@@ -182,7 +199,14 @@ private:
 
   void addFooter(QGraphicsScene & page, unsigned int nb) const;
 
-  static float getScale(const Box & box);
+  /** return the size corresponding to the drawing of the given box with the given width */
+  static float getScale(const Box & box, float width);
+
+  /** return the ratio of the given box (y/x in the drawing) */
+  static float getRatio(const Box & box);
+
+  /** return the number of units drawn in the X direction */
+  static float getNbUnits(const Box & box);
 
   void drawBoardAndCaption(QGraphicsScene & scene,
 			   const QRectF & region, const QVector<QSharedPointer<Piece> > & oldpieces,
@@ -193,25 +217,31 @@ private:
 
   static QSizeF getDrawingSize(const Box & box, float ratio);
 
-  DrawingSize getDrawingSize(const QMap<QSharedPointer<Piece>, unsigned int> & pgroup,
-			     const QRectF & region, float maxWidthCaptionText) const;
+
+  inline LayoutBoardAndCaption getLayout(const QMap<QSharedPointer<Piece>, unsigned int> & pgroup,
+				  const QRectF & region) const {
+    return getLayout(pgroup, QSizeF(region.width(), region.height()));
+  }
+
+  LayoutBoardAndCaption getLayout(const QMap<QSharedPointer<Piece>, unsigned int> & pgroup,
+				  const QSizeF & region) const;
 
   void drawBoard(QGraphicsScene & scene,
-		 const QRectF & region, float ratio,
+		 const QRectF & region, const LayoutBoardAndCaption & layout,
 		 const QVector<QSharedPointer<Piece> > & oldpieces,
 		 const QVector<QSharedPointer<Piece> > & newpieces, bool drawNewPieces) const;
 
   void drawCaption(QGraphicsScene & scene,
-		   const QRectF & region, const DrawingSize & dsize,
+		   const QRectF & region, const LayoutBoardAndCaption & layout,
 		   const QMap<QSharedPointer<Piece>, unsigned int> & pgroup) const;
 
-  void drawObjects(QGraphicsScene &scene, const QPointF & point, QVector<DObject> & fae, float ratio) const;
+  void drawObjects(QGraphicsScene &scene, const QPointF & point, QVector<DObject> & fae, float scale) const;
 
-  void drawObject(QGraphicsScene &scene, const QPointF & point, const DObject & object, float ratio) const;
+  void drawObject(QGraphicsScene &scene, const QPointF & point, const DObject & object, float scale) const;
 
-  static QPointF getDrawingLocation(const Coord & coord, const QPointF & point, float ratio);
+  static QPointF getDrawingLocation(const Coord & coord, const QPointF & point, float scale);
 
-  static QPointF getOrigin(const Box & box, float ratio);
+  static QPointF getOrigin(const Box & box, float scale);
 
 public:
   /** constructor
