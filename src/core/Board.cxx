@@ -37,6 +37,7 @@ Board::Board(unsigned int x, unsigned int y, unsigned int z,
     window1(w1), window2(w2),
     face1(f1), face2(f2)
 {
+
   Q_ASSERT((x > 0) && (y > 0) && (z > 0));
   cells = new QVector<QSharedPointer<Piece> >[x * y * z];
   if (!box.inBorder(w1)) {
@@ -404,6 +405,8 @@ bool Board::load(QDomDocument & elem, const QString & name) {
   QDomElement docElem = elem.documentElement();
   Box newBox;
   Coord w1, w2;
+  Direction::Type f1 = Direction::Static;
+  Direction::Type f2 = Direction::Static;
   QVector<QSharedPointer<Piece> > newPieces;
 
   if (docElem.tagName() != name)
@@ -455,13 +458,13 @@ bool Board::load(QDomDocument & elem, const QString & name) {
 	      if (e2.tagName() == "window1") {
 		w1.fromXML(e2, "window1");
 		if (e2.hasAttribute("direction")) {
-		  face1 = Direction::fromString(e2.attribute("direction"));
+		  f1 = Direction::fromString(e2.attribute("direction"));
 		}
 	      }
 	      else if (e2.tagName() == "window2") {
 		w2.fromXML(e2, "window2");
 		if (e2.hasAttribute("direction")) {
-		  face2 = Direction::fromString(e2.attribute("direction"));
+		  f2 = Direction::fromString(e2.attribute("direction"));
 		}
 	      }
 	      else
@@ -484,6 +487,12 @@ bool Board::load(QDomDocument & elem, const QString & name) {
   allowOutside = (ao == "true");
   window1 = w1;
   window2 = w2;
+  face1 = f1;
+  face2 = f2;
+  if (face1 == Direction::Static)
+    face1 = getBorderSide(w1);
+  if (face2 == Direction::Static)
+    face2 = getBorderSide(w2);
 
   if (cells != NULL)
     delete [] cells;
