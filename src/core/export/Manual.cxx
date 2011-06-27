@@ -50,7 +50,7 @@ Manual::Manual(const Board & b) : board(b), substep(false), nbcolumns(2),
     throw Exception("Cannot draw a board with non-valid windows");
   if ((board.getSizeX() == 0) || (board.getSizeY() == 0) ||
       (board.getSizeZ() == 0))
-    throw Exception("Cannot draw a flat board");
+   throw Exception("Cannot draw a flat board");
 
 }
 
@@ -246,48 +246,69 @@ Manual::LayoutBoardAndCaption::LayoutBoardAndCaption(const QSizeF & r,
 
   // first, try the maximal size
   boardSize = QSizeF(region.width(), region.width() * br);
-  qWarning("boardSize: %f, %f", boardSize.width(), boardSize.height());
   boardScale = captionScale = boardSize.width() / bnu;
   const float bwidth = boardScale * pnu;
   captionSize = QSizeF(bwidth, bwidth * pr);
-  qWarning("captionSize: %f, %f", captionSize.width(), captionSize.height());
 
-  fontSize = captionSize.height() / 40;
-  qWarning("on a une font size de %d", fontSize);
+  buildCaptionProperties(nbc, nbmax);
 
-  // QGraphicsTextItem * text = new QGraphicsTextItem;
-  // QFont font("DejaVu Sans", fontSize);
-  // (*text).setFont(font);
-  // (*text).setPlainText(QString::fromUtf8("× %1").arg(nbmax));
-  // const float maxWidthCaptionText = (*text).boundingRect().width();
+  // then rescale if the height is not good
+  float globalCaptionHeight = nbLines * (epsilonCaption + captionSize.height());
+  float globalHeight = boardSize.height() + epsilon + globalCaptionHeight;
+  if (globalHeight > region.height()) {
+    // first try an adjustment only on the caption, if it's too big
+    if (globalCaptionHeight > .3 * globalHeight) {
+      adjustCaptionLayout(captionScale / globalCaptionHeight * .3 * globalHeight, nbc, nbmax);
+    }
+    globalCaptionHeight = nbLines * (epsilonCaption + captionSize.height());
+    globalHeight = boardSize.height() + epsilon + globalCaptionHeight;
+    if (globalHeight > region.height()) {
+      adjustCaptionLayout(captionScale / globalHeight * region.height(), nbc, nbmax);
+      adjustBoardLayout(boardScale / globalHeight * region.height());
+    }
+  }
 
-  // TODO
-  nbColumns = 1;
+  // then rescale the caption if its width is not good
+  if ((captionSizeFull.width()) * nbColumns + epsilonCaption * (nbColumns - 1) > region.height()) {
+    qWarning("Require an adjustment");
+    // TODO
+  }
 
-  // // estimate the number of pieces to draw by line in the caption
-  // unsigned int nbPieceByLine = floor(region.width() / dPiece.width());
-  // if (nbPieceByLine == 0) {
-  //   nbPieceByLine = 1;
-  //   qWarning("Missing readjust");
-  //   // TODO: readjust big pieces ?
-  // }
-  // // estimate the number of lines
-  // const unsigned int nbLines = ceil(pgroup.size() / nbPieceByLine);
+}
 
-  // // get the optimal height
-  // float optimalHeight = dBoard.height() + nbLines * dPiece.height();
+void Manual::LayoutBoardAndCaption::buildCaptionProperties(unsigned int nbc, unsigned int nbmax) {
+  fontSize = captionSize.height() / 2;
 
-  // if (optimalHeight > region.height()) {
-  //   // we have to adjust the board and piece list size
-  //   qWarning("Missing an adjustment: %f vs %f (%d groups)", optimalHeight, region.height(), pgroup.size());
-  //   // TODO: adjust the sizes according to the constraint
-  //   return DrawingSize(scaleBoard, ratioPiece, nbPieceByLine, dPiece);
-  // }
-  // else {
-  //   return DrawingSize(scaleBoard, ratioPiece, nbPieceByLine, dPiece);
-  // }
+  QGraphicsTextItem * text = new QGraphicsTextItem;
+  QFont font("DejaVu Sans", fontSize);
+  (*text).setFont(font);
+  (*text).setPlainText(QString::fromUtf8("× %1").arg(nbmax));
+  const float maxWidthCaptionText = (*text).boundingRect().width();
 
+  captionSizeFull = captionSize;
+  captionSizeFull.rwidth() += epsilon + maxWidthCaptionText;
 
+  nbColumns = floor(region.width() / captionSizeFull.width());
+
+  if (nbColumns == 0)
+    nbColumns = 1;
+
+  nbLines = (nbc - nbc % nbColumns) / nbColumns + (nbc % nbColumns != 0 ? 1 : 0);
+}
+
+void Manual::LayoutBoardAndCaption::adjustCaptionLayout(float newScale, unsigned int nbc, unsigned int nbmax) {
+  captionSize.rwidth() *= newScale / captionScale;
+  captionSize.rheight() *= newScale / captionScale;
+
+  captionScale = newScale;
+
+  buildCaptionProperties(nbc, nbmax);
+}
+
+void Manual::LayoutBoardAndCaption::adjustBoardLayout(float newScale) {
+  boardSize.rwidth() *= newScale / boardScale;
+  boardSize.rheight() *= newScale / boardScale;
+  boardScale = newScale;
 }
 
 QRectF Manual::LayoutBoardAndCaption::getCaptionRect(const QPointF & origin, unsigned int id) const {
@@ -295,9 +316,10 @@ QRectF Manual::LayoutBoardAndCaption::getCaptionRect(const QPointF & origin, uns
   const unsigned int idColumn = id % nbColumns;
 
   QPointF start(origin);
-  start.ry() += boardSize.height() + epsilon + idRow * (captionSize.height() + epsilonCaption);
-  start.rx() += idColumn * (captionSize.width() + epsilonCaption);
-  return QRectF (start, captionSize);
+  start.ry() += boardSize.height() + epsilon + idRow * (captionSizeFull.height() + epsilonCaption);
+  start.rx() += idColumn * (captionSizeFull.width() + epsilonCaption);
+
+  return QRectF (start, captionSizeFull);
 }
 
 void Manual::drawBoardAndCaption(QGraphicsScene & scene,
@@ -331,13 +353,13 @@ void Manual::drawBoard(QGraphicsScene & scene,
   origin += getOrigin(box, scale);
 
   CoordF p000(-.5, -.5, -.5);
-  CoordF p001(-.5, -.5, box.getSizeZ() + .5);
-  CoordF p010(-.5, box.getSizeY() + .5, -.5);
-  CoordF p100(box.getSizeX() + .5, -.5, -.5);
-  CoordF pp000(box.getSizeX() + .5, box.getSizeY() + .5, box.getSizeZ() + .5);
-  CoordF pp001(box.getSizeX() + .5, box.getSizeY() + .5, -.5);
-  CoordF pp010(box.getSizeX() + .5, - .5, box.getSizeZ() + .5);
-  CoordF pp100(- .5, box.getSizeY() + .5, box.getSizeZ() + .5);
+  CoordF p001(-.5, -.5, box.getSizeZ() - .5);
+  CoordF p010(-.5, box.getSizeY() - .5, -.5);
+  CoordF p100(box.getSizeX() - .5, -.5, -.5);
+  CoordF pp000(box.getSizeX() - .5, box.getSizeY() - .5, box.getSizeZ() - .5);
+  CoordF pp001(box.getSizeX() - .5, box.getSizeY() - .5, -.5);
+  CoordF pp010(box.getSizeX() - .5, - .5, box.getSizeZ() - .5);
+  CoordF pp100(- .5, box.getSizeY() - .5, box.getSizeZ() - .5);
 
   QLineF lineA(getDrawingLocation(p010, origin, scale),
 	       getDrawingLocation(p000, origin, scale));
@@ -408,6 +430,7 @@ void Manual::drawCaption(QGraphicsScene & scene,
 			 const QRectF & region,
 			 const LayoutBoardAndCaption & layout,
 			 const QMap<QSharedPointer<Piece>, unsigned int> & pgroup) const {
+  QFont font("DejaVu Sans", layout.getFontSize());
   unsigned int idCaption = 0;
   for (QMap<QSharedPointer<Piece>, unsigned int>::const_iterator piece = pgroup.begin(); piece != pgroup.end(); ++piece, ++idCaption) {
     QPair<QList<Face>, QList<Edge> > fae = (*(piece.key())).getFacesAndEdges(false);
@@ -418,9 +441,17 @@ void Manual::drawCaption(QGraphicsScene & scene,
       objects.push_back(DObject(*e, true));
 
     QRectF rect = layout.getCaptionRect(region.topLeft(), idCaption);
-    qWarning("Dessin (%f, %f)", rect.topLeft().x(), rect.topLeft().y());
 
-    drawObjects(scene, rect.topLeft(), objects, layout.getCaptionScale());
+    QPointF origin(rect.topLeft());
+    origin += getOrigin((*(piece.key())).getBoundedBox(), layout.getCaptionScale());
+
+    drawObjects(scene, origin, objects, layout.getCaptionScale());
+
+    QGraphicsTextItem * text = new QGraphicsTextItem;
+    (*text).setFont(font);
+    (*text).setPlainText(QString::fromUtf8("× %1").arg(*piece));
+    (*text).setPos(rect.right() - (*text).boundingRect().width(), rect.center().y() - ((*text).boundingRect().height() / 2));
+    scene.addItem(text);
   }
 
 }
@@ -433,76 +464,67 @@ void Manual::drawObjects(QGraphicsScene &scene, const QPointF & point, QVector<D
 
 }
 
+void Manual::drawFace(QGraphicsScene &scene, const QPointF & point, const Face & face, float scale,
+		      const QPen & pen, const QBrush & brush) const {
+  QList<Edge> edges = face.getEdges();
+  Q_ASSERT(edges.size() == 4);
+  QVector<QPointF> points;
+  for(QList<Edge>::const_iterator e = edges.begin(); e != edges.end(); ++e) {
+    CoordF p((*e).getRealLocation());
+    points.push_back(getDrawingLocation(p, point, scale));
+  }
+  QPolygonF polygon(points);
+
+  scene.addPolygon(polygon, pen, brush);
+}
+
+
+void Manual::drawEdge(QGraphicsScene &scene, const QPointF & point, const Edge & edge, float scale, const QPen & pen) const {
+  CoordF p = edge.getRealLocation();
+  QLineF line(getDrawingLocation(p, point, scale),
+	      getDrawingLocation(p + edge.getDirection(), point, scale));
+  scene.addLine(line, pen);
+}
+
 void Manual::drawObject(QGraphicsScene &scene, const QPointF & point, const DObject & object, float scale) const {
   if (object.isFace()) {
-
-    QList<Edge> edges = object.getFace().getEdges();
-    Q_ASSERT(edges.size() == 4);
-    QVector<QPointF> points;
-    for(QList<Edge>::const_iterator e = edges.begin(); e != edges.end(); ++e) {
-      CoordF p = CoordF((*e).getLocation()) + CoordF(.5, .5, .5);
-      points.push_back(getDrawingLocation(p, point, scale));
-    }
-
-    QPolygonF polygon(points);
-
-    scene.addPolygon(polygon, QPen(), object.isNew() ? brushNewObject : brushOldObject);
+    drawFace(scene, point, object.getFace(), scale, QPen(), object.isNew() ? brushNewObject : brushOldObject);
   }
   else {
     Q_ASSERT(object.isEdge());
-    CoordF p = CoordF(object.getEdge().getLocation()) + CoordF(.5, .5, .5);
-    QLineF line(getDrawingLocation(p, point, scale),
-		getDrawingLocation(p + object.getEdge().getDirection(), point, scale));
-    scene.addLine(line, object.isNew() ? penNewObject : penOldObject);
+    drawEdge(scene, point, object.getEdge(), scale, object.isNew() ? penNewObject : penOldObject);
   }
 }
 
 
 QPointF Manual::getOrigin(const Box & box, float scale) {
   QPointF result(0., 0.);
-  result -= scale * yunit * (box.getSizeY());
+  result -= scale * yunit * box.getSizeY();
   result.rx() = 0.;
-  result -= scale * zunit * (box.getSizeZ());
+  result -= scale * zunit * box.getSizeZ();
+  result += .5 * scale * (xunit + yunit + zunit);
   return result;
 }
 
-QPointF Manual::getDrawingLocation(const Coord & coord, const QPointF & point, float scale) {
-  QPointF result(point);
-  result += scale * (xunit * coord.getX() + yunit * coord.getY() + zunit * coord.getZ());
-  return result;
-}
 
 QSizeF Manual::getDrawingSize(const Box & box, float scale) {
-  QPointF c1(0., 0.);
   QPointF c2 = xunit * box.getSizeX() + yunit * box.getSizeY() + zunit * box.getSizeZ();
 
-  Q_ASSERT(c1.x() < c2.x());
-  Q_ASSERT(c1.y() > c2.y());
+  Q_ASSERT(0. < c2.x());
+  Q_ASSERT(0. > c2.y());
+  Q_ASSERT(scale > 0);
 
-  return QSizeF((c2.x() - c1.x()) * scale, (c1.y() - c2.y()) * scale);
+  return QSizeF(c2.x() * scale, -c2.y() * scale);
 }
 
 float Manual::getRatio(const Box & box) {
   QSizeF dsize = getDrawingSize(box, 1.);
-  return dsize.width() / dsize.height();
+  return dsize.height() / dsize.width();
 }
 
 float Manual::getNbUnits(const Box & box) {
   QSizeF dsize = getDrawingSize(box, 1.);
-  float scale = getScale(box, 1.);
-  return dsize.width() / scale;
-}
-
-float Manual::getScale(const Box & box, float width) {
-  QPointF c1(0., 0.);
-  QPointF c2 = xunit * box.getSizeX() + yunit * box.getSizeY() + zunit * box.getSizeZ();
-
-  if ((c1.x() == c2.x()) || (c1.y() == c2.y()))
-    throw Exception("Bad configuration");
-  Q_ASSERT(c1.x() < c2.x());
-  Q_ASSERT(c1.y() > c2.y());
-
-  return width / (c2.x() - c1.x());
+  return dsize.width();
 }
 
 

@@ -58,6 +58,8 @@ public:
   /** accessor */
   inline const Coord & getLocation() const { return location; }
   /** accessor */
+  inline CoordF getRealLocation() const { return CoordF(location) + CoordF(.5, .5, .5); }
+  /** accessor */
   inline const Direction::Type & getDirection() const { return direction; }
 
   /** comparison operator */

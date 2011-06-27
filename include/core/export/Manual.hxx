@@ -97,12 +97,21 @@ private:
     float boardScale;
     float captionScale;
     unsigned int nbColumns;
+    unsigned int nbLines;
     QSizeF boardSize;
     QSizeF captionSize;
+    QSizeF captionSizeFull;
     unsigned int fontSize;
     QSizeF region;
     float epsilon;
     float epsilonCaption;
+
+    void adjustCaptionLayout(float newScale, unsigned int nbc, unsigned int nbmax);
+
+    void adjustBoardLayout(float newScale);
+
+    void buildCaptionProperties(unsigned int nbc, unsigned int nbmax);
+
   public:
     /** default constructor
 	\param region The target region
@@ -199,9 +208,6 @@ private:
 
   void addFooter(QGraphicsScene & page, unsigned int nb) const;
 
-  /** return the size corresponding to the drawing of the given box with the given width */
-  static float getScale(const Box & box, float width);
-
   /** return the ratio of the given box (y/x in the drawing) */
   static float getRatio(const Box & box);
 
@@ -239,7 +245,13 @@ private:
 
   void drawObject(QGraphicsScene &scene, const QPointF & point, const DObject & object, float scale) const;
 
-  static QPointF getDrawingLocation(const Coord & coord, const QPointF & point, float scale);
+  void drawFace(QGraphicsScene &scene, const QPointF & point, const Face & face, float scale,
+		const QPen & pen, const QBrush & brush) const;
+
+  void drawEdge(QGraphicsScene &scene, const QPointF & point, const Edge & edge, float scale, const QPen & pen) const;
+
+  template <typename T>
+  static QPointF getDrawingLocation(const CoordT<T> & coord, const QPointF & point, float scale);
 
   static QPointF getOrigin(const Box & box, float scale);
 
@@ -326,5 +338,12 @@ public:
   bool toSVG(const QString & prefix, const QString & suffix = ".svg");
 
 };
+
+template <typename T>
+QPointF Manual::getDrawingLocation(const CoordT<T> & coord, const QPointF & point, float scale) {
+  QPointF result(point);
+  result += scale * (xunit * coord.getX() + yunit * coord.getY() + zunit * coord.getZ());
+  return result;
+}
 
 #endif // VOXIGAME_CORE_MANUAL_HXX
