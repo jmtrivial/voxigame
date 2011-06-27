@@ -193,7 +193,10 @@ public:
 
   /** reset transformation */
   inline Piece & resetTransform() {
-    return transform(Angle::A0, Direction::Xplus, Coord(0, 0, 0));
+    angle = Angle::A0;
+    direction = Direction::Xplus;
+    location = Coord(0, 0, 0);
+    return *this;
   }
 
   /** generate an xml version of the piece */
