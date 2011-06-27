@@ -130,14 +130,14 @@ QSharedPointer<QGraphicsScene> Manual::createFirstPage() const {
 
   (*text2).setPlainText("Author: " + author +
 		       "\nCreation: " + date.toString("d.M.yyyy"));
-  (*text2).setPos(innermargin, pageSize.height() - footerwidth - (*text).boundingRect().height());
+  (*text2).setPos(innermargin, pageSize.height() - footerwidth - (*text2).boundingRect().height());
   (*first).addItem(text2);
 
 
   // then draw the puzzle
   drawInitialBoard(*first,
 		   QRectF(QPointF(innermargin, btitle.bottom() + columnmargin),
-			  QPointF(pageSize.width() - outermargin, pageSize.height() - footerwidth - (*text).boundingRect().height() - columnmargin)),
+			  QPointF(pageSize.width() - outermargin, pageSize.height() - footerwidth - (*text2).boundingRect().height() - columnmargin)),
 		   board.getPieces());
 
   addFooter(*first, 1);
@@ -347,6 +347,15 @@ void Manual::drawBoard(QGraphicsScene & scene,
 		       const QRectF & region, const LayoutBoardAndCaption & layout,
 		       const QVector<QSharedPointer<Piece> > & oldpieces,
 		       const QVector<QSharedPointer<Piece> > & newpieces, bool drawNewPieces) const {
+
+  Face faces[2] = {Face(Coord(-1, -1, -1), Direction::Xplus), Face(Coord(-1, -1, -1), Direction::Xplus) };
+  try {
+    faces[0] = board.getWindowFace1();
+  } catch (...) { }
+  try {
+    faces[1] = board.getWindowFace2();
+  } catch (...) { }
+
   QPointF origin = layout.getBoardRect(region.topLeft()).topLeft();
   const Box & box = board.getBox();
   const float scale = layout.getBoardScale();
@@ -370,6 +379,14 @@ void Manual::drawBoard(QGraphicsScene & scene,
   QLineF lineC(getDrawingLocation(p010, origin, scale),
 	       getDrawingLocation(pp100, origin, scale));
   scene.addLine(lineC, penBoardBack);
+
+  for(unsigned char i = 0; i != 2; ++i) {
+    if ((faces[i].getLocation() != Coord(-1, -1, -1)) &&
+	((faces[i].getMiddleX() <= 0) || (faces[i].getMiddleY() >= (box.getSizeY() - 1)) ||
+	 (faces[i].getMiddleZ() <= 0))) {
+      drawFace(scene, origin, faces[i], scale, penBoardBack, brushNewObject);
+    }
+  }
 
   // create drawing objects
   QVector<DObject> objects;
@@ -423,6 +440,13 @@ void Manual::drawBoard(QGraphicsScene & scene,
   QLineF lineL(getDrawingLocation(pp100, origin, scale),
   	       getDrawingLocation(pp000, origin, scale));
   scene.addLine(lineL, penBoardFront);
+
+  for(unsigned char i = 0; i != 2; ++i)
+    if ((faces[i].getLocation() != Coord(-1, -1, -1)) &&
+	((faces[i].getMiddleX() >= (box.getSizeX() - 1)) || (faces[i].getMiddleY() <= 0) ||
+	 (faces[i].getMiddleZ() >= (box.getSizeZ() - 1)))) {
+      drawFace(scene, origin, faces[i], scale, penBoardFront, brushNewObject);
+    }
 
 }
 
