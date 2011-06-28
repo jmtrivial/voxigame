@@ -31,6 +31,7 @@
 #include <QDate>
 #include <QSize>
 #include <QPen>
+#include <QMap>
 #include "core/Board.hxx"
 
 /** a class to generate manuals from a board */
@@ -67,6 +68,12 @@ private:
 
   /** date */
   QDate date;
+
+  /** draw the filled board before the steps */
+  bool drawFilledBoard;
+
+  /** draw the path board befor the steps  */
+  bool drawPath;
 
   /** page size */
   QSize pageSize;
@@ -157,16 +164,16 @@ private:
       with a "new" status */
   class DObject {
   private:
-    const Face * face;
-    const Edge * edge;
+    QSharedPointer<Face> face;
+    QSharedPointer<Edge> edge;
     bool newObj;
   public:
     /** default constructor */
     DObject();
     /** constructor */
-    DObject(const Face & f, bool n);
+    DObject(const QSharedPointer<Face> & f, bool n);
     /** constructor */
-    DObject(const Edge & e, bool n);
+    DObject(const QSharedPointer<Edge> & e, bool n);
     /** copy constructor */
     DObject(const DObject & dobj);
     /** destructor */
@@ -197,12 +204,20 @@ private:
     float getMiddleY() const;
     /** accessor */
     float getMiddleZ() const;
+    /** accessor */
+    CoordF getMiddle() const;
 
     /** comparison operator for display */
     bool operator<(const DObject & dobj) const;
   };
 
+  QSharedPointer<QGraphicsScene> createClearPage(unsigned int cpt) const;
+
   QSharedPointer<QGraphicsScene> createFirstPage() const;
+
+  QSharedPointer<QGraphicsScene> createFilledPage(unsigned int cpt) const;
+
+  QSharedPointer<QGraphicsScene> createPathPage(unsigned int cpt) const;
 
   void generate();
 
@@ -232,6 +247,11 @@ private:
   LayoutBoardAndCaption getLayout(const QMap<QSharedPointer<Piece>, unsigned int> & pgroup,
 				  const QSizeF & region) const;
 
+  inline LayoutBoardAndCaption getBoardLayout(const QSizeF & region) const {
+    QMap<QSharedPointer<Piece>, unsigned int> m;
+    return getLayout(m, region);
+  }
+
   void drawBoard(QGraphicsScene & scene,
 		 const QRectF & region, const LayoutBoardAndCaption & layout,
 		 const QVector<QSharedPointer<Piece> > & oldpieces,
@@ -247,6 +267,9 @@ private:
 
   void drawFace(QGraphicsScene &scene, const QPointF & point, const Face & face, float scale,
 		const QPen & pen, const QBrush & brush) const;
+
+  void drawEdgesFromFace(QGraphicsScene &scene, const QPointF & point, const Face & face, float scale,
+			 const QPen & pen) const;
 
   void drawEdge(QGraphicsScene &scene, const QPointF & point, const Edge & edge, float scale, const QPen & pen) const;
 
@@ -318,6 +341,22 @@ public:
   */
   inline Manual & setDate(const QDate & d = QDate()) {
     date = d;
+    return *this;
+  }
+
+  /** modifier
+      \param f Value
+  */
+  inline Manual & setDrawFilledBoard(bool f = true) {
+    drawFilledBoard = f;
+    return *this;
+  }
+
+  /** modifier
+      \param p Value
+  */
+  inline Manual & setDrawPath(bool p = true) {
+    drawPath = p;
     return *this;
   }
 

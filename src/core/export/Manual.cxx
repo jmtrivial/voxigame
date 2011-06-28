@@ -34,7 +34,9 @@ const QPointF Manual::zunit(0., -1.);
 
 Manual::Manual(const Board & b) : board(b), substep(false), nbcolumns(2),
 				  level(0), maxLevel(10), id(0),
-				  author("Unknown"), date(QDate::currentDate()), pageSize(210, 297),
+				  author("Unknown"), date(QDate::currentDate()),
+				  drawFilledBoard(true), drawPath(true),
+				  pageSize(210, 297),
 				  innermargin(15.), outermargin(7.), bottommargin(5.), topmargin(5.),
 				  columnmargin(5.), footerwidth(20), headererwidth(15.),
 				  epsilonmargin(1.),
@@ -86,6 +88,38 @@ void Manual::addFooter(QGraphicsScene & page, unsigned int nb) const {
     (*npage).setPos(pageSize.width() - (*npage).boundingRect().width() - outermargin, pageSize.height() - footerwidth);
     page.addItem(npage);
   }
+}
+
+
+QSharedPointer<QGraphicsScene> Manual::createClearPage(unsigned int cpt) const {
+  QSharedPointer<QGraphicsScene> page = QSharedPointer<QGraphicsScene>(new QGraphicsScene(QRectF(0, 0, pageSize.width(), pageSize.height())));
+
+  addFooter(*page, cpt);
+  return page;
+}
+
+QSharedPointer<QGraphicsScene> Manual::createPathPage(unsigned int cpt) const {
+  QSharedPointer<QGraphicsScene> page = QSharedPointer<QGraphicsScene>(new QGraphicsScene(QRectF(0, 0, pageSize.width(), pageSize.height())));
+
+  // TODO
+
+  addFooter(*page, cpt);
+  return page;
+}
+
+QSharedPointer<QGraphicsScene> Manual::createFilledPage(unsigned int cpt) const {
+  QSharedPointer<QGraphicsScene> page = QSharedPointer<QGraphicsScene>(new QGraphicsScene(QRectF(0, 0, pageSize.width(), pageSize.height())));
+
+  QRectF region(QPointF(innermargin, topmargin + columnmargin),
+		QPointF(pageSize.width() - outermargin, pageSize.height() - footerwidth - columnmargin));
+
+  LayoutBoardAndCaption layout = getBoardLayout(QSizeF(region.width(), region.height()));
+
+  drawBoard(*page, region,
+	    layout, QVector<QSharedPointer<Piece> >(), board.getPieces(), true);
+
+  addFooter(*page, cpt);
+  return page;
 }
 
 QSharedPointer<QGraphicsScene> Manual::createFirstPage() const {
@@ -150,8 +184,19 @@ void Manual::generate() {
 
   pages.push_back(createFirstPage());
 
+  unsigned int cpt = 2;
+  pages.push_back(createClearPage(cpt++));
+
+  if (drawPath) {
+    pages.push_back(createPathPage(cpt++));
+  }
+
+  if (drawFilledBoard) {
+    pages.push_back(createFilledPage(cpt++));
+  }
+
   // TODO
-  qWarning("Only first page generated.");
+  qWarning("Only first pages generated.");
 }
 
 bool Manual::toPDF(const QString & filename) {
@@ -240,6 +285,7 @@ Manual::LayoutBoardAndCaption::LayoutBoardAndCaption(const QSizeF & r,
 						     unsigned int nbc,
 						     unsigned int nbmax,
 						     float epsilon_, float epsilonCaption_) {
+  // TODO: ajust by removing the bottom space (middle)
   epsilon = epsilon_;
   epsilonCaption = epsilonCaption_;
   region = r;
@@ -384,27 +430,27 @@ void Manual::drawBoard(QGraphicsScene & scene,
     if ((faces[i].getLocation() != Coord(-1, -1, -1)) &&
 	((faces[i].getMiddleX() <= 0) || (faces[i].getMiddleY() >= (box.getSizeY() - 1)) ||
 	 (faces[i].getMiddleZ() <= 0))) {
-      drawFace(scene, origin, faces[i], scale, penBoardBack, brushNewObject);
+      drawEdgesFromFace(scene, origin, faces[i], scale, penBoardBack);
     }
   }
 
   // create drawing objects
   QVector<DObject> objects;
   for(QVector<QSharedPointer<Piece> >::const_iterator p = oldpieces.begin(); p != oldpieces.end(); ++p) {
-    QPair<QList<Face>, QList<Edge> > fae = (**p).getFacesAndEdges();
+    QPair<QList<Face>, QList<Edge> > fae = (**p).getFacesAndEdges(true);
     for(QList<Face>::const_iterator f = fae.first.begin(); f != fae.first.end(); ++f)
-      objects.push_back(DObject(*f, false));
+      objects.push_back(DObject(QSharedPointer<Face>(new Face(*f)), false));
     for(QList<Edge>::const_iterator e = fae.second.begin(); e != fae.second.end(); ++e)
-      objects.push_back(DObject(*e, false));
+      objects.push_back(DObject(QSharedPointer<Edge>(new Edge(*e)), false));
   }
 
   if (drawNewPieces)
     for(QVector<QSharedPointer<Piece> >::const_iterator p = newpieces.begin(); p != newpieces.end(); ++p) {
-      QPair<QList<Face>, QList<Edge> > fae = (**p).getFacesAndEdges();
+      QPair<QList<Face>, QList<Edge> > fae = (**p).getFacesAndEdges(true);
       for(QList<Face>::const_iterator f = fae.first.begin(); f != fae.first.end(); ++f)
-	objects.push_back(DObject(*f, true));
+	objects.push_back(DObject(QSharedPointer<Face>(new Face(*f)), true));
       for(QList<Edge>::const_iterator e = fae.second.begin(); e != fae.second.end(); ++e)
-      objects.push_back(DObject(*e, true));
+	objects.push_back(DObject(QSharedPointer<Edge>(new Edge(*e)), true));
     }
 
   // then draw it
@@ -445,7 +491,7 @@ void Manual::drawBoard(QGraphicsScene & scene,
     if ((faces[i].getLocation() != Coord(-1, -1, -1)) &&
 	((faces[i].getMiddleX() >= (box.getSizeX() - 1)) || (faces[i].getMiddleY() <= 0) ||
 	 (faces[i].getMiddleZ() >= (box.getSizeZ() - 1)))) {
-      drawFace(scene, origin, faces[i], scale, penBoardFront, brushNewObject);
+      drawEdgesFromFace(scene, origin, faces[i], scale, penBoardFront);
     }
 
 }
@@ -454,30 +500,31 @@ void Manual::drawCaption(QGraphicsScene & scene,
 			 const QRectF & region,
 			 const LayoutBoardAndCaption & layout,
 			 const QMap<QSharedPointer<Piece>, unsigned int> & pgroup) const {
-  QFont font("DejaVu Sans", layout.getFontSize());
-  unsigned int idCaption = 0;
-  for (QMap<QSharedPointer<Piece>, unsigned int>::const_iterator piece = pgroup.begin(); piece != pgroup.end(); ++piece, ++idCaption) {
-    QPair<QList<Face>, QList<Edge> > fae = (*(piece.key())).getFacesAndEdges(false);
-    QVector<DObject> objects;
-    for(QList<Face>::const_iterator f = fae.first.begin(); f != fae.first.end(); ++f)
-      objects.push_back(DObject(*f, true));
-    for(QList<Edge>::const_iterator e = fae.second.begin(); e != fae.second.end(); ++e)
-      objects.push_back(DObject(*e, true));
+  if (layout.getCaptionRect(region.topLeft(), 0).width() != 0) {
+    QFont font("DejaVu Sans", layout.getFontSize());
+    unsigned int idCaption = 0;
+    for (QMap<QSharedPointer<Piece>, unsigned int>::const_iterator piece = pgroup.begin(); piece != pgroup.end(); ++piece, ++idCaption) {
+      QPair<QList<Face>, QList<Edge> > fae = (*(piece.key())).getFacesAndEdges(false);
+      QVector<DObject> objects;
+      for(QList<Face>::const_iterator f = fae.first.begin(); f != fae.first.end(); ++f)
+	objects.push_back(DObject(QSharedPointer<Face>(new Face(*f)), true));
+      for(QList<Edge>::const_iterator e = fae.second.begin(); e != fae.second.end(); ++e)
+	objects.push_back(DObject(QSharedPointer<Edge>(new Edge(*e)), true));
 
-    QRectF rect = layout.getCaptionRect(region.topLeft(), idCaption);
+      QRectF rect = layout.getCaptionRect(region.topLeft(), idCaption);
 
-    QPointF origin(rect.topLeft());
-    origin += getOrigin((*(piece.key())).getBoundedBox(), layout.getCaptionScale());
+      QPointF origin(rect.topLeft());
+      origin += getOrigin((*(piece.key())).getBoundedBox(), layout.getCaptionScale());
 
-    drawObjects(scene, origin, objects, layout.getCaptionScale());
+      drawObjects(scene, origin, objects, layout.getCaptionScale());
 
-    QGraphicsTextItem * text = new QGraphicsTextItem;
-    (*text).setFont(font);
-    (*text).setPlainText(QString::fromUtf8("× %1").arg(*piece));
-    (*text).setPos(rect.right() - (*text).boundingRect().width(), rect.center().y() - ((*text).boundingRect().height() / 2));
-    scene.addItem(text);
+      QGraphicsTextItem * text = new QGraphicsTextItem;
+      (*text).setFont(font);
+      (*text).setPlainText(QString::fromUtf8("× %1").arg(*piece));
+      (*text).setPos(rect.right() - (*text).boundingRect().width(), rect.center().y() - ((*text).boundingRect().height() / 2));
+      scene.addItem(text);
+    }
   }
-
 }
 
 void Manual::drawObjects(QGraphicsScene &scene, const QPointF & point, QVector<DObject> & fae, float scale) const {
@@ -485,6 +532,16 @@ void Manual::drawObjects(QGraphicsScene &scene, const QPointF & point, QVector<D
 
   for(QVector<DObject>::const_iterator object = fae.begin(); object != fae.end(); ++object)
     drawObject(scene, point, *object, scale);
+
+}
+
+void Manual::drawEdgesFromFace(QGraphicsScene &scene, const QPointF & point, const Face & face, float scale,
+			       const QPen & pen) const {
+  QList<Edge> edges = face.getEdges();
+  Q_ASSERT(edges.size() == 4);
+
+  for(QList<Edge>::const_iterator e = edges.begin(); e != edges.end(); ++e)
+    drawEdge(scene, point, *e, scale, pen);
 
 }
 
@@ -499,7 +556,7 @@ void Manual::drawFace(QGraphicsScene &scene, const QPointF & point, const Face &
   }
   QPolygonF polygon(points);
 
-  scene.addPolygon(polygon, pen, brush);
+  scene.addPolygon(polygon, pen, brush);//QBrush(QColor(qrand() % 256, qrand() % 256, qrand() % 256)));//brush);
 }
 
 
@@ -512,7 +569,8 @@ void Manual::drawEdge(QGraphicsScene &scene, const QPointF & point, const Edge &
 
 void Manual::drawObject(QGraphicsScene &scene, const QPointF & point, const DObject & object, float scale) const {
   if (object.isFace()) {
-    drawFace(scene, point, object.getFace(), scale, QPen(), object.isNew() ? brushNewObject : brushOldObject);
+    QBrush brush = object.isNew() ? brushNewObject : brushOldObject;
+    drawFace(scene, point, object.getFace(), scale, QPen(brush.color()), brush);
   }
   else {
     Q_ASSERT(object.isEdge());
@@ -561,9 +619,9 @@ Manual::DObject & Manual::DObject::operator=(const DObject & dobj) {
 
 Manual::DObject::DObject() : face(NULL), edge(NULL), newObj(false) {
 }
-Manual::DObject::DObject(const Face & f, bool n) : face(&f), edge(NULL), newObj(n) {
+Manual::DObject::DObject(const QSharedPointer<Face> & f, bool n) : face(f), edge(NULL), newObj(n) {
 }
-Manual::DObject::DObject(const Edge & e, bool n) : face(NULL), edge(&e), newObj(n) {
+Manual::DObject::DObject(const QSharedPointer<Edge> & e, bool n) : face(NULL), edge(e), newObj(n) {
 }
 Manual::DObject::DObject(const DObject & dobj) : face(dobj.face), edge(dobj.edge), newObj(dobj.newObj) {
 }
@@ -593,20 +651,40 @@ float Manual::DObject::getMiddleZ() const {
     return (*edge).getMiddleZ();
   }
 }
+CoordF Manual::DObject::getMiddle() const {
+  if (isFace())
+    return (*face).getMiddle();
+  else {
+    Q_ASSERT(isEdge());
+    return (*edge).getMiddle();
+  }
+}
 
 
 bool Manual::DObject::operator<(const DObject & dobj) const {
-  if (getMiddleZ() < dobj.getMiddleZ())
-    return true;
-  else if (getMiddleZ() > dobj.getMiddleZ())
-    return false;
-  else {
-    if (getMiddleY() > dobj.getMiddleY()) {
-      return true;
-    }
-    else if (isEdge())
-      return true;
-    else
-      return false;
+  const float e = .5;
+  CoordF c = getMiddle();
+  CoordF cd = dobj.getMiddle();
+  if (isEdge()) {
+    const Direction::Type & d = getEdge().getDirection();
+    if ((d == Direction::Xplus) || (d == Direction::Xminus))
+      c.addY(-e).addZ(e);
+    if ((d == Direction::Yplus) || (d == Direction::Yminus))
+      c.addX(e).addZ(e);
+    if ((d == Direction::Zplus) || (d == Direction::Zminus))
+      c.addX(e).addY(-e);
   }
+  if (dobj.isEdge()) {
+    const Direction::Type & d = dobj.getEdge().getDirection();
+    if ((d == Direction::Xplus) || (d == Direction::Xminus))
+      cd.addY(-e).addZ(e);
+    if ((d == Direction::Yplus) || (d == Direction::Yminus))
+      cd.addX(e).addZ(e);
+    if ((d == Direction::Zplus) || (d == Direction::Zminus))
+      cd.addX(e).addY(-e);
+  }
+
+  return ((c.getZ() < cd.getZ()) ||
+	  ((c.getZ() == cd.getZ()) && ((c.getY() > cd.getY()) ||
+				       ((c.getY() == cd.getY()) && (c.getX() < cd.getX())))));
 }
