@@ -75,6 +75,11 @@ public:
   /** accessor */
   float getMiddleZ() const;
 
+  /** accessor */
+  inline CoordT<float> getMiddle() const {
+    return CoordT<float>(getMiddleX(), getMiddleY(), getMiddleZ());
+  }
+
   /** return 0 if the two pieces are not in the same location,
       1 if they are equal, or -1 if they are in the same location but in
       the opposite direction */
