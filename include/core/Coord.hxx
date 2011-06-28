@@ -162,7 +162,7 @@ public:
   inline CoordT & addZ(T v) { z += v; return *this; }
 
   /** translate the current point in the given direction, with a distance of \p t */
-  CoordT & translate(const Direction::Type & direction, unsigned int t = 1) {
+  CoordT & translate(const Direction::Type & direction, int t = 1) {
     if (direction == Direction::Xplus)
       addX(t);
     else if (direction == Direction::Xminus)
