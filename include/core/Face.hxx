@@ -74,11 +74,22 @@ public:
   /** accessor */
   float getMiddleZ() const;
 
+  /** accessor */
+  inline CoordT<float> getMiddle() const {
+    return CoordT<float>(getMiddleX(), getMiddleY(), getMiddleZ());
+  }
+
   /** comparison operator */
   bool operator==(const Face & face) const;
 
   /** comparison operator used by ordering algorithms */
   bool operator<(const Face & face) const;
+
+  /** return true if the edge and the current face are coplanar */
+  bool coplanar(const Edge & edge) const;
+
+  /** return true if the edge and the current face are adjacent */
+  bool adjacent(const Edge & edge) const;
 
   /** return 0 if the two pieces are not in the same location,
       1 if they are equal, or -1 if they are in the same location but in

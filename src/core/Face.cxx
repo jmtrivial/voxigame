@@ -81,7 +81,6 @@ QList<Edge> Face::getEdges() const {
       break;
     default:
       return QList<Edge>();
-      break;
     }
     for(unsigned char i = 0; i != 4; ++i) {
       edges.push_back(Edge(start, d[i]));
@@ -118,4 +117,34 @@ float Face::getMiddleZ() const {
     return location.getZ() - 0.5;
   else
     return location.getZ();
+}
+
+bool Face::coplanar(const Edge & edge) const {
+  if ((direction == edge.getDirection()) ||
+      (-direction == edge.getDirection()))
+    return false;
+  CoordF mf = getMiddle();
+  CoordF me = edge.getMiddle();
+  switch(direction) {
+  case Direction::Xplus:
+  case Direction::Xminus:
+    return mf.getX() == me.getX();
+  case Direction::Yplus:
+  case Direction::Yminus:
+    return mf.getY() == me.getY();
+  case Direction::Zplus:
+  case Direction::Zminus:
+    return mf.getZ() == me.getZ();
+  default:
+    return false;
+  }
+}
+
+bool Face::adjacent(const Edge & edge) const {
+  if ((direction == edge.getDirection()) ||
+      (-direction == edge.getDirection()))
+    return false;
+  CoordF mf = getMiddle();
+  CoordF me = edge.getMiddle();
+  return mf.distance(me) < .50001;
 }
