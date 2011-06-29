@@ -499,9 +499,23 @@ bool Board::load(QDomDocument & elem, const QString & name) {
   cells = new QVector<QSharedPointer<Piece> >[box.getSizeX() * box.getSizeY() * box.getSizeZ()];
 
   pieces.clear();
-  for(QVector<QSharedPointer<Piece> >::const_iterator p = newPieces.begin(); p != newPieces.end(); ++p)
+  for(QVector<QSharedPointer<Piece> >::const_iterator p = newPieces.begin(); p != newPieces.end(); ++p) {
     pieces.push_back(*p);
+    addInCells(pieces.back());
+  }
 
 
   return true;
+}
+
+QVector<Coord> Board::getFreeCells() const {
+  QVector<Coord> result;
+
+  qWarning("Size: %d, %d, %d", box.getSizeX(), box.getSizeY(), box.getSizeZ());
+  Box::const_iterator e = box.end();
+  for(Box::const_iterator cc = box.begin(); cc != e; ++cc)
+    if (getCell(*cc).isEmpty())
+      result.push_back(*cc);
+
+  return result;
 }

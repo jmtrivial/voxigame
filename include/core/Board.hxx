@@ -225,6 +225,9 @@ public:
     return pieces;
   }
 
+  /** return the list of free cells (without piece) */
+  QVector<Coord> getFreeCells() const;
+
   /** add a new piece in the board. This function throws an exception if the configuration is not valid according to
       the requirements of the board. */
   Board & addPiece(const Piece & b);
