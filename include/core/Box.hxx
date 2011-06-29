@@ -76,7 +76,7 @@ public:
 
   /** end for iterations */
   inline const_iterator end() const {
-    return const_iterator(*this, Coord(corner1.getX(), corner2.getY(), corner2.getZ()));
+    return ++const_iterator(*this, Coord(corner2.getX(), corner2.getY(), corner2.getZ()));
   }
 
 

@@ -72,7 +72,7 @@ Coord Box::getNextPosition(const Coord & c) const
     result.setX(corner1.getX());
     result += Direction::Yplus;
     if (!contains(result)) {
-      result.setY(corner2.getY());
+      result.setY(corner1.getY());
       result += Direction::Zplus;
     }
   }
