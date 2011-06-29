@@ -25,6 +25,7 @@
 #include <QDomElement>
 #include <QString>
 #include <QMap>
+#include "core/AbstractPiece.hxx"
 
 Piece::Piece(const QDomElement & elem, const QString & name)
 {
@@ -238,14 +239,14 @@ bool Piece::isSimilar(const Piece & piece) const {
 }
 
 
-QMap<QSharedPointer<Piece>, unsigned int>
+QMap<AbstractPiece, unsigned int>
 Piece::groupBySimilarity(const QVector<QSharedPointer<Piece> > & pieces) {
-  QMap<QSharedPointer<Piece>, unsigned int> result;
+  QMap<AbstractPiece, unsigned int> result;
 
   for(QVector<QSharedPointer<Piece> >::const_iterator piece = pieces.begin();
       piece != pieces.end(); ++piece) {
     bool found = false;
-    for(QMap<QSharedPointer<Piece>, unsigned int>::iterator p = result.begin();
+    for(QMap<AbstractPiece, unsigned int>::iterator p = result.begin();
 	p != result.end(); ++p)
       if ((*(p.key())).isSimilar(**piece)) {
 	++(*p);
@@ -253,11 +254,29 @@ Piece::groupBySimilarity(const QVector<QSharedPointer<Piece> > & pieces) {
 	break;
       }
     if (!found) {
-      QSharedPointer<Piece> local = QSharedPointer<Piece>((**piece).clone());
+      AbstractPiece local = AbstractPiece((**piece).clone());
       (*local).resetTransform();
       result[local] = 1;
     }
   }
 
   return result;
+}
+
+bool Piece::operator<(const Piece & piece) const {
+  Box b = getBoundedBox();
+  Box bp = piece.getBoundedBox();
+  const unsigned int v = b.volume();
+  const unsigned int vp = bp.volume();
+  if (v > vp)
+    return true;
+  else if (v == vp) {
+    if (b.getSizeX() > bp.getSizeX())
+      return true;
+    else {
+      return nbVoxels() > piece.nbVoxels();
+    }
+  }
+  else
+    return false;
 }

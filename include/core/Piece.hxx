@@ -34,6 +34,7 @@
 class QDomDocument;
 class QDomElement;
 class QString;
+class AbstractPiece;
 
 /** abstract class to describe pieces */
 class Piece {
@@ -226,7 +227,10 @@ public:
 
 
   /** group pieces by similarity */
-  static QMap<QSharedPointer<Piece>, unsigned int> groupBySimilarity(const QVector<QSharedPointer<Piece> > & pieces);
+  static QMap<AbstractPiece, unsigned int> groupBySimilarity(const QVector<QSharedPointer<Piece> > & pieces);
+
+  /** an ordering using sizes to have an ordered list of pieces */
+  bool operator<(const Piece & piece) const;
 };
 
 #endif // VOXIGAME_CORE_PIECE_HXX

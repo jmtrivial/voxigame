@@ -33,6 +33,7 @@
 #include <QPen>
 #include <QMap>
 #include "core/Board.hxx"
+#include "core/AbstractPiece.hxx"
 
 /** a class to generate manuals from a board */
 class Manual {
@@ -266,16 +267,16 @@ private:
   static QSizeF getDrawingSize(const Box & box, float ratio);
 
 
-  inline LayoutBoardAndCaption getLayout(const QMap<QSharedPointer<Piece>, unsigned int> & pgroup,
+  inline LayoutBoardAndCaption getLayout(const QMap<AbstractPiece, unsigned int> & pgroup,
 					 const QRectF & region, bool writeNumbers, bool valign) const {
     return getLayout(pgroup, QSizeF(region.width(), region.height()), writeNumbers, valign);
   }
 
-  LayoutBoardAndCaption getLayout(const QMap<QSharedPointer<Piece>, unsigned int> & pgroup,
+  LayoutBoardAndCaption getLayout(const QMap<AbstractPiece, unsigned int> & pgroup,
 				  const QSizeF & region, bool writeNumbers, bool valign) const;
 
   inline LayoutBoardAndCaption getBoardLayout(const QSizeF & region, bool valign = true) const {
-    QMap<QSharedPointer<Piece>, unsigned int> m;
+    QMap<AbstractPiece, unsigned int> m;
     return getLayout(m, region, false, valign);
   }
 
@@ -286,7 +287,7 @@ private:
 
   void drawCaption(QGraphicsScene & scene,
 		   const QRectF & region, const LayoutBoardAndCaption & layout,
-		   const QMap<QSharedPointer<Piece>, unsigned int> & pgroup) const;
+		   const QMap<AbstractPiece, unsigned int> & pgroup) const;
 
   void drawObjects(QGraphicsScene &scene, const QPointF & point, QVector<DObject> & fae, float scale) const;
 

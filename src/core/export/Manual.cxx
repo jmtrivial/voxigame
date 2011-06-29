@@ -347,7 +347,7 @@ void Manual::drawInitialBoard(QGraphicsScene & scene, const QRectF & region, con
 }
 
 
-Manual::LayoutBoardAndCaption Manual::getLayout(const QMap<QSharedPointer<Piece>, unsigned int> & pgroup,
+Manual::LayoutBoardAndCaption Manual::getLayout(const QMap<AbstractPiece, unsigned int> & pgroup,
 						const QSizeF & region,
 						bool writeNumbers, bool valign) const {
   // get board properties
@@ -359,7 +359,7 @@ Manual::LayoutBoardAndCaption Manual::getLayout(const QMap<QSharedPointer<Piece>
   unsigned int maxNb = 0;
   if (!pgroup.isEmpty()) {
     b = (*(pgroup.begin().key())).getBoundedBox();
-    for(QMap<QSharedPointer<Piece>, unsigned int>::const_iterator p = pgroup.begin() + 1; p != pgroup.end(); ++p) {
+    for(QMap<AbstractPiece, unsigned int>::const_iterator p = pgroup.begin() + 1; p != pgroup.end(); ++p) {
       b.add((*(p.key())).getBoundedBox());
       if (maxNb < (*p))
 	maxNb = *p;
@@ -494,10 +494,10 @@ void Manual::drawBoardAndCaption(QGraphicsScene & scene,
 				 const QRectF & region, const QVector<QSharedPointer<Piece> > & oldpieces,
 				 const QVector<QSharedPointer<Piece> > & newpieces, bool drawNewPieces,
 				 bool writeNumbers, bool valign) const {
-  QMap<QSharedPointer<Piece>, unsigned int> pgroup = Piece::groupBySimilarity(newpieces);
+  QMap<AbstractPiece, unsigned int> pgroup = Piece::groupBySimilarity(newpieces);
 
   unsigned int nbPieces = 0;
-  for(QMap<QSharedPointer<Piece>, unsigned int>::const_iterator p = pgroup.begin(); p != pgroup.end(); ++p)
+  for(QMap<AbstractPiece, unsigned int>::const_iterator p = pgroup.begin(); p != pgroup.end(); ++p)
     if (nbPieces < (*p))
       nbPieces = *p;
 
@@ -622,11 +622,11 @@ void Manual::drawBoard(QGraphicsScene & scene,
 void Manual::drawCaption(QGraphicsScene & scene,
 			 const QRectF & region,
 			 const LayoutBoardAndCaption & layout,
-			 const QMap<QSharedPointer<Piece>, unsigned int> & pgroup) const {
+			 const QMap<AbstractPiece, unsigned int> & pgroup) const {
   if (layout.getCaptionRect(region.topLeft(), 0).width() != 0) {
     QFont font("DejaVu Sans", layout.getFontSize());
     unsigned int idCaption = 0;
-    for (QMap<QSharedPointer<Piece>, unsigned int>::const_iterator piece = pgroup.begin(); piece != pgroup.end(); ++piece, ++idCaption) {
+    for (QMap<AbstractPiece, unsigned int>::const_iterator piece = pgroup.begin(); piece != pgroup.end(); ++piece, ++idCaption) {
       QPair<QList<Face>, QList<Edge> > fae = (*(piece.key())).getFacesAndEdges(false);
       QVector<DObject> objects;
       for(QList<Face>::const_iterator f = fae.first.begin(); f != fae.first.end(); ++f)
