@@ -44,7 +44,8 @@ int main(int argc, char** argv)
   }
   if (args.contains("--help") ||
       args.contains("-h")) {
-    out << "Usage: vg2manual [parameters] INPUT [OUTPUT|PREFIX]" << endl;
+    out << "Generate a manual from a voxigame board." << endl;
+    out << " Usage: vg2manual [parameters] INPUT [OUTPUT|PREFIX]" << endl;
     out << endl;
     out << " Parameters:" << endl;
     out << "  -s, --svg        Generate an svg rather than a pdf. The output names are PREFIX<numbers>SUFFIX.svg" << endl;
@@ -55,9 +56,9 @@ int main(int argc, char** argv)
     out << "  -l, --level=L    Level (maximum: 10)" << endl;
     out << "  -h, --help       Print this help message" << endl;
     out << endl;
-    out << "INPUT: a voxigame file describing a board." << endl;
-    out << "OUTPUT (if the generated document is a pdf): the pdf file." << endl;
-    out << "PREFIX (if the generated document is an svg): the suffix for svg filenames." << endl;
+    out << " INPUT: a voxigame file describing a board." << endl;
+    out << " OUTPUT (if the generated document is a pdf): the pdf file." << endl;
+    out << " PREFIX (if the generated document is an svg): the suffix for svg filenames." << endl;
     return 0;
   }
 
