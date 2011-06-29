@@ -104,14 +104,29 @@ QSharedPointer<QGraphicsScene> Manual::createClearPage(unsigned int cpt) const {
 QSharedPointer<QGraphicsScene> Manual::createPathPage(unsigned int cpt) const {
   QSharedPointer<QGraphicsScene> page = QSharedPointer<QGraphicsScene>(new QGraphicsScene(QRectF(0, 0, pageSize.width(), pageSize.height())));
 
+  float l_innermargin = twoSides ? innermargin : outermargin;
+
+
+  // draw title
+  QFont titleFont("DejaVu Sans", 10, QFont::Bold);
+  QGraphicsTextItem * title = new QGraphicsTextItem;
+  (*title).setPos(l_innermargin, headererwidth);
+  (*title).setPlainText("Tip: free voxels");
+  (*title).setFont(titleFont);
+
+  (*page).addItem(title);
+  QRectF btitle = (*title).sceneBoundingRect();
+
+  QLineF linetitle(l_innermargin, btitle.bottom(),
+		   pageSize.width() - outermargin, btitle.bottom());
+  (*page).addLine(linetitle, QPen(Qt::black, 1));
 
   QVector<Coord> path = board.getFreeCells();
   QVector<QSharedPointer<Piece> > pieces;
   pieces.push_back(QSharedPointer<Piece>(new GenericPiece(path, Coord(0, 0, 0))));
 
-  float l_innermargin = twoSides ? innermargin : outermargin;
 
-  QRectF region(QPointF(l_innermargin, topmargin + columnmargin),
+  QRectF region(QPointF(l_innermargin, btitle.bottom() + columnmargin),
 		QPointF(pageSize.width() - outermargin, pageSize.height() - footerwidth - columnmargin));
 
   LayoutBoardAndCaption layout = getBoardLayout(QSizeF(region.width(), region.height()));
@@ -128,7 +143,22 @@ QSharedPointer<QGraphicsScene> Manual::createFilledPage(unsigned int cpt) const 
 
   float l_innermargin = twoSides ? innermargin : outermargin;
 
-  QRectF region(QPointF(l_innermargin, topmargin + columnmargin),
+  // draw title
+  QFont titleFont("DejaVu Sans", 10, QFont::Bold);
+  QGraphicsTextItem * title = new QGraphicsTextItem;
+  (*title).setPos(l_innermargin, headererwidth);
+  (*title).setPlainText("Tip: solution");
+  (*title).setFont(titleFont);
+
+  (*page).addItem(title);
+  QRectF btitle = (*title).sceneBoundingRect();
+
+  QLineF linetitle(l_innermargin, btitle.bottom(),
+		   pageSize.width() - outermargin, btitle.bottom());
+  (*page).addLine(linetitle, QPen(Qt::black, 1));
+
+  // draw solution
+  QRectF region(QPointF(l_innermargin, btitle.bottom() + columnmargin),
 		QPointF(pageSize.width() - outermargin, pageSize.height() - footerwidth - columnmargin));
 
   LayoutBoardAndCaption layout = getBoardLayout(QSizeF(region.width(), region.height()));
