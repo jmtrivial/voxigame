@@ -25,6 +25,7 @@
 #include <QGraphicsTextItem>
 
 #include "core/export/Manual.hxx"
+#include "core/GenericPiece.hxx"
 
 
 const QPointF Manual::xunit(1., 0.);
@@ -46,6 +47,7 @@ Manual::Manual(const Board & b) : board(b), substep(false), nbcolumns(2),
 				  penBoardFront(Qt::gray, .5, Qt::SolidLine, Qt::RoundCap),
 				  brushNewObject(Qt::white),
 				  brushOldObject(Qt::lightGray) {
+  Q_ASSERT(board.checkInternalMemoryState());
   if (!board.isValid())
     throw Exception("Cannot draw a non-valid board");
   if (!board.validWindows())
@@ -101,7 +103,19 @@ QSharedPointer<QGraphicsScene> Manual::createClearPage(unsigned int cpt) const {
 QSharedPointer<QGraphicsScene> Manual::createPathPage(unsigned int cpt) const {
   QSharedPointer<QGraphicsScene> page = QSharedPointer<QGraphicsScene>(new QGraphicsScene(QRectF(0, 0, pageSize.width(), pageSize.height())));
 
-  // TODO
+
+  QVector<Coord> path = board.getFreeCells();
+  QVector<QSharedPointer<Piece> > pieces;
+  pieces.push_back(QSharedPointer<Piece>(new GenericPiece(path, Coord(0, 0, 0))));
+
+
+  QRectF region(QPointF(innermargin, topmargin + columnmargin),
+		QPointF(pageSize.width() - outermargin, pageSize.height() - footerwidth - columnmargin));
+
+  LayoutBoardAndCaption layout = getBoardLayout(QSizeF(region.width(), region.height()));
+
+  drawBoard(*page, region,
+	    layout, pieces, QVector<QSharedPointer<Piece> >(), false);
 
   addFooter(*page, cpt);
   return page;
