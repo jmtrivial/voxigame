@@ -33,7 +33,7 @@ const QPointF Manual::yunit(.5, -.3);
 const QPointF Manual::zunit(0., -1.);
 
 
-Manual::Manual(const Board & b) : board(b), substep(false), nbcolumns(2),
+Manual::Manual(const Board & b) : board(b), substep(false), nbcolumns(2), twoSides(false),
 				  level(0), maxLevel(10), id(0),
 				  author("Unknown"), date(QDate::currentDate()),
 				  drawFilledBoard(true), drawPath(true),
@@ -42,11 +42,11 @@ Manual::Manual(const Board & b) : board(b), substep(false), nbcolumns(2),
 				  columnmargin(5.), footerwidth(20), headererwidth(15.),
 				  epsilonmargin(1.),
 				  penNewObject(Qt::black, .5, Qt::SolidLine, Qt::RoundCap),
-				  penOldObject(Qt::darkGray, .5, Qt::SolidLine, Qt::RoundCap),
-				  penBoardBack(Qt::gray, .5, Qt::DashLine, Qt::RoundCap),
-				  penBoardFront(Qt::gray, .5, Qt::SolidLine, Qt::RoundCap),
-				  brushNewObject(Qt::white),
-				  brushOldObject(Qt::lightGray) {
+				  penOldObject(Qt::black, .5, Qt::SolidLine, Qt::RoundCap),
+				  penBoardBack(Qt::black, .7, Qt::DotLine, Qt::RoundCap),
+				  penBoardFront(Qt::black, .7, Qt::SolidLine, Qt::RoundCap),
+				  brushNewObject(QColor::fromRgbF(.9, .9, .9, .9)),
+				  brushOldObject(QColor::fromRgbF(.5, .5, .5, .5)) {
   Q_ASSERT(board.checkInternalMemoryState());
   if (!board.isValid())
     throw Exception("Cannot draw a non-valid board");
@@ -60,9 +60,10 @@ Manual::Manual(const Board & b) : board(b), substep(false), nbcolumns(2),
 
 void Manual::addFooter(QGraphicsScene & page, unsigned int nb) const {
   // first draw line
-  bool even = nb % 2 == 0;
-  QLineF line(even ? outermargin : innermargin, pageSize.height() - footerwidth,
-	      pageSize.width() - (even ?  innermargin : outermargin), pageSize.height() - footerwidth);
+  bool even = (twoSides) && (nb % 2 == 0);
+  float l_innermargin = twoSides ? innermargin : outermargin;
+  QLineF line(even ? outermargin : l_innermargin, pageSize.height() - footerwidth,
+	      pageSize.width() - (even ?  l_innermargin : outermargin), pageSize.height() - footerwidth);
   page.addLine(line, QPen(Qt::black, 1));
 
   // text
@@ -80,11 +81,11 @@ void Manual::addFooter(QGraphicsScene & page, unsigned int nb) const {
     (*npage).setPos(outermargin, pageSize.height() - footerwidth);
     page.addItem(npage);
 
-    (*text).setPos(pageSize.width() - (*text).boundingRect().width() - innermargin, pageSize.height() - footerwidth);
+    (*text).setPos(pageSize.width() - (*text).boundingRect().width() - l_innermargin, pageSize.height() - footerwidth);
     page.addItem(text);
   }
   else {
-    (*text).setPos(innermargin, pageSize.height() - footerwidth);
+    (*text).setPos(l_innermargin, pageSize.height() - footerwidth);
     page.addItem(text);
 
     (*npage).setPos(pageSize.width() - (*npage).boundingRect().width() - outermargin, pageSize.height() - footerwidth);
@@ -108,8 +109,9 @@ QSharedPointer<QGraphicsScene> Manual::createPathPage(unsigned int cpt) const {
   QVector<QSharedPointer<Piece> > pieces;
   pieces.push_back(QSharedPointer<Piece>(new GenericPiece(path, Coord(0, 0, 0))));
 
+  float l_innermargin = twoSides ? innermargin : outermargin;
 
-  QRectF region(QPointF(innermargin, topmargin + columnmargin),
+  QRectF region(QPointF(l_innermargin, topmargin + columnmargin),
 		QPointF(pageSize.width() - outermargin, pageSize.height() - footerwidth - columnmargin));
 
   LayoutBoardAndCaption layout = getBoardLayout(QSizeF(region.width(), region.height()));
@@ -124,7 +126,9 @@ QSharedPointer<QGraphicsScene> Manual::createPathPage(unsigned int cpt) const {
 QSharedPointer<QGraphicsScene> Manual::createFilledPage(unsigned int cpt) const {
   QSharedPointer<QGraphicsScene> page = QSharedPointer<QGraphicsScene>(new QGraphicsScene(QRectF(0, 0, pageSize.width(), pageSize.height())));
 
-  QRectF region(QPointF(innermargin, topmargin + columnmargin),
+  float l_innermargin = twoSides ? innermargin : outermargin;
+
+  QRectF region(QPointF(l_innermargin, topmargin + columnmargin),
 		QPointF(pageSize.width() - outermargin, pageSize.height() - footerwidth - columnmargin));
 
   LayoutBoardAndCaption layout = getBoardLayout(QSizeF(region.width(), region.height()));
@@ -139,17 +143,19 @@ QSharedPointer<QGraphicsScene> Manual::createFilledPage(unsigned int cpt) const 
 QSharedPointer<QGraphicsScene> Manual::createFirstPage() const {
   QSharedPointer<QGraphicsScene> first = QSharedPointer<QGraphicsScene>(new QGraphicsScene(QRectF(0, 0, pageSize.width(), pageSize.height())));
 
+  float l_innermargin = twoSides ? innermargin : outermargin;
+
   // draw title
   QFont titleFont("DejaVu Sans", 16, QFont::Bold);
   QGraphicsTextItem * title = new QGraphicsTextItem;
-  (*title).setPos(innermargin, headererwidth);
+  (*title).setPos(l_innermargin, headererwidth);
   (*title).setPlainText("Voxigame");
   (*title).setFont(titleFont);
 
   (*first).addItem(title);
   QRectF btitle = (*title).sceneBoundingRect();
 
-  QLineF linetitle(innermargin, btitle.bottom(),
+  QLineF linetitle(l_innermargin, btitle.bottom(),
 		   pageSize.width() - outermargin, btitle.bottom());
   (*first).addLine(linetitle, QPen(Qt::black, 5));
 
@@ -178,13 +184,13 @@ QSharedPointer<QGraphicsScene> Manual::createFirstPage() const {
 
   (*text2).setPlainText("Author: " + author +
 		       "\nCreation: " + date.toString("d.M.yyyy"));
-  (*text2).setPos(innermargin, pageSize.height() - footerwidth - (*text2).boundingRect().height());
+  (*text2).setPos(l_innermargin, pageSize.height() - footerwidth - (*text2).boundingRect().height());
   (*first).addItem(text2);
 
 
   // then draw the puzzle
   drawInitialBoard(*first,
-		   QRectF(QPointF(innermargin, btitle.bottom() + columnmargin),
+		   QRectF(QPointF(l_innermargin, btitle.bottom() + columnmargin),
 			  QPointF(pageSize.width() - outermargin, pageSize.height() - footerwidth - (*text2).boundingRect().height() - columnmargin)),
 		   board.getPieces());
 
@@ -199,14 +205,20 @@ void Manual::generate() {
   pages.push_back(createFirstPage());
 
   unsigned int cpt = 2;
-  pages.push_back(createClearPage(cpt++));
+  if (twoSides)
+    pages.push_back(createClearPage(cpt++));
+
 
   if (drawPath) {
     pages.push_back(createPathPage(cpt++));
+    if (twoSides)
+      pages.push_back(createClearPage(cpt++));
   }
 
   if (drawFilledBoard) {
     pages.push_back(createFilledPage(cpt++));
+    if (twoSides)
+      pages.push_back(createClearPage(cpt++));
   }
 
   // TODO

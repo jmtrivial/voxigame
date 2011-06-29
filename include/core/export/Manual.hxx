@@ -54,6 +54,9 @@ private:
   /** number of columns per page */
   unsigned int nbcolumns;
 
+  /** if true, create a two-side pages document */
+  bool twoSides;
+
   /** level. 0 means unknown */
   unsigned int level;
 
@@ -283,6 +286,14 @@ public:
       \param b The described board
   */
   Manual(const Board & b);
+
+  /** modifier
+      \param s If true, create a document with two-side pages
+  */
+  inline Manual & setTwoSides(bool s = true) {
+    twoSides = s;
+    return *this;
+  }
 
   /** modifier
       \param s If true, the levels are subdivised in separated steps
