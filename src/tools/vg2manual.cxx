@@ -54,6 +54,8 @@ int main(int argc, char** argv)
     out << "  -a, --author=A   Author" << endl;
     out << "  -i, --id=I       id (must be != 0)" << endl;
     out << "  -l, --level=L    Level (maximum: 10)" << endl;
+    out << endl;
+    out << "  -2, --two-sides  The generated pages are two-side pages (for a recto/verso printing)" << endl;
     out << "  -h, --help       Print this help message" << endl;
     out << endl;
     out << " INPUT: a voxigame file describing a board." << endl;
@@ -66,8 +68,9 @@ int main(int argc, char** argv)
   QString input;
   QString output;
   QString suffix;
-  QString author;
+  QString author = "Anonymous";
   bool pdf = true;
+  bool twoSides = false;
   unsigned int level = 0;
   unsigned int id = 0;
 
@@ -94,6 +97,9 @@ int main(int argc, char** argv)
       }
       else if ((s == "-s") || (s == "--svg")) {
 	pdf = false;
+      }
+      else if ((s == "-2") || (s == "--two-sides")) {
+	twoSides = true;
       }
       else if (s == "--suffix") {
 	++i;
@@ -167,6 +173,7 @@ int main(int argc, char** argv)
   manual.setLevel(level);
   manual.setId(id);
   manual.setAuthor(author);
+  manual.setTwoSides(twoSides);
 
   if (pdf) {
     out << "Save file (" << output << ")" << endl;
