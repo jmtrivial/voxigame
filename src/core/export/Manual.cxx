@@ -36,7 +36,7 @@ const QPointF Manual::zunit(0., -1.);
 Manual::Manual(const Board & b) : board(b), substep(false), nbcolumns(2), twoSides(false),
 				  level(0), maxLevel(10), id(0),
 				  author("Unknown"), date(QDate::currentDate()),
-				  drawFilledBoard(true), drawPath(true),
+				  drawFilledBoard(true), drawPath(true), drawWithNumbers(true),
 				  pageSize(210, 297),
 				  innermargin(15.), outermargin(7.), bottommargin(5.), topmargin(5.),
 				  columnmargin(5.), footerwidth(20), headererwidth(15.),
@@ -101,6 +101,37 @@ QSharedPointer<QGraphicsScene> Manual::createClearPage(unsigned int cpt) const {
   return page;
 }
 
+QSharedPointer<QGraphicsScene> Manual::createWNPage(unsigned int cpt) const {
+  QSharedPointer<QGraphicsScene> page = QSharedPointer<QGraphicsScene>(new QGraphicsScene(QRectF(0, 0, pageSize.width(), pageSize.height())));
+
+  float l_innermargin = twoSides ? innermargin : outermargin;
+
+
+  // draw title
+  QFont titleFont("DejaVu Sans", 10, QFont::Bold);
+  QGraphicsTextItem * title = new QGraphicsTextItem;
+  (*title).setPos(l_innermargin, headererwidth);
+  (*title).setPlainText("Tip: quantity");
+  (*title).setFont(titleFont);
+
+  (*page).addItem(title);
+  QRectF btitle = (*title).sceneBoundingRect();
+
+  QLineF linetitle(l_innermargin, btitle.bottom(),
+		   pageSize.width() - outermargin, btitle.bottom());
+  (*page).addLine(linetitle, QPen(Qt::black, 1));
+
+
+  QRectF region(QPointF(l_innermargin, btitle.bottom() + columnmargin),
+		QPointF(pageSize.width() - outermargin, pageSize.height() - footerwidth - columnmargin));
+
+  // then draw the puzzle
+  drawInitialBoard(*page, region, board.getPieces(), true);
+
+  addFooter(*page, cpt);
+  return page;
+}
+
 QSharedPointer<QGraphicsScene> Manual::createPathPage(unsigned int cpt) const {
   QSharedPointer<QGraphicsScene> page = QSharedPointer<QGraphicsScene>(new QGraphicsScene(QRectF(0, 0, pageSize.width(), pageSize.height())));
 
@@ -129,7 +160,7 @@ QSharedPointer<QGraphicsScene> Manual::createPathPage(unsigned int cpt) const {
   QRectF region(QPointF(l_innermargin, btitle.bottom() + columnmargin),
 		QPointF(pageSize.width() - outermargin, pageSize.height() - footerwidth - columnmargin));
 
-  LayoutBoardAndCaption layout = getBoardLayout(QSizeF(region.width(), region.height()));
+  LayoutBoardAndCaption layout = getBoardLayout(QSizeF(region.width(), region.height()), true);
 
   drawBoard(*page, region,
 	    layout, pieces, QVector<QSharedPointer<Piece> >(), false);
@@ -161,7 +192,7 @@ QSharedPointer<QGraphicsScene> Manual::createFilledPage(unsigned int cpt) const 
   QRectF region(QPointF(l_innermargin, btitle.bottom() + columnmargin),
 		QPointF(pageSize.width() - outermargin, pageSize.height() - footerwidth - columnmargin));
 
-  LayoutBoardAndCaption layout = getBoardLayout(QSizeF(region.width(), region.height()));
+  LayoutBoardAndCaption layout = getBoardLayout(QSizeF(region.width(), region.height()), true);
 
   drawBoard(*page, region,
 	    layout, QVector<QSharedPointer<Piece> >(), board.getPieces(), true);
@@ -222,7 +253,7 @@ QSharedPointer<QGraphicsScene> Manual::createFirstPage() const {
   drawInitialBoard(*first,
 		   QRectF(QPointF(l_innermargin, btitle.bottom() + columnmargin),
 			  QPointF(pageSize.width() - outermargin, pageSize.height() - footerwidth - (*text2).boundingRect().height() - columnmargin)),
-		   board.getPieces());
+		   board.getPieces(), true);
 
   addFooter(*first, 1);
   return first;
@@ -238,6 +269,12 @@ void Manual::generate() {
   if (twoSides)
     pages.push_back(createClearPage(cpt++));
 
+
+  if (drawWithNumbers) {
+    pages.push_back(createWNPage(cpt++));
+    if (twoSides)
+      pages.push_back(createClearPage(cpt++));
+  }
 
   if (drawPath) {
     pages.push_back(createPathPage(cpt++));
@@ -304,13 +341,15 @@ bool Manual::toSVG(const QString & prefix, const QString & suffix) {
 }
 
 
-void Manual::drawInitialBoard(QGraphicsScene & scene, const QRectF & region, const QVector<QSharedPointer<Piece> > & newpieces) const {
-  drawBoardAndCaption(scene, region, QVector<QSharedPointer<Piece> >(), newpieces, false);
+void Manual::drawInitialBoard(QGraphicsScene & scene, const QRectF & region, const QVector<QSharedPointer<Piece> > & newpieces,
+			      bool writeNumbers, bool valign) const {
+  drawBoardAndCaption(scene, region, QVector<QSharedPointer<Piece> >(), newpieces, false, writeNumbers, valign);
 }
 
 
 Manual::LayoutBoardAndCaption Manual::getLayout(const QMap<QSharedPointer<Piece>, unsigned int> & pgroup,
-						const QSizeF & region) const {
+						const QSizeF & region,
+						bool writeNumbers, bool valign) const {
   // get board properties
   const float ratioBoard = getRatio(board.getBox());
   const float nbUnitBoard = getNbUnits(board.getBox());
@@ -332,7 +371,8 @@ Manual::LayoutBoardAndCaption Manual::getLayout(const QMap<QSharedPointer<Piece>
   return LayoutBoardAndCaption(region,
 			       ratioBoard, ratioPiece,
 			       nbUnitBoard, nbUnitPiece,
-			       pgroup.size(), maxNb, columnmargin, epsilonmargin);
+			       pgroup.size(), maxNb, columnmargin, epsilonmargin,
+			       valign, writeNumbers);
 }
 
 Manual::LayoutBoardAndCaption::LayoutBoardAndCaption(const QSizeF & r,
@@ -340,10 +380,14 @@ Manual::LayoutBoardAndCaption::LayoutBoardAndCaption(const QSizeF & r,
 						     float bnu, float pnu,
 						     unsigned int nbc,
 						     unsigned int nbmax,
-						     float epsilon_, float epsilonCaption_) {
-  // TODO: ajust by removing the bottom space (middle)
+						     float epsilon_, float epsilonCaption_,
+						     bool valign_, bool writeNumbers_) {
+
+  topMargin = 0.;
   epsilon = epsilon_;
   epsilonCaption = epsilonCaption_;
+  valign = valign_;
+  writeNumbers = writeNumbers_;
   region = r;
 
   // first, try the maximal size
@@ -376,16 +420,27 @@ Manual::LayoutBoardAndCaption::LayoutBoardAndCaption(const QSizeF & r,
     // TODO
   }
 
+  // vertical alignment
+  if (valign) {
+    QSizeF area = getGlobalSize();
+    if (area.height() < region.height()) {
+      topMargin = (region.height() - area.height()) / 2;
+    }
+  }
+
 }
 
 void Manual::LayoutBoardAndCaption::buildCaptionProperties(unsigned int nbc, unsigned int nbmax) {
-  fontSize = captionSize.height() / 2;
+  float maxWidthCaptionText = 0.;
+  if (writeNumbers) {
+    fontSize = captionSize.height() / 2;
 
-  QGraphicsTextItem * text = new QGraphicsTextItem;
-  QFont font("DejaVu Sans", fontSize);
-  (*text).setFont(font);
-  (*text).setPlainText(QString::fromUtf8("× %1").arg(nbmax));
-  const float maxWidthCaptionText = (*text).boundingRect().width();
+    QGraphicsTextItem * text = new QGraphicsTextItem;
+    QFont font("DejaVu Sans", fontSize);
+    (*text).setFont(font);
+    (*text).setPlainText(QString::fromUtf8("× %1").arg(nbmax));
+    maxWidthCaptionText = (*text).boundingRect().width();
+  }
 
   captionSizeFull = captionSize;
   captionSizeFull.rwidth() += epsilon + maxWidthCaptionText;
@@ -413,12 +468,23 @@ void Manual::LayoutBoardAndCaption::adjustBoardLayout(float newScale) {
   boardScale = newScale;
 }
 
+QSizeF Manual::LayoutBoardAndCaption::getGlobalSize() const {
+  return QSizeF(region.width(), boardSize.height() + epsilon + nbLines * (captionSizeFull.height() + epsilonCaption) + topMargin);
+}
+
+QRectF Manual::LayoutBoardAndCaption::getGlobalRect(const QPointF & origin) const {
+  QPointF start(origin);
+  start.ry() += topMargin;
+
+  return QRectF(start, getGlobalSize());
+}
+
 QRectF Manual::LayoutBoardAndCaption::getCaptionRect(const QPointF & origin, unsigned int id) const {
   const unsigned int idRow = (id - (id % nbColumns)) / nbColumns;
   const unsigned int idColumn = id % nbColumns;
 
   QPointF start(origin);
-  start.ry() += boardSize.height() + epsilon + idRow * (captionSizeFull.height() + epsilonCaption);
+  start.ry() += boardSize.height() + epsilon + idRow * (captionSizeFull.height() + epsilonCaption) + topMargin;
   start.rx() += idColumn * (captionSizeFull.width() + epsilonCaption);
 
   return QRectF (start, captionSizeFull);
@@ -426,7 +492,8 @@ QRectF Manual::LayoutBoardAndCaption::getCaptionRect(const QPointF & origin, uns
 
 void Manual::drawBoardAndCaption(QGraphicsScene & scene,
 				 const QRectF & region, const QVector<QSharedPointer<Piece> > & oldpieces,
-				 const QVector<QSharedPointer<Piece> > & newpieces, bool drawNewPieces) const {
+				 const QVector<QSharedPointer<Piece> > & newpieces, bool drawNewPieces,
+				 bool writeNumbers, bool valign) const {
   QMap<QSharedPointer<Piece>, unsigned int> pgroup = Piece::groupBySimilarity(newpieces);
 
   unsigned int nbPieces = 0;
@@ -435,7 +502,7 @@ void Manual::drawBoardAndCaption(QGraphicsScene & scene,
       nbPieces = *p;
 
   // get the drawing sizes
-  LayoutBoardAndCaption layout = getLayout(pgroup, QSizeF(region.width(), region.height()));
+  LayoutBoardAndCaption layout = getLayout(pgroup, QSizeF(region.width(), region.height()), valign, writeNumbers);
 
   // draw the board
   drawBoard(scene, region, layout, oldpieces, newpieces, drawNewPieces);
@@ -574,11 +641,13 @@ void Manual::drawCaption(QGraphicsScene & scene,
 
       drawObjects(scene, origin, objects, layout.getCaptionScale());
 
-      QGraphicsTextItem * text = new QGraphicsTextItem;
-      (*text).setFont(font);
-      (*text).setPlainText(QString::fromUtf8("× %1").arg(*piece));
-      (*text).setPos(rect.right() - (*text).boundingRect().width(), rect.center().y() - ((*text).boundingRect().height() / 2));
-      scene.addItem(text);
+      if (layout.getWriteNumbers()) {
+	QGraphicsTextItem * text = new QGraphicsTextItem;
+	(*text).setFont(font);
+	(*text).setPlainText(QString::fromUtf8("× %1").arg(*piece));
+	(*text).setPos(rect.right() - (*text).boundingRect().width(), rect.center().y() - ((*text).boundingRect().height() / 2));
+	scene.addItem(text);
+      }
     }
   }
 }

@@ -50,25 +50,19 @@ private:
 
   /** if true, all the levels are subdivised in separated steps */
   bool substep;
-
   /** number of columns per page */
   unsigned int nbcolumns;
-
   /** if true, create a two-side pages document */
   bool twoSides;
 
   /** level. 0 means unknown */
   unsigned int level;
-
   /** maximum level. */
   unsigned int maxLevel;
-
   /** id. */
   unsigned int id;
-
   /** author */
   QString author;
-
   /** date */
   QDate date;
 
@@ -77,6 +71,9 @@ private:
 
   /** draw the path board befor the steps  */
   bool drawPath;
+
+  /** draw the boards with caption and numbers */
+  bool drawWithNumbers;
 
   /** page size */
   QSize pageSize;
@@ -115,6 +112,12 @@ private:
     QSizeF region;
     float epsilon;
     float epsilonCaption;
+    float topMargin;
+
+    /** vertical alignement */
+    bool valign;
+    /** write numbers */
+    bool writeNumbers;
 
     void adjustCaptionLayout(float newScale, unsigned int nbc, unsigned int nbmax);
 
@@ -131,6 +134,8 @@ private:
 	\param pnu Piece unit in caption (number of units in the X direction)
 	\param nbc Number of pieces in the caption
 	\param nbmax Maximal number of similar pieces
+	\param valign Vertical alignement in the region
+	\param writeNumbers Write the numbers
      */
     LayoutBoardAndCaption(const QSizeF & r,
 			  float br, float pr,
@@ -138,7 +143,9 @@ private:
 			  unsigned int nbc,
 			  unsigned int nbmax,
 			  float epsilon_,
-			  float epsilonCaption_);
+			  float epsilonCaption_,
+			  bool valign_ = false,
+			  bool writeNumbers_ = true);
 
     /** accessor */
     inline float getBoardScale() const { return boardScale; }
@@ -150,6 +157,7 @@ private:
 	\param origin top-left corner of the global region */
     inline QRectF getBoardRect(const QPointF & origin) const {
       QPointF point(origin);
+      point.ry() += topMargin;
       point.rx() += (region.width() - boardSize.width()) / 2;
       return QRectF(point, boardSize);
     }
@@ -159,8 +167,19 @@ private:
 	\param id Id of the caption line */
     QRectF getCaptionRect(const QPointF & origin, unsigned int id) const;
 
+    /** return the size where corresponding to the global drawing
+	\param origin top-left corner of the global region */
+    QSizeF getGlobalSize() const;
+
+    /** return the rectangle where corresponding to the global drawing
+	\param origin top-left corner of the global region */
+    QRectF getGlobalRect(const QPointF & origin) const;
+
     /** return the estimated font size for the captions */
     inline unsigned int getFontSize() const { return fontSize; }
+
+    /** return true if the layout contains the numbers */
+    inline bool getWriteNumbers() const { return writeNumbers; }
   };
 
   /** this class describe an object to be drawn (a face or an edge),
@@ -222,6 +241,8 @@ private:
 
   QSharedPointer<QGraphicsScene> createPathPage(unsigned int cpt) const;
 
+  QSharedPointer<QGraphicsScene> createWNPage(unsigned int cpt) const;
+
   void generate();
 
   void addFooter(QGraphicsScene & page, unsigned int nb) const;
@@ -234,25 +255,28 @@ private:
 
   void drawBoardAndCaption(QGraphicsScene & scene,
 			   const QRectF & region, const QVector<QSharedPointer<Piece> > & oldpieces,
-			   const QVector<QSharedPointer<Piece> > & newpieces, bool drawNewPieces = true) const;
+			   const QVector<QSharedPointer<Piece> > & newpieces,
+			   bool drawNewPieces = true,
+			   bool writeNumbers = true,
+			   bool valign = false) const;
 
   void drawInitialBoard(QGraphicsScene & scene,
-			const QRectF & region, const QVector<QSharedPointer<Piece> > & newpieces) const;
+			const QRectF & region, const QVector<QSharedPointer<Piece> > & newpieces, bool writeNumbers = false, bool valign = true) const;
 
   static QSizeF getDrawingSize(const Box & box, float ratio);
 
 
   inline LayoutBoardAndCaption getLayout(const QMap<QSharedPointer<Piece>, unsigned int> & pgroup,
-				  const QRectF & region) const {
-    return getLayout(pgroup, QSizeF(region.width(), region.height()));
+					 const QRectF & region, bool writeNumbers, bool valign) const {
+    return getLayout(pgroup, QSizeF(region.width(), region.height()), writeNumbers, valign);
   }
 
   LayoutBoardAndCaption getLayout(const QMap<QSharedPointer<Piece>, unsigned int> & pgroup,
-				  const QSizeF & region) const;
+				  const QSizeF & region, bool writeNumbers, bool valign) const;
 
-  inline LayoutBoardAndCaption getBoardLayout(const QSizeF & region) const {
+  inline LayoutBoardAndCaption getBoardLayout(const QSizeF & region, bool valign = true) const {
     QMap<QSharedPointer<Piece>, unsigned int> m;
-    return getLayout(m, region);
+    return getLayout(m, region, false, valign);
   }
 
   void drawBoard(QGraphicsScene & scene,
@@ -352,6 +376,15 @@ public:
   */
   inline Manual & setDate(const QDate & d = QDate()) {
     date = d;
+    return *this;
+  }
+
+
+  /** modifier
+      \param f Value
+  */
+  inline Manual & setDrawWithNumbers(bool n = true) {
+    drawWithNumbers = n;
     return *this;
   }
 
