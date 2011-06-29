@@ -253,7 +253,7 @@ QSharedPointer<QGraphicsScene> Manual::createFirstPage() const {
   drawInitialBoard(*first,
 		   QRectF(QPointF(l_innermargin, btitle.bottom() + columnmargin),
 			  QPointF(pageSize.width() - outermargin, pageSize.height() - footerwidth - (*text2).boundingRect().height() - columnmargin)),
-		   board.getPieces(), true);
+		   board.getPieces(), false);
 
   addFooter(*first, 1);
   return first;
@@ -502,7 +502,7 @@ void Manual::drawBoardAndCaption(QGraphicsScene & scene,
       nbPieces = *p;
 
   // get the drawing sizes
-  LayoutBoardAndCaption layout = getLayout(pgroup, QSizeF(region.width(), region.height()), valign, writeNumbers);
+  LayoutBoardAndCaption layout = getLayout(pgroup, QSizeF(region.width(), region.height()), writeNumbers, valign);
 
   // draw the board
   drawBoard(scene, region, layout, oldpieces, newpieces, drawNewPieces);
