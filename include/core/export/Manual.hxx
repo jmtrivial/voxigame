@@ -66,6 +66,8 @@ private:
   QString author;
   /** date */
   QDate date;
+  /** name */
+  QString name;
 
   /** draw the filled board before the steps */
   bool drawFilledBoard;
@@ -113,6 +115,7 @@ private:
     QSizeF region;
     float epsilon;
     float epsilonCaption;
+    float realEpsilonCaption;
     float topMargin;
 
     /** vertical alignement */
@@ -244,6 +247,8 @@ private:
 
   QSharedPointer<QGraphicsScene> createWNPage(unsigned int cpt) const;
 
+  QVector<QSharedPointer<QGraphicsScene> > createStepByStepPages(unsigned int & cpt) const;
+
   void generate();
 
   void addFooter(QGraphicsScene & page, unsigned int nb) const;
@@ -253,6 +258,14 @@ private:
 
   /** return the number of units drawn in the X direction */
   static float getNbUnits(const Box & box);
+
+  void drawBoardAndCaption(QGraphicsScene & scene,
+			   const QPointF & topleft,
+			   const LayoutBoardAndCaption & layout,
+			   const QVector<QSharedPointer<Piece> > & oldpieces,
+			   const QVector<QSharedPointer<Piece> > & newpieces,
+			   const QMap<AbstractPiece, unsigned int> & pgroup,
+			   bool drawNewPieces) const;
 
   void drawBoardAndCaption(QGraphicsScene & scene,
 			   const QRectF & region, const QVector<QSharedPointer<Piece> > & oldpieces,
@@ -281,12 +294,12 @@ private:
   }
 
   void drawBoard(QGraphicsScene & scene,
-		 const QRectF & region, const LayoutBoardAndCaption & layout,
+		 const QPointF & topleft, const LayoutBoardAndCaption & layout,
 		 const QVector<QSharedPointer<Piece> > & oldpieces,
 		 const QVector<QSharedPointer<Piece> > & newpieces, bool drawNewPieces) const;
 
   void drawCaption(QGraphicsScene & scene,
-		   const QRectF & region, const LayoutBoardAndCaption & layout,
+		   const QPointF & topleft, const LayoutBoardAndCaption & layout,
 		   const QMap<AbstractPiece, unsigned int> & pgroup) const;
 
   void drawObjects(QGraphicsScene &scene, const QPointF & point, QVector<DObject> & fae, float scale) const;
@@ -377,6 +390,14 @@ public:
   */
   inline Manual & setDate(const QDate & d = QDate()) {
     date = d;
+    return *this;
+  }
+
+  /** modifier
+      \param n name of the board
+  */
+  inline Manual & setName(const QString & n = "") {
+    name = n;
     return *this;
   }
 

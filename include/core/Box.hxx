@@ -175,6 +175,12 @@ public:
   /** accessor */
   inline unsigned int getSizeZ() const { return corner2.getZ() - corner1.getZ() + 1; }
 
+  /** accessor */
+  inline unsigned int getMinZ() const { return corner1.getZ(); }
+
+  /** accessor */
+  inline unsigned int getMaxZ() const { return corner2.getZ(); }
+
   /** return the volume of the current box */
   inline unsigned int volume() const { return getSizeX() * getSizeY() * getSizeZ(); }
 

@@ -231,6 +231,11 @@ public:
 
   /** an ordering using sizes to have an ordered list of pieces */
   bool operator<(const Piece & piece) const;
+
+  /** Let [zmin, zmax] be the interval of a piece projected on z.
+      this comparator return true if p1.zmin < p2.zmin or if p1.zmin == p2.zmin and
+      p1.zmax < p2.zmax */
+  static bool zLessThan(const Piece & p1, const Piece & p2);
 };
 
 #endif // VOXIGAME_CORE_PIECE_HXX

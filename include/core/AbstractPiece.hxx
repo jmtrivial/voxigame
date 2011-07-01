@@ -59,6 +59,11 @@ public:
   inline Piece & operator*() {
     return *piece;
   }
+
+  /** an ordering along the z axis */
+  inline static bool zLessThan(const QSharedPointer<Piece> & p1, const QSharedPointer<Piece> & p2) {
+    return Piece::zLessThan(*p1, *p2);
+  }
 };
 
 #endif // VOXIGAME_CORE_ABSTRACT_PIECE_HXX

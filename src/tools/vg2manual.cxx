@@ -51,6 +51,7 @@ int main(int argc, char** argv)
     out << "  -s, --svg        Generate an svg rather than a pdf. The output names are PREFIX<numbers>SUFFIX.svg" << endl;
     out << "  --suffix=SUFFIX  Suffix useed in case of svg output." << endl;
     out << endl;
+    out << "  -n, --name=A     Name of the board" << endl;
     out << "  -a, --author=A   Author" << endl;
     out << "  -i, --id=I       id (must be != 0)" << endl;
     out << "  -l, --level=L    Level (maximum: 10)" << endl;
@@ -69,6 +70,7 @@ int main(int argc, char** argv)
   QString output;
   QString suffix;
   QString author = "Anonymous";
+  QString name;
   bool pdf = true;
   bool twoSides = false;
   unsigned int level = 0;
@@ -109,6 +111,15 @@ int main(int argc, char** argv)
 	  return 1;
 	}
 	suffix = args[i];
+      }
+      else if ((s == "-n") || (s == "--name")) {
+	++i;
+	if (i == (unsigned int)args.size()) {
+	  err << "Error: no given name (" + s + ")" << endl;
+	  err << "Abort." << endl;
+	  return 1;
+	}
+	name = args[i];
       }
       else if ((s == "-i") || (s == "--id")) {
 	++i;
@@ -174,6 +185,7 @@ int main(int argc, char** argv)
   manual.setId(id);
   manual.setAuthor(author);
   manual.setTwoSides(twoSides);
+  manual.setName(name);
 
   if (pdf) {
     out << "Save file (" << output << ")" << endl;

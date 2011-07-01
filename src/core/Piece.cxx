@@ -280,3 +280,10 @@ bool Piece::operator<(const Piece & piece) const {
   else
     return false;
 }
+
+bool Piece::zLessThan(const Piece & p1, const Piece & p2) {
+  Box b1 = p1.getBoundedBox();
+  Box b2 = p2.getBoundedBox();
+  return (b1.getMinZ() < b2.getMinZ()) ||
+    (b1.getMinZ() == b2.getMinZ() && b1.getMaxZ() < b2.getMaxZ());
+}
