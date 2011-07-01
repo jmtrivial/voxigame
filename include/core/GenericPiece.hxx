@@ -88,6 +88,8 @@ public:
   /** comparison operator */
   virtual bool operator==(const Piece & piece) const;
 
+  /** add a boxel in the structure */
+  GenericPiece & addVoxel(const Coord & c);
 };
 
 #endif // VOXIGAME_CORE_GENERICPIECE_HXX

@@ -56,14 +56,14 @@ GenericPiece::GenericPiece(const QDomElement & elem, const QString & name)
           const QString sz = ee.attribute("z");
           const double x = sx.toUInt(&ok);
           if (!ok)
-        throw Exception("Bad coordinate description (x)");
+	    throw Exception("Bad coordinate description (x)");
           const double y = sy.toUInt(&ok);
           if (!ok)
-        throw Exception("Bad coordinate description (y)");
+	    throw Exception("Bad coordinate description (y)");
           const double z = sz.toUInt(&ok);
           if (!ok)
-        throw Exception("Bad coordinate description (z)");
-          coords.push_back(Coord(x, y, z));
+	    throw Exception("Bad coordinate description (z)");
+	  addVoxel(Coord(x, y, z));
         }
       }
       nn = nn.nextSibling();
@@ -78,6 +78,13 @@ GenericPiece::GenericPiece(const QDomElement & elem, const QString & name)
     throw Exception("Voxels not found");
 
 }
+GenericPiece & GenericPiece::addVoxel(const Coord & c) {
+  coords.push_back(c);
+  bbox.add(c);
+  cend = Coord(bbox.getCorner2() + Coord(1, 1, 1));
+  return *this;
+}
+
 
 bool GenericPiece::operator==(const Piece & piece) const {
   try {
