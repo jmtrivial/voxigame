@@ -361,6 +361,13 @@ Manual::LayoutBoardAndCaption Manual::getLayout(const QMap<AbstractPiece, unsign
 	maxNb = *p;
     }
   }
+  Q_ASSERT(b.getCorner1().getX() <= b.getCorner2().getX());
+  Q_ASSERT(b.getCorner1().getY() <= b.getCorner2().getY());
+  Q_ASSERT(b.getCorner1().getZ() <= b.getCorner2().getZ());
+
+  Q_ASSERT(b.getCorner1().getX() <= b.getCorner2().getX());
+  Q_ASSERT(b.getCorner1().getY() <= b.getCorner2().getY());
+  Q_ASSERT(b.getCorner1().getZ() <= b.getCorner2().getZ());
   float ratioPiece = getRatio(b);
   const float nbUnitPiece = getNbUnits(b);
 
