@@ -374,7 +374,7 @@ Manual::LayoutBoardAndCaption Manual::getLayout(const QMap<AbstractPiece, unsign
   return LayoutBoardAndCaption(region,
 			       ratioBoard, ratioPiece,
 			       nbUnitBoard, nbUnitPiece,
-			       pgroup.size(), maxNb, columnmargin, epsilonmargin,
+			       pgroup.size(), maxNb, columnmargin / 3, epsilonmargin,
 			       valign, writeNumbers);
 }
 
