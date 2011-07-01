@@ -56,6 +56,8 @@ int main(int argc, char** argv)
     out << "  -i, --id=I       id (must be != 0)" << endl;
     out << "  -l, --level=L    Level (maximum: 10)" << endl;
     out << endl;
+    out << "  -substeps        Draw substeps (more details in the step-by-step description)" << endl;
+    out << endl;
     out << "  -2, --two-sides  The generated pages are two-side pages (for a recto/verso printing)" << endl;
     out << "  -h, --help       Print this help message" << endl;
     out << endl;
@@ -75,6 +77,7 @@ int main(int argc, char** argv)
   bool twoSides = false;
   unsigned int level = 0;
   unsigned int id = 0;
+  bool substeps = true;
 
   // load parameters
   for(unsigned int i = 1; i != (unsigned int) args.size(); ++i) {
@@ -99,6 +102,9 @@ int main(int argc, char** argv)
       }
       else if ((s == "-s") || (s == "--svg")) {
 	pdf = false;
+      }
+      else if (s == "--substeps") {
+	substeps = true;
       }
       else if ((s == "-2") || (s == "--two-sides")) {
 	twoSides = true;
@@ -186,6 +192,7 @@ int main(int argc, char** argv)
   manual.setAuthor(author);
   manual.setTwoSides(twoSides);
   manual.setName(name);
+  manual.setDrawSubsteps(substeps);
 
   if (pdf) {
     out << "Save file (" << output << ")" << endl;
