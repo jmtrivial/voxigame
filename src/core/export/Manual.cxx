@@ -574,7 +574,7 @@ void Manual::drawBoard(QGraphicsScene & scene,
     if ((faces[i].getLocation() != Coord(-1, -1, -1)) &&
 	((faces[i].getMiddleX() <= 0) || (faces[i].getMiddleY() >= (box.getSizeY() - 1)) ||
 	 (faces[i].getMiddleZ() <= 0))) {
-      drawEdgesFromFace(scene, origin, faces[i], scale, penBoardBack);
+      drawFace(scene, origin, faces[i], scale, penBoardBack, brushWindow);
     }
   }
 
@@ -635,7 +635,7 @@ void Manual::drawBoard(QGraphicsScene & scene,
     if ((faces[i].getLocation() != Coord(-1, -1, -1)) &&
 	((faces[i].getMiddleX() >= (box.getSizeX() - 1)) || (faces[i].getMiddleY() <= 0) ||
 	 (faces[i].getMiddleZ() >= (box.getSizeZ() - 1)))) {
-      drawEdgesFromFace(scene, origin, faces[i], scale, penBoardFront);
+      drawFace(scene, origin, faces[i], scale, penBoardFront, brushWindow);
     }
 
 }
@@ -965,6 +965,7 @@ Manual & Manual::setUseColors(bool u) {
     brushOldObject[1] = QBrush(QColor::fromRgbF(.75, .75, .9, .6));
     brushOldObject[2] = QBrush(QColor::fromRgbF(.85, .85, 1., .6));
 
+    brushWindow = QBrush(QColor::fromRgbF(.3, 0., 0., .6));
   }
   else {
     penNewObject = QPen(Qt::black, .5, Qt::SolidLine, Qt::RoundCap);
@@ -980,6 +981,8 @@ Manual & Manual::setUseColors(bool u) {
     brushOldObject[0] = QBrush(QColor::fromRgbF(1., 1., 1., .6));
     brushOldObject[1] = QBrush(QColor::fromRgbF(.85, .85, .85, .6));
     brushOldObject[2] = QBrush(QColor::fromRgbF(.9, .9, .9, .6));
+
+    brushWindow = QBrush(QColor::fromRgbF(.3, .3, .3, .6));
   }
 
   return *this;

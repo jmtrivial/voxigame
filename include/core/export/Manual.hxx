@@ -100,6 +100,7 @@ private:
 
   QBrush brushNewObject[3];
   QBrush brushOldObject[3];
+  QBrush brushWindow;
 
   /** a class that describe the layout of a board and an associated caption */
   class LayoutBoardAndCaption {
