@@ -59,6 +59,7 @@ int main(int argc, char** argv)
     out << "  -substeps        Draw substeps (more details in the step-by-step description)" << endl;
     out << endl;
     out << "  -2, --two-sides  The generated pages are two-side pages (for a recto/verso printing)" << endl;
+    out << "  -c, --colors     Create a colored document" << endl;
     out << "  -h, --help       Print this help message" << endl;
     out << endl;
     out << " INPUT: a voxigame file describing a board." << endl;
@@ -78,6 +79,7 @@ int main(int argc, char** argv)
   unsigned int level = 0;
   unsigned int id = 0;
   bool substeps = true;
+  bool usecolor = false;
 
   // load parameters
   for(unsigned int i = 1; i != (unsigned int) args.size(); ++i) {
@@ -99,6 +101,9 @@ int main(int argc, char** argv)
 	  err << "Abort." << endl;
 	  return 1;
 	}
+      }
+      else if ((s == "-c") || (s == "--colors")) {
+	usecolor = true;
       }
       else if ((s == "-s") || (s == "--svg")) {
 	pdf = false;
@@ -193,6 +198,7 @@ int main(int argc, char** argv)
   manual.setTwoSides(twoSides);
   manual.setName(name);
   manual.setDrawSubsteps(substeps);
+  manual.setUseColors(usecolor);
 
   if (pdf) {
     out << "Save file (" << output << ")" << endl;

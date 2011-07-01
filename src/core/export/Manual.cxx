@@ -40,13 +40,8 @@ Manual::Manual(const Board & b) : board(b), substep(false), nbcolumns(2), twoSid
 				  pageSize(210, 297),
 				  innermargin(15.), outermargin(7.), bottommargin(5.), topmargin(5.),
 				  columnmargin(15.), footerwidth(20), headererwidth(15.),
-				  epsilonmargin(1.),
-				  penNewObject(Qt::black, .5, Qt::SolidLine, Qt::RoundCap),
-				  penOldObject(QColor::fromRgbF(0., 0., 0., .6), .5, Qt::SolidLine, Qt::RoundCap),
-				  penBoardBack(Qt::black, .7, Qt::DotLine, Qt::RoundCap),
-				  penBoardFront(Qt::black, .7, Qt::SolidLine, Qt::RoundCap),
-				  brushNewObject(QColor::fromRgbF(.6, .6, .6, .8)),
-				  brushOldObject(QColor::fromRgbF(.9, .9, .9, .3)) {
+				  epsilonmargin(1.) {
+  setUseColors(false);
   Q_ASSERT(board.checkInternalMemoryState());
   if (!board.isValid())
     throw Exception("Cannot draw a non-valid board");
@@ -700,7 +695,7 @@ void Manual::drawFace(QGraphicsScene &scene, const QPointF & point, const Face &
   }
   QPolygonF polygon(points);
 
-  scene.addPolygon(polygon, pen, brush);//QBrush(QColor(qrand() % 256, qrand() % 256, qrand() % 256)));//brush);
+  scene.addPolygon(polygon, pen, brush);
 }
 
 
@@ -713,7 +708,15 @@ void Manual::drawEdge(QGraphicsScene &scene, const QPointF & point, const Edge &
 
 void Manual::drawObject(QGraphicsScene &scene, const QPointF & point, const DObject & object, float scale) const {
   if (object.isFace()) {
-    QBrush brush = object.isNew() ? brushNewObject : brushOldObject;
+    const Direction::Type d = object.getFace().getDirection();
+    unsigned char i;
+    if ((d == Direction::Xplus) || (d == Direction::Xminus))
+      i = 0;
+    else if ((d == Direction::Yplus) || (d == Direction::Yminus))
+      i = 1;
+    else
+      i = 2;
+    QBrush brush = object.isNew() ? brushNewObject[i] : brushOldObject[i];
     drawFace(scene, point, object.getFace(), scale, QPen(brush.color()), brush);
   }
   else {
@@ -937,4 +940,40 @@ QVector<QSharedPointer<QGraphicsScene> > Manual::createStepByStepPages(unsigned 
   }
 
   return result;
+}
+
+Manual & Manual::setUseColors(bool u) {
+  if (u) {
+    penNewObject = QPen(Qt::black, .5, Qt::SolidLine, Qt::RoundCap);
+    penOldObject = QPen(QColor::fromRgbF(0., 0., 0., .6), .5, Qt::SolidLine, Qt::RoundCap);
+
+    penBoardBack = QPen(Qt::black, .7, Qt::DotLine, Qt::RoundCap);
+    penBoardFront = QPen(Qt::black, .7, Qt::SolidLine, Qt::RoundCap);
+
+    brushNewObject[0] = QBrush(QColor::fromRgbF(1., .95, .7, .9));
+    brushNewObject[1] = QBrush(QColor::fromRgbF(.8, .7, .3, .9));
+    brushNewObject[2] = QBrush(QColor::fromRgbF(1., .9, .4, .9));
+
+    brushOldObject[0] = QBrush(QColor::fromRgbF(.95, .95, 1., .6));
+    brushOldObject[1] = QBrush(QColor::fromRgbF(.75, .75, .9, .6));
+    brushOldObject[2] = QBrush(QColor::fromRgbF(.85, .85, 1., .6));
+
+  }
+  else {
+    penNewObject = QPen(Qt::black, .5, Qt::SolidLine, Qt::RoundCap);
+    penOldObject = QPen(QColor::fromRgbF(0., 0., 0., .6), .5, Qt::SolidLine, Qt::RoundCap);
+
+    penBoardBack = QPen(Qt::black, .7, Qt::DotLine, Qt::RoundCap);
+    penBoardFront = QPen(Qt::black, .7, Qt::SolidLine, Qt::RoundCap);
+
+    brushNewObject[0] = QBrush(QColor::fromRgbF(.8, .8, .8, .9));
+    brushNewObject[1] = QBrush(QColor::fromRgbF(.5, .5, .5, .9));
+    brushNewObject[2] = QBrush(QColor::fromRgbF(.7, .7, .7, .9));
+
+    brushOldObject[0] = QBrush(QColor::fromRgbF(1., 1., 1., .6));
+    brushOldObject[1] = QBrush(QColor::fromRgbF(.85, .85, .85, .6));
+    brushOldObject[2] = QBrush(QColor::fromRgbF(.9, .9, .9, .6));
+  }
+
+  return *this;
 }

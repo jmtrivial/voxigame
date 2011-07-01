@@ -98,8 +98,8 @@ private:
   QPen penBoardBack;
   QPen penBoardFront;
 
-  QBrush brushNewObject;
-  QBrush brushOldObject;
+  QBrush brushNewObject[3];
+  QBrush brushOldObject[3];
 
   /** a class that describe the layout of a board and an associated caption */
   class LayoutBoardAndCaption {
@@ -324,6 +324,11 @@ public:
       \param b The described board
   */
   Manual(const Board & b);
+
+  /** modifier
+      \param s If true, create a document is a colored document
+  */
+  Manual & setUseColors(bool u = true);
 
   /** modifier
       \param s If true, create a document with two-side pages
