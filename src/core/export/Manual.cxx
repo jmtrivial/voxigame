@@ -834,9 +834,8 @@ bool Manual::DObject::operator<(const DObject & dobj) const {
 }
 
 QVector<QSharedPointer<QGraphicsScene> > Manual::createStepByStepPages(unsigned int & cpt) const {
-  float minimalvmargin = columnmargin;
   QVector<QSharedPointer<QGraphicsScene> > result;
-  result.push_back(createClearPage(cpt++));
+  float minimalvmargin = columnmargin;
 
   const float l_innermargin = twoSides ? innermargin : outermargin;
 
@@ -878,6 +877,9 @@ QVector<QSharedPointer<QGraphicsScene> > Manual::createStepByStepPages(unsigned 
   QVector<QSharedPointer<Piece> > seenPieces;
   unsigned int step = 0;
   while(current != cend) {
+    if ((currentColumn == 0) && (currentLine == 0))
+      result.push_back(createClearPage(cpt++));
+
     ++step;
     // compute the next set of pieces
     QVector<QSharedPointer<Piece> > stepPieces;
@@ -928,7 +930,6 @@ QVector<QSharedPointer<QGraphicsScene> > Manual::createStepByStepPages(unsigned 
       ++currentLine;
       currentColumn = 0;
       if (currentLine == nbPerColumn) {
-	result.push_back(createClearPage(cpt++));
 	currentLine = 0;
       }
     }
