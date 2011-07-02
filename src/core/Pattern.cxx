@@ -423,6 +423,21 @@ Pattern Pattern::load(QDomElement & elem, const QString & name) {
 
     return Pattern::armchair(sx, sy, sz, location, direction, angle);
   }
+  else if (bi == "parallelepiped") {
+    bool ok;
+    QString sizex = elem.attribute("sizex");
+    QString sizey = elem.attribute("sizey");
+    QString sizez = elem.attribute("sizez");
+
+    unsigned int sx = sizex.toUInt(&ok);
+    if (!ok) throw Exception("Bad x size");
+    unsigned int sy = sizey.toUInt(&ok);
+    if (!ok) throw Exception("Bad y size");
+    unsigned int sz = sizez.toUInt(&ok);
+    if (!ok) throw Exception("Bad z size");
+
+    return Pattern::parallelepiped(sx, sy, sz, location, direction, angle);
+  }
   else if (bi == "tunnel") {
     bool ok;
     QString size1 = elem.attribute("size1");
