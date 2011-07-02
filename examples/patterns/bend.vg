@@ -2,7 +2,7 @@
 <board allow_outside="false" allow_intersections="false">
  <windows>
   <window1 x="0" y="1" z="1"/>
-  <window2 x="0" y="1" z="1"/>
+  <window2 x="2" y="1" z="4"/>
  </windows>
  <geometry>
   <corner1 x="0" y="0" z="0"/>

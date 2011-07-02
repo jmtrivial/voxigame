@@ -9,4 +9,14 @@ if [ ! -e "$MANUALDIRECTORY" ]; then
     mkdir examples/patterns/
 fi
 
-$VG2MANUAL $VGDIRECTORY/tunnel.vg  $MANUALDIRECTORY/tunnel.pdf -a "Laurent Provot" -c -l 1 -n "Tunnel" -i 1
+$VG2MANUAL $VGDIRECTORY/tunnel.vg  $MANUALDIRECTORY/tunnel.pdf -a "L. Provot" -c -l 1 -n "Tunnel" -i 1 -d "28.03.2011"
+
+$VG2MANUAL $VGDIRECTORY/bend.vg  $MANUALDIRECTORY/bend.pdf -a "V. Barra, J.-M. Favreau" -c -l 2 -n "Bend" -i 2 -d "05.04.2011"
+
+$VG2MANUAL $VGDIRECTORY/armchair.vg  $MANUALDIRECTORY/armchair.pdf -a "J.-M. Favreau" -c -l 3 -n "Armchair" -i 3 -d "09.06.2011"
+
+$VG2MANUAL $VGDIRECTORY/turn.vg  $MANUALDIRECTORY/turn.pdf -a "L. Provot, J.-M. Favreau" -c -l 3 -n "Turn" -i 4 -d "09.06.2011"
+
+$VG2MANUAL $VGDIRECTORY/corner.vg  $MANUALDIRECTORY/corner.pdf -a "L. Provot, J.-M. Favreau" -c -l 2 -n "Corner" -i 5 -d "09.06.2011"
+
+$VG2MANUAL $VGDIRECTORY/diagonal.vg  $MANUALDIRECTORY/corner.pdf -a "L. Provot, J.-M. Favreau" -c -l 4 -n "Diagonal" -i 5 -d "09.06.2011"
