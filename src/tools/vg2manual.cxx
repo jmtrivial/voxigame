@@ -53,6 +53,7 @@ int main(int argc, char** argv)
     out << endl;
     out << "  -n, --name=A     Name of the board" << endl;
     out << "  -a, --author=A   Author" << endl;
+    out << "  -d, --date=A     Creation date (format: \"DD.MM.YYYY\")" << endl;
     out << "  -i, --id=I       id (must be != 0)" << endl;
     out << "  -l, --level=L    Level (maximum: 10)" << endl;
     out << endl;
@@ -74,6 +75,7 @@ int main(int argc, char** argv)
   QString suffix;
   QString author = "Anonymous";
   QString name;
+  QDate date(QDate::currentDate());
   bool pdf = true;
   bool twoSides = false;
   unsigned int level = 0;
@@ -87,6 +89,15 @@ int main(int argc, char** argv)
     if (s[0] == '-') {
       if ((s == "-h") || (s == "--help"))
 	continue;
+      else if ((s == "-d") || (s == "--date")) {
+	++i;
+	if (i == (unsigned int)args.size()) {
+	  err << "Error: no given date (" + s + ")" << endl;
+	  err << "Abort." << endl;
+	  return 1;
+	}
+	date = QDate::fromString(args[i], "dd.MM.yyyy");
+      }
       else if ((s == "-l") || (s == "--level")) {
 	++i;
 	if (i == (unsigned int)args.size()) {
@@ -199,6 +210,7 @@ int main(int argc, char** argv)
   manual.setName(name);
   manual.setDrawSubsteps(substeps);
   manual.setUseColors(usecolor);
+  manual.setDate(date);
 
   if (pdf) {
     out << "Save file (" << output << ")" << endl;
