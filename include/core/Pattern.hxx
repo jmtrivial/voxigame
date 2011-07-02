@@ -64,6 +64,10 @@ public:
   /** copy constructor */
   Pattern(const Pattern & p);
 
+
+  /** load pattern from the given XML document */
+  static Pattern load(QDomElement & elem, const QString & name = "pattern");
+
   /** accessor */
   inline unsigned int getNbPieces() const { return pieces.size(); }
 

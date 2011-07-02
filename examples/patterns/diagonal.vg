@@ -9,32 +9,8 @@
   <corner2 x="3" y="2" z="2"/>
  </geometry>
  <pieces>
-  <piece direction="y" length="3" type="straight" angle="0">
-   <location x="0" y="0" z="0"/>
-  </piece>
-  <piece direction="y" length="3" type="straight" angle="0">
-   <location x="2" y="0" z="0"/>
-  </piece>
-  <piece direction="y" length="3" type="straight" angle="0">
-   <location x="3" y="0" z="0"/>
-  </piece>
-  <piece direction="y" length="3" type="straight" angle="0">
-   <location x="3" y="0" z="1"/>
-  </piece>
-  <piece direction="x" length="3" type="straight" angle="0">
-   <location x="0" y="0" z="1"/>
-  </piece>
-  <piece direction="y" length="2" type="straight" angle="0">
-   <location x="0" y="1" z="1"/>
-  </piece>
-  <piece direction="y" length="2" type="straight" angle="0">
-   <location x="0" y="0" z="2"/>
-  </piece>
-  <piece direction="x" length="4" type="straight" angle="0">
-   <location x="0" y="2" z="2"/>
-  </piece>
-  <piece direction="z" length="3" type="straight" angle="0">
-   <location x="1" y="1" z="0"/>
-  </piece>
+   <pattern build-in="diagonal" direction="x" angle="0">
+     <location x="0" y="0" z="0" />
+   </pattern>
  </pieces>
 </board>

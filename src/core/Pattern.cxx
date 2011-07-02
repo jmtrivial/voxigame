@@ -345,3 +345,100 @@ Pattern Pattern::spiral(const Coord & c,
   Q_ASSERT(!pattern.hasIntersection());
   return pattern;
 }
+
+Pattern Pattern::load(QDomElement & elem, const QString & name) {
+
+  if (elem.tagName() != name)
+    throw Exception("Cannot load pattern.");
+
+
+  if (!elem.hasAttribute("build-in")) {
+    throw Exception("This pattern is not a build-in structure. Not yet implemented.");
+  }
+
+  QString d = elem.attribute("direction");
+  QString a = elem.attribute("angle");
+  Coord location;
+
+  QDomNode n = elem.firstChild();
+  bool l = false;
+  while(!n.isNull() && !l) {
+    QDomElement e = n.toElement();
+    if(!e.isNull()) {
+      if (e.tagName() == "location") {
+    location.fromXML(e, "location");
+    l = true;
+    break;
+      }
+    }
+    n = n.nextSibling();
+  }
+  if (!l)
+    throw Exception("Location not found");
+
+  Direction::Type direction = Direction::fromString(d);
+  Angle::Type angle = Angle::fromString(a);
+
+  QString bi = elem.attribute("build-in");
+  if (bi == "corner") {
+    bool ok;
+    QString sizex = elem.attribute("sizex");
+    QString sizey = elem.attribute("sizey");
+    QString sizez = elem.attribute("sizez");
+
+    unsigned int sx = sizex.toUInt(&ok);
+    if (!ok) throw Exception("Bad x size");
+    unsigned int sy = sizey.toUInt(&ok);
+    if (!ok) throw Exception("Bad y size");
+    unsigned int sz = sizez.toUInt(&ok);
+    if (!ok) throw Exception("Bad z size");
+
+    return Pattern::armchair(sx, sy, sz, location, direction, angle);
+  }
+  else if (bi == "diagonal") {
+    qWarning("load pattern");
+    return Pattern::diagonal(location, direction, angle);
+  }
+  else if (bi == "pipe") {
+    QString d1 = elem.attribute("in");
+    QString d2 = elem.attribute("out");
+
+    Direction::Type direction1 = Direction::fromString(d1);
+    Direction::Type direction2 = Direction::fromString(d2);
+
+    return Pattern::pipe(location, direction1, direction2);
+  }
+  else if (bi == "armchair") {
+    bool ok;
+    QString sizex = elem.attribute("sizex");
+    QString sizey = elem.attribute("sizey");
+    QString sizez = elem.attribute("sizez");
+
+    unsigned int sx = sizex.toUInt(&ok);
+    if (!ok) throw Exception("Bad x size");
+    unsigned int sy = sizey.toUInt(&ok);
+    if (!ok) throw Exception("Bad y size");
+    unsigned int sz = sizez.toUInt(&ok);
+    if (!ok) throw Exception("Bad z size");
+
+    return Pattern::armchair(sx, sy, sz, location, direction, angle);
+  }
+  else if (bi == "tunnel") {
+    bool ok;
+    QString size1 = elem.attribute("size1");
+    QString size2 = elem.attribute("size2");
+
+    unsigned int s1 = size1.toUInt(&ok);
+    if (!ok) throw Exception("Bad size");
+    unsigned int s2 = size2.toUInt(&ok);
+    if (!ok) throw Exception("Bad size");
+
+    return Pattern::tunnel(s1, s2, location, direction, angle);
+
+  }
+  else {
+    throw Exception("Cannot load an unknown build-in structure.");
+  }
+
+
+}

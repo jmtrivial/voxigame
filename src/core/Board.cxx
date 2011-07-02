@@ -408,6 +408,7 @@ bool Board::load(QDomDocument & elem, const QString & name) {
   Direction::Type f1 = Direction::Static;
   Direction::Type f2 = Direction::Static;
   QVector<QSharedPointer<Piece> > newPieces;
+  QVector<Pattern> patterns;
 
   if (docElem.tagName() != name)
     return false;
@@ -439,14 +440,24 @@ bool Board::load(QDomDocument & elem, const QString & name) {
 	while(!n2.isNull()) {
 	  QDomElement e2 = n2.toElement();
 	  if(!e2.isNull()) {
-	    try {
-	      newPieces.push_back(QSharedPointer<Piece>(PieceFactory::build(e2)));
+	    if (e2.tagName() == "piece") {
+	      try {
+		newPieces.push_back(QSharedPointer<Piece>(PieceFactory::build(e2)));
+	      }
+	      catch(...) {
+		return false;
+	      }
 	    }
-	    catch(...) {
-	      return false;
+	    else if (e2.tagName() == "pattern") {
+	      try {
+		patterns.push_back(Pattern::load(e2));
+	      }
+	      catch(...) {
+		return false;
+	      }
 	    }
+	    n2 = n2.nextSibling();
 	  }
-	  n2 = n2.nextSibling();
 	}
       }
       else if (e.tagName() == "windows") {
@@ -504,6 +515,8 @@ bool Board::load(QDomDocument & elem, const QString & name) {
     addInCells(pieces.back());
   }
 
+  for(QVector<Pattern>::const_iterator p = patterns.begin(); p != patterns.end(); ++p)
+    addPattern(*p);
 
   return true;
 }
