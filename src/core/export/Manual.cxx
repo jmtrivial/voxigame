@@ -419,8 +419,7 @@ Manual::LayoutBoardAndCaption::LayoutBoardAndCaption(const QSizeF & r,
 
   // then rescale the caption if its width is not good
   if ((captionSizeFull.width()) * nbColumns + epsilonCaption * (nbColumns - 1) > region.width()) {
-    const float ratio = ((region.width() - epsilonCaption * (nbColumns - 1)) / nbColumns -
-			 (captionSizeFull.width() - captionSize.width())) / captionSize.width();
+    const float ratio = ((region.width() - epsilonCaption * (nbColumns - 1)) / nbColumns) / captionSizeFull.width();
     captionSize.rwidth() *= ratio;
     captionSize.rheight() *= ratio;
     captionScale *= ratio;
