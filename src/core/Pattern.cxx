@@ -396,7 +396,6 @@ Pattern Pattern::load(QDomElement & elem, const QString & name) {
     return Pattern::corner(sx, sy, sz, location, direction, angle);
   }
   else if (bi == "diagonal") {
-    qWarning("load pattern");
     return Pattern::diagonal(location, direction, angle);
   }
   else if (bi == "pipe") {
