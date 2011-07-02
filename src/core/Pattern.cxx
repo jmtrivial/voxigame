@@ -393,7 +393,7 @@ Pattern Pattern::load(QDomElement & elem, const QString & name) {
     unsigned int sz = sizez.toUInt(&ok);
     if (!ok) throw Exception("Bad z size");
 
-    return Pattern::armchair(sx, sy, sz, location, direction, angle);
+    return Pattern::corner(sx, sy, sz, location, direction, angle);
   }
   else if (bi == "diagonal") {
     qWarning("load pattern");
