@@ -44,31 +44,43 @@ Board::Board(unsigned int x, unsigned int y, unsigned int z,
     qWarning("Warning: the input window is not in the border of the board");
   }
   else if (f1 == Direction::Static) {
-    face1 = getBorderSide(w1);
+    face1 = getBorderSide(w1, true);
   }
   if (!box.inBorder(w2)) {
     qWarning("Warning: the output window is not in the border of the board");
   }
   else if (f2 == Direction::Static) {
-    face2 = getBorderSide(w2);
+    face2 = getBorderSide(w2, false);
   }
 }
 
-Direction::Type Board::getBorderSide(const Coord & point) const {
-  if (point.getX() == box.getCorner1().getX())
-    return Direction::Xminus;
-  else if (point.getX() == box.getCorner2().getX())
+Direction::Type Board::getBorderSide(const Coord & point, bool first) const {
+  if (first) {
+    if (point.getX() == box.getCorner1().getX())
+      return Direction::Xminus;
+    else if (point.getY() == box.getCorner1().getY())
+      return Direction::Yminus;
+    else if (point.getZ() == box.getCorner1().getZ())
+      return Direction::Zminus;
+  }
+
+  if (point.getX() == box.getCorner2().getX())
     return Direction::Xplus;
-  else if (point.getY() == box.getCorner1().getY())
-    return Direction::Yminus;
   else if (point.getY() == box.getCorner2().getY())
     return Direction::Yplus;
-  else if (point.getZ() == box.getCorner1().getZ())
-    return Direction::Zminus;
   else if (point.getZ() == box.getCorner2().getZ())
     return Direction::Zplus;
-  else
-    return Direction::Static;
+
+  if (!first) {
+    if (point.getX() == box.getCorner1().getX())
+      return Direction::Xminus;
+    else if (point.getY() == box.getCorner1().getY())
+      return Direction::Yminus;
+    else if (point.getZ() == box.getCorner1().getZ())
+      return Direction::Zminus;
+  }
+
+  return Direction::Static;
 }
 
 
@@ -501,9 +513,9 @@ bool Board::load(QDomDocument & elem, const QString & name) {
   face1 = f1;
   face2 = f2;
   if (face1 == Direction::Static)
-    face1 = getBorderSide(w1);
+    face1 = getBorderSide(w1, true);
   if (face2 == Direction::Static)
-    face2 = getBorderSide(w2);
+    face2 = getBorderSide(w2, false);
 
   if (cells != NULL)
     delete [] cells;

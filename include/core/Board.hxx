@@ -84,8 +84,11 @@ private:
   void addInCells(QSharedPointer<Piece> & p);
 
   /** assuming that the point is a voxel in the border of the box, it
-      returns a direction corresponding to the outside */
-  Direction::Type getBorderSide(const Coord & point) const;
+      returns a direction corresponding to the outside. In order to choose
+      different faces if the two points are in the same voxel location,
+      this method needs a boolean to describe if it's the first or the second
+      window. */
+  Direction::Type getBorderSide(const Coord & point, bool first) const;
 public:
 
   class iterator {
