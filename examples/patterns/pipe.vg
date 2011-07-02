@@ -1,16 +1,16 @@
 <!DOCTYPE VoxigameBoard>
 <board allow_outside="false" allow_intersections="false">
  <windows>
-  <window1 x="2" y="1" z="1"/>
-  <window2 x="1" y="0" z="1"/>
+  <window1 x="0" y="1" z="1"/>
+  <window2 x="2" y="1" z="1"/>
  </windows>
  <geometry>
   <corner1 x="0" y="0" z="0"/>
   <corner2 x="2" y="2" z="2"/>
  </geometry>
  <pieces>
-   <pattern build-in="corner" direction="-y" angle="0" sizex="3" sizey="3" sizez="3">
-     <location x="0" y="2" z="2" />
+   <pattern build-in="pipe" direction="x" angle="0" in="-x" out="x">
+     <location x="1" y="1" z="1" />
    </pattern>
  </pieces>
 </board>
