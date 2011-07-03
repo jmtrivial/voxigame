@@ -21,4 +21,4 @@ $VG2MANUAL $VGDIRECTORY/corner.vg  $MANUALDIRECTORY/corner.pdf -a "L. Provot, J.
 
 $VG2MANUAL $VGDIRECTORY/diagonal.vg  $MANUALDIRECTORY/diagonal.pdf -a "L. Provot, J.-M. Favreau" -c -l 4 -n "Diagonal" -i 6 -d "09.06.2011"
 
-$VG2MANUAL $VGDIRECTORY/corner2.vg  $MANUALDIRECTORY/corner2.pdf -a "Y. Gérard" -c -l 5 -n "Corner (2)" -i 7 -d "03.07.2011" --nb-columns 3
+$VG2MANUAL $VGDIRECTORY/turn2.vg  $MANUALDIRECTORY/turn2.pdf -a "Y. Gérard" -c -l 5 -n "Turn (2)" -i 7 -d "03.07.2011"

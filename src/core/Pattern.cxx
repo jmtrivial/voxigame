@@ -101,25 +101,44 @@ Pattern Pattern::armchair(unsigned int width,
                           unsigned int depth,
                           const Coord & c,
                           const Direction::Type & d,
-                          const Angle::Type & a)
+                          const Angle::Type & a,
+			  unsigned int method)
 {
   Q_ASSERT(width > 2);
   Q_ASSERT(height > 1);
   Q_ASSERT(depth > 1);
   Pattern pattern(c, d, a);
 
-  // bottom part
-  for(unsigned int x = 1; x < depth; ++x)
-    pattern.addPiece(StraightPiece(width, Coord(x, 0, 0), Direction::Yplus));
+  if (method == 0) {
+    // bottom part
+    for(unsigned int x = 1; x < depth; ++x)
+      pattern.addPiece(StraightPiece(width, Coord(x, 0, 0), Direction::Yplus));
 
-  // back part
-  for(unsigned int y = 1; y < width - 1; ++y)
-    pattern.addPiece(StraightPiece(height, Coord(0, y, 0), Direction::Zplus));
+    // back part
+    for(unsigned int y = 1; y < width - 1; ++y)
+      pattern.addPiece(StraightPiece(height, Coord(0, y, 0), Direction::Zplus));
 
-  // armrest part
-  for(unsigned int z = 1; z < height; ++z) {
-    pattern.addPiece(StraightPiece(depth, Coord(0, 0, z), Direction::Xplus));
-    pattern.addPiece(StraightPiece(depth, Coord(0, width - 1, z), Direction::Xplus));
+    // armrest part
+    for(unsigned int z = 1; z < height; ++z) {
+      pattern.addPiece(StraightPiece(depth, Coord(0, 0, z), Direction::Xplus));
+      pattern.addPiece(StraightPiece(depth, Coord(0, width - 1, z), Direction::Xplus));
+    }
+  }
+  else if (method == 1) {
+    pattern.addPiece(StraightPiece(width, Coord(0, 0, 0), Direction::Yplus));
+
+    for(unsigned int z = 1; z < height; ++z) {
+      pattern.addPiece(StraightPiece(depth, Coord(0, width - 1, z), Direction::Xplus));
+      pattern.addPiece(StraightPiece(width - 1, Coord(0, 0, z), Direction::Yplus));
+    }
+
+    for(unsigned int x = 1; x < depth; ++x) {
+      pattern.addPiece(StraightPiece(width - 1, Coord(x, 1, 0), Direction::Yplus));
+      pattern.addPiece(StraightPiece(height, Coord(x, 0, 0), Direction::Zplus));
+    }
+  }
+  else {
+    throw Exception("Unknown method for armchair pattern");
   }
 
   Q_ASSERT(!pattern.hasIntersection());
@@ -276,16 +295,19 @@ Pattern Pattern::turning(unsigned int width,
                          unsigned int depth,
                          const Coord & c,
                          const Direction::Type & d,
-                         const Angle::Type & a)
+                         const Angle::Type & a,
+			 unsigned int method)
 {
   Q_ASSERT(width > 2);
   Q_ASSERT(height > 2);
   Q_ASSERT(depth > 2);
   Pattern pattern(c, d, a);
-  pattern.addPattern(armchair(width, height - 1, depth, Coord(0, 0, 0)));
+  pattern.addPattern(armchair(width, height - 1, depth, Coord(0, 0, 0), Direction::Xplus, Angle::A0, method));
   pattern.addPattern(tunnel(width - 1, depth - 1, Coord(0, 0, height - 1), Direction::Zplus));
-  pattern.addPiece(StraightPiece(1, Coord(0, 0, 0)));
-  pattern.addPiece(StraightPiece(1, Coord(0, width - 1, 0)));
+  if (method == 0) {
+    pattern.addPiece(StraightPiece(1, Coord(0, 0, 0)));
+    pattern.addPiece(StraightPiece(1, Coord(0, width - 1, 0)));
+  }
 
   Q_ASSERT(!pattern.hasIntersection());
   return pattern;
@@ -413,6 +435,14 @@ Pattern Pattern::load(QDomElement & elem, const QString & name) {
     QString sizey = elem.attribute("sizey");
     QString sizez = elem.attribute("sizez");
 
+    unsigned int method = 0;
+
+    if (elem.hasAttribute("method")) {
+      QString m = elem.attribute("method");
+      method = m.toUInt(&ok);
+      if (!ok) throw Exception("Bad method");
+    }
+
     unsigned int sx = sizex.toUInt(&ok);
     if (!ok) throw Exception("Bad x size");
     unsigned int sy = sizey.toUInt(&ok);
@@ -420,7 +450,30 @@ Pattern Pattern::load(QDomElement & elem, const QString & name) {
     unsigned int sz = sizez.toUInt(&ok);
     if (!ok) throw Exception("Bad z size");
 
-    return Pattern::armchair(sx, sy, sz, location, direction, angle);
+    return Pattern::armchair(sx, sy, sz, location, direction, angle, method);
+  }
+  else if (bi == "turning") {
+    bool ok;
+    QString sizex = elem.attribute("sizex");
+    QString sizey = elem.attribute("sizey");
+    QString sizez = elem.attribute("sizez");
+
+    unsigned int method = 0;
+
+    if (elem.hasAttribute("method")) {
+      QString m = elem.attribute("method");
+      method = m.toUInt(&ok);
+      if (!ok) throw Exception("Bad method");
+    }
+
+    unsigned int sx = sizex.toUInt(&ok);
+    if (!ok) throw Exception("Bad x size");
+    unsigned int sy = sizey.toUInt(&ok);
+    if (!ok) throw Exception("Bad y size");
+    unsigned int sz = sizez.toUInt(&ok);
+    if (!ok) throw Exception("Bad z size");
+
+    return Pattern::turning(sx, sy, sz, location, direction, angle, method);
   }
   else if (bi == "parallelepiped") {
     bool ok;

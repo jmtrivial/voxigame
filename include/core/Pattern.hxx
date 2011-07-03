@@ -104,52 +104,59 @@ public:
                         const Direction::Type & d = Direction::Xplus,
                         const Angle::Type & a = Angle::A0);
 
-  /** Initial pattern designed by Jean-Marie Favreau
+  /** Initial patterns designed by Jean-Marie Favreau and Yan Gérard
       The openings are in X and Z direction.
       \param width Size in the Y direction
-      \param height Size in the X and Z directions */
+      \param height Size in the X and Z directions
+      \param method Method to generate the armchair (0: Jean-Marie Favreau, 1: Yan Gérard) */
   inline static Pattern armchair(unsigned int width,
                                  unsigned int height,
                                  const Coord & c,
                                  const Direction::Type & d = Direction::Xplus,
-                                 const Angle::Type & a = Angle::A0)
+                                 const Angle::Type & a = Angle::A0,
+				 unsigned int method = 0)
   {
-    return armchair(width, height, height, c, d, a);
+    return armchair(width, height, height, c, d, a, method);
   }
 
-  /** Initial pattern designed by Jean-Marie Favreau
+  /** Initial patterns designed by Jean-Marie Favreau and Yan Gérard
       The openings are in X and Z direction.
       \param width Size in the Y direction
       \param height Size in the Z direction
       \param height Size in the X direction
-*/
+      \param method Method to generate the armchair (0: Jean-Marie Favreau, 1: Yan Gérard) */
   static Pattern armchair(unsigned int width,
                           unsigned int height,
                           unsigned int depth,
                           const Coord & c,
                           const Direction::Type & d = Direction::Xplus,
-                          const Angle::Type & a = Angle::A0);
+                          const Angle::Type & a = Angle::A0,
+			  unsigned int method = 0);
 
   /** Initial pattern designed by Laurent Provot and Jean-Marie Favreau,
-      using a small armchair and a tunnel. */
+      using a small armchair and a tunnel.
+      \param method Method to generate the armchair (0: Jean-Marie Favreau, 1: Yan Gérard) */
   static Pattern turning(unsigned int width,
                          unsigned int height,
                          const Coord & c,
                          const Direction::Type & d = Direction::Xplus,
-                         const Angle::Type & a = Angle::A0)
+                         const Angle::Type & a = Angle::A0,
+			 unsigned int method = 0)
   {
-    return turning(width, height, height, c, d, a);
+    return turning(width, height, height, c, d, a, method);
   }
 
 
-  /** Initial pattern designed by Laurent Provot and Jean-Marie Favreau,
-      using a small armchair and a tunnel. */
+  /** Initial patterns designed by Laurent Provot and Jean-Marie Favreau, and Yan Gérard
+      using a small armchair and a tunnel.
+      \param method Method to generate the armchair (0: Jean-Marie Favreau, 1: Yan Gérard) */
   static Pattern turning(unsigned int width,
                          unsigned int height,
                          unsigned int depth,
                          const Coord & c,
                          const Direction::Type & d = Direction::Xplus,
-                         const Angle::Type & a = Angle::A0);
+                         const Angle::Type & a = Angle::A0,
+			 unsigned int method = 0);
 
   /** create a cube filled with pieces */
   inline static Pattern cube(unsigned int size,
