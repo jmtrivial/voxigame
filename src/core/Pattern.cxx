@@ -283,7 +283,7 @@ Pattern Pattern::pipe(const Coord & c,
     Coord myC(0, 0, 0);
     myC.translate(-d1).translate(-d2).translate(-ortho);
 
-    pattern.addPattern(turning(3, 3, myC, myD, myA));
+    pattern.addPattern(turning(3, 3, myC, myD, myA, 1));
   }
 
   Q_ASSERT(!pattern.hasIntersection());
