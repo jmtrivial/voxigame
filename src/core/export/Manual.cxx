@@ -868,7 +868,7 @@ QVector<QSharedPointer<QGraphicsScene> > Manual::createStepByStepPages(unsigned 
     cpagecolumns.height() - layout.getGlobalSize().height();
 
   // if the empty space is too big, reduce the size of the elements
-  if (availablespace > .35 * layout.getGlobalSize().height()) {
+  if (availablespace > .3 * layout.getGlobalSize().height()) {
     QSizeF newSize = cpagecolumns;
     newSize.rheight() = (cpagecolumns.height() - nbPerColumn * minimalvmargin) / (nbPerColumn + 1);
     ++nbPerColumn;
