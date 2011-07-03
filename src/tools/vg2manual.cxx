@@ -57,7 +57,8 @@ int main(int argc, char** argv)
     out << "  -i, --id=I       id (must be != 0)" << endl;
     out << "  -l, --level=L    Level (maximum: 10)" << endl;
     out << endl;
-    out << "  -substeps        Draw substeps (more details in the step-by-step description)" << endl;
+    out << "  --substeps       Draw substeps (more details in the step-by-step description)" << endl;
+    out << "  --nb-columns=NB  Number of columns in the step-by-step description" << endl;
     out << endl;
     out << "  -2, --two-sides  The generated pages are two-side pages (for a recto/verso printing)" << endl;
     out << "  -c, --colors     Create a colored document" << endl;
@@ -80,6 +81,7 @@ int main(int argc, char** argv)
   bool twoSides = false;
   unsigned int level = 0;
   unsigned int id = 0;
+  unsigned int nbcolumns = 2;
   bool substeps = true;
   bool usecolor = false;
 
@@ -97,6 +99,21 @@ int main(int argc, char** argv)
 	  return 1;
 	}
 	date = QDate::fromString(args[i], "dd.MM.yyyy");
+      }
+      else if (s == "--nb-columns") {
+	++i;
+	if (i == (unsigned int)args.size()) {
+	  err << "Error: no given number of columns (" + s + ")" << endl;
+	  err << "Abort." << endl;
+	  return 1;
+	}
+	bool ok;
+	nbcolumns = args[i].toUInt(&ok);
+	if ((!ok) || nbcolumns < 1) {
+	  err << "Error: Wrong number of columns (" + s + "). It should be an integer >= 1." << endl;
+	  err << "Abort." << endl;
+	  return 1;
+	}
       }
       else if ((s == "-l") || (s == "--level")) {
 	++i;
@@ -211,6 +228,7 @@ int main(int argc, char** argv)
   manual.setDrawSubsteps(substeps);
   manual.setUseColors(usecolor);
   manual.setDate(date);
+  manual.setNbColumns(nbcolumns);
 
   if (pdf) {
     out << "Save file (" << output << ")" << endl;
