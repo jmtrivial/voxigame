@@ -483,6 +483,7 @@ void Manual::LayoutBoardAndCaption::adjustBoardLayout(float newScale) {
 }
 
 QSizeF Manual::LayoutBoardAndCaption::getGlobalSize() const {
+  Q_ASSERT(epsilonCaption >= 0);
   return QSizeF(region.width(), boardSize.height() + epsilon + nbLines * (captionSizeFull.height() + epsilonCaption) + topMargin);
 }
 
@@ -861,16 +862,20 @@ QVector<QSharedPointer<QGraphicsScene> > Manual::createStepByStepPages(unsigned 
   QMap<AbstractPiece, unsigned int> pgroup = Piece::groupBySimilarity(board.getPieces());
   LayoutBoardAndCaption layout = getLayout(pgroup, cpagecolumns, true, false);
   unsigned int nbPerColumn = floor(cpagecolumns.height() / (layout.getGlobalSize().height() + minimalvmargin));
-  float space = cpagecolumns.height() - nbPerColumn * (layout.getGlobalSize().height() + minimalvmargin);
+  float availablespace = cpagecolumns.height() - nbPerColumn * (layout.getGlobalSize().height() + minimalvmargin);
+
+  float space = (nbPerColumn > 1) ? (cpagecolumns.height() - nbPerColumn * layout.getGlobalSize().height()) / (nbPerColumn - 1) :
+    cpagecolumns.height() - layout.getGlobalSize().height();
 
   // if the empty space is too big, reduce the size of the elements
-  if (space > .35 * layout.getGlobalSize().height()) {
+  if (availablespace > .35 * layout.getGlobalSize().height()) {
     QSizeF newSize = cpagecolumns;
     newSize.rheight() = (cpagecolumns.height() - nbPerColumn * minimalvmargin) / (nbPerColumn + 1);
     ++nbPerColumn;
-    space = minimalvmargin;
     layout = getLayout(pgroup, newSize, true, false);
+    space = minimalvmargin;
   }
+  Q_ASSERT(space >= 0.);
   pgroup.clear();
 
   // get pieces and order them by z
