@@ -922,7 +922,7 @@ QVector<QSharedPointer<QGraphicsScene> > Manual::createStepByStepPages(unsigned 
     drawBoardAndCaption(*(result.back()), point, layout, seenPieces, stepPieces, pgroup, true);
 
     QGraphicsTextItem * text = new QGraphicsTextItem;
-    (*text).setFont(QFont("DejaVu Sans", 7));
+    (*text).setFont(QFont("DejaVu Sans", 14 / nbcolumns));
     (*text).setPlainText(QString("%1").arg(step));
     (*text).setPos(point - QPointF(0., columnmargin / 2));
     QRectF rect = (*text).sceneBoundingRect();
