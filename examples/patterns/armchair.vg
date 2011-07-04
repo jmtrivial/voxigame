@@ -9,7 +9,8 @@
   <corner2 x="2" y="2" z="2"/>
  </geometry>
  <pieces>
-   <pattern build-in="armchair" direction="x" angle="0" sizex="3" sizey="3" sizez="3">
+   <pattern build-in="armchair" direction="x" angle="0" sizex="3" sizey="3"
+  sizez="3" method="0">
      <location x="0" y="0" z="0" />
    </pattern>
  </pieces>
