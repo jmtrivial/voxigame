@@ -114,7 +114,7 @@ public:
                                  const Coord & c,
                                  const Direction::Type & d = Direction::Xplus,
                                  const Angle::Type & a = Angle::A0,
-				 unsigned int method = 0)
+				 unsigned int method = 1)
   {
     return armchair(width, height, height, c, d, a, method);
   }
@@ -131,7 +131,7 @@ public:
                           const Coord & c,
                           const Direction::Type & d = Direction::Xplus,
                           const Angle::Type & a = Angle::A0,
-			  unsigned int method = 0);
+			  unsigned int method = 1);
 
   /** Initial pattern designed by Laurent Provot and Jean-Marie Favreau,
       using a small armchair and a tunnel.
@@ -141,7 +141,7 @@ public:
                          const Coord & c,
                          const Direction::Type & d = Direction::Xplus,
                          const Angle::Type & a = Angle::A0,
-			 unsigned int method = 0)
+			 unsigned int method = 1)
   {
     return turning(width, height, height, c, d, a, method);
   }
@@ -156,7 +156,7 @@ public:
                          const Coord & c,
                          const Direction::Type & d = Direction::Xplus,
                          const Angle::Type & a = Angle::A0,
-			 unsigned int method = 0);
+			 unsigned int method = 1);
 
   /** create a cube filled with pieces */
   inline static Pattern cube(unsigned int size,
