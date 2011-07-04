@@ -435,7 +435,7 @@ Pattern Pattern::load(QDomElement & elem, const QString & name) {
     QString sizey = elem.attribute("sizey");
     QString sizez = elem.attribute("sizez");
 
-    unsigned int method = 0;
+    unsigned int method = 1;
 
     if (elem.hasAttribute("method")) {
       QString m = elem.attribute("method");
@@ -458,7 +458,7 @@ Pattern Pattern::load(QDomElement & elem, const QString & name) {
     QString sizey = elem.attribute("sizey");
     QString sizez = elem.attribute("sizez");
 
-    unsigned int method = 0;
+    unsigned int method = 1;
 
     if (elem.hasAttribute("method")) {
       QString m = elem.attribute("method");
