@@ -23,4 +23,4 @@ $VG2MANUAL $VGDIRECTORY/diagonal.vg  $MANUALDIRECTORY/diagonal.pdf -a "L. Provot
 
 $VG2MANUAL $VGDIRECTORY/turn2.vg  $MANUALDIRECTORY/turn2.pdf -a "Y. Gérard" -c -l 5 -n "Turn (2)" -i 7 -d "03.07.2011"
 
-$VG2MANUAL $VGDIRECTORY/armchair2.vg  $MANUALDIRECTORY/armchair2.pdf -a "Y. Gérard" -c -l 3 -n "Throne" -i 3 -d "09.06.2011"
+$VG2MANUAL $VGDIRECTORY/throne.vg  $MANUALDIRECTORY/throne.pdf -a "Y. Gérard" -c -l 3 -n "Throne" -i 3 -d "09.06.2011"
