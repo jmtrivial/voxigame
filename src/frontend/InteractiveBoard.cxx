@@ -22,30 +22,44 @@
 #include "InteractiveBoard.hxx"
 
 
-InteractiveBoard::InteractiveBoard() {
-  // TODO
+
+InteractiveBoard::InteractiveBoard(const Board & b,
+				   const QString & f,
+				   bool m) : editmode(false),
+					     board(b),
+					     filename(f),
+					     modified(m) {
 
 }
 
-InteractiveBoard::InteractiveBoard(const Board & b) {
-  // TODO
-
-}
-
-bool InteractiveBoard::setBoard(const Board & b) {
-  // TODO
+bool InteractiveBoard::setBoard(const Board & b,
+				const QString & f,
+				bool m) {
+  board = b;
+  filename = f;
+  modified = m;
+  editmode = false;
+  pProp.clear();
 
   return true;
 }
 
-bool InteractiveBoard::save(const QString & f) const {
-  // TODO
-
-  return true;
+bool InteractiveBoard::save(const QString & f) {
+  if (board.save(f)) {
+    modified = false;
+    return true;
+  }
+  else {
+    return false;
+  }
 }
 
 bool InteractiveBoard::load(const QString & f) {
-  // TODO
-
-  return true;
+  Board tmp;
+  if (tmp.load(f)) {
+    return setBoard(tmp, f);
+  }
+  else {
+    return false;
+  }
 }

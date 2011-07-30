@@ -34,12 +34,27 @@ private:
   QColor color;
   QSharedPointer<Piece> piece;
   bool selected;
+
+  void setRandomColor();
 public:
   /** default constructor */
   PieceProperties();
 
   /** constructor from a piece */
   PieceProperties(const QSharedPointer<Piece> & p);
+
+  /** check if the current object is a correct piece */
+  inline bool isValidPiece() const {
+    return piece != NULL;
+  }
+
+  /** accessor */
+  inline bool isSelected() const { return selected; }
+  /** accessor */
+  inline QColor getColor() const { return color; }
+
+  /** modifier */
+  inline void setSelected(bool s = true) { selected = s; }
 
 };
 

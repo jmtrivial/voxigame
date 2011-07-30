@@ -30,6 +30,7 @@
 
 
 class InteractiveBoard : public QObject {
+  Q_OBJECT
 private:
   /** list of piece properties */
   QVector<PieceProperties> pProp;
@@ -39,19 +40,22 @@ private:
   Board board;
   /** current filename */
   QString filename;
+  /** is the board modified */
+  bool modified;
 
 public:
-  /** default constructor */
-  InteractiveBoard();
+  /** default constructor (corresponding to the given file) */
+  InteractiveBoard(const Board & b,
+		   const QString & f = "",
+		   bool m = false);
 
-  /** default constructor */
-  InteractiveBoard(const Board & b);
-
-  /** set the manipulated board */
-  bool setBoard(const Board & b);
+  /** set the manipulated board (corresponding to the given file) */
+  bool setBoard(const Board & b,
+		const QString & f = "",
+		bool m = false);
 
   /** save the manipulated board in the given file */
-  bool save(const QString & f) const;
+  bool save(const QString & f);
 
   /** load the manipulated board from the given file */
   bool load(const QString & f);

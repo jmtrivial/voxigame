@@ -22,10 +22,18 @@
 #include "PieceProperties.hxx"
 
 
-PieceProperties::PieceProperties() {
-  // TODO
+PieceProperties::PieceProperties() : piece(NULL), selected(false) {
+  setRandomColor();
 }
 
-PieceProperties::PieceProperties(const QSharedPointer<Piece> & p) {
-  // TODO
+PieceProperties::PieceProperties(const QSharedPointer<Piece> & p) : piece(p),
+								    selected(false) {
+  setRandomColor();
+}
+
+void PieceProperties::setRandomColor() {
+  const int r = int(random() / (RAND_MAX + 1.0) * (256));
+  const int v = int(random() / (RAND_MAX + 1.0) * (256));
+  const int b = int(random() / (RAND_MAX + 1.0) * (256));
+  color = QColor(r, v, b);
 }
