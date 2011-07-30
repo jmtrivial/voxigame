@@ -39,11 +39,6 @@ private:
   bool editmode;
   /** the manipulated board */
   Board board;
-  /** */
-  /** current filename */
-  QString filename;
-  /** is the board modified */
-  bool modified;
   /** the pieces manipulated during the edit mode */
   Pattern modPieces;
 
@@ -51,21 +46,8 @@ private:
 
   void setPatternFromSelectedPieces();
 public:
-  /** default constructor (corresponding to the given file) */
-  InteractiveBoard(const Board & b,
-		   const QString & f = "",
-		   bool m = false);
-
-  /** set the manipulated board (corresponding to the given file) */
-  bool setBoard(const Board & b,
-		const QString & f = "",
-		bool m = false);
-
-  /** save the manipulated board in the given file */
-  bool save(const QString & f);
-
-  /** load the manipulated board from the given file */
-  bool load(const QString & f);
+  /** default constructor */
+  InteractiveBoard(const Board & b);
 
   /** accessor */
   inline unsigned int getNbPieces() const {
@@ -73,14 +55,28 @@ public:
     return board.getNbPieces();
   }
 
+  /** accessor */
+  const PieceProperties & at(unsigned int pos) const;
+
+public slots:
+  /** set the manipulated board */
+  void setBoard(const Board & b);
+
+  /** load the manipulated board from the given file */
+  void load(const QString & f);
+
   /** toggle edit mode. Return false if editmode was false and
       there is no selected piece, or if editmode was true and
       the modification cannot be applied (because of intersections for
       example) */
-  bool toggleEditMode();
+  void toggleEditMode();
 
-  /** accessor */
-  const PieceProperties & at(unsigned int pos) const;
+  /** save the manipulated board in the given file */
+  void save(const QString & f);
+
+signals:
+  void modified();
+  void saved();
 };
 
 #endif // INTERACTIVE_BOARD_H

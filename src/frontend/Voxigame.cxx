@@ -35,7 +35,9 @@ Voxigame::Voxigame() : board(getBoardFromSettings()), filename(), modified(false
   connect(ui.actionSave_as, SIGNAL(triggered()), SLOT(saveAsBoard()));
   connect(ui.actionQuit, SIGNAL(triggered()), SLOT(quit()));
   connect(ui.actionClose, SIGNAL(triggered()), SLOT(closeBoard()));
+
   ui.listView->setModel(new ListModelBoard(board));
+  connect(&board, SIGNAL(modified()), ui.listView, SLOT(update()));
 }
 
 Voxigame::~Voxigame() {
@@ -77,13 +79,14 @@ void Voxigame::loadBoard() {
 
   if (!fname.isEmpty()) {
     QApplication::setOverrideCursor(Qt::WaitCursor);
-    if(board.load(fname)) {
+    try {
+      board.load(fname);
       filename = fname;
       modified = false;
       QApplication::restoreOverrideCursor();
       statusBar()->showMessage("File loaded", 2000);
     }
-    else {
+    catch (...) {
       QApplication::restoreOverrideCursor();
       QMessageBox::warning(this, "Recent Files", QString("Cannot load file %1").arg(fname));
       statusBar()->showMessage("Abort loading", 2000);
@@ -138,14 +141,15 @@ void Voxigame::closeBoard() {
 bool Voxigame::saveFile(const QString & fileName) {
 
   QApplication::setOverrideCursor(Qt::WaitCursor);
-  if(board.save(fileName)) {
+  try {
+    board.save(fileName);
     filename = fileName;
     modified = false;
     QApplication::restoreOverrideCursor();
     statusBar()->showMessage("File saved", 2000);
     return true;
   }
-  else {
+  catch (...) {
     QApplication::restoreOverrideCursor();
     QMessageBox::warning(this, "Recent Files", QString("Cannot write file %1").arg(fileName));
     statusBar()->showMessage("Abort saving", 2000);

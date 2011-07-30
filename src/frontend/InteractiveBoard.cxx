@@ -23,46 +23,35 @@
 
 
 
-InteractiveBoard::InteractiveBoard(const Board & b,
-				   const QString & f,
-				   bool m) : editmode(false),
-					     board(b),
-					     filename(f),
-					     modified(m) {
+InteractiveBoard::InteractiveBoard(const Board & b) : editmode(false),
+						      board(b) {
 
 }
 
-bool InteractiveBoard::setBoard(const Board & b,
-				const QString & f,
-				bool m) {
+void InteractiveBoard::setBoard(const Board & b) {
   board = b;
-  filename = f;
-  modified = m;
   editmode = false;
 
   setPropertiesFromPieces();
 
-  return true;
+  emit modified();
 }
 
-bool InteractiveBoard::save(const QString & f) {
+void InteractiveBoard::save(const QString & f) {
   if (board.save(f)) {
-    modified = false;
-    return true;
+    emit saved();
   }
   else {
-    return false;
+    throw Exception("Cannot save file");
   }
 }
 
-bool InteractiveBoard::load(const QString & f) {
+void InteractiveBoard::load(const QString & f) {
   Board tmp;
   if (tmp.load(f)) {
-    return setBoard(tmp, f);
+    setBoard(tmp);
   }
-  else {
-    return false;
-  }
+  else throw Exception("Cannot load file");
 }
 
 void InteractiveBoard::setPropertiesFromPieces() {
@@ -85,19 +74,18 @@ void InteractiveBoard::setPatternFromSelectedPieces() {
       modPieces.addPiece((*pp).getPiece());
 }
 
-bool InteractiveBoard::toggleEditMode() {
+void InteractiveBoard::toggleEditMode() {
   if (editmode) {
     // TODO: check if the new location is valid, and apply it
-    return false;
   }
   else {
     setPatternFromSelectedPieces();
-    if (modPieces.getNbPieces() == 0)
-      return false;
-    else {
+    if (modPieces.getNbPieces() != 0) {
       editmode = true;
-      return true;
+      emit modified();
     }
+    else
+      throw Exception("Cannot toggle edit mode");
   }
 }
 
