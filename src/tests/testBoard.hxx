@@ -60,7 +60,7 @@ private slots:
     board.addPiece(p2);
     QVERIFY(board.hasPiece(p1));
     QVERIFY(board.hasPiece(p2));
-    QVERIFY(board.getNbPiece() == 2);
+    QVERIFY(board.getNbPieces() == 2);
     QVERIFY(board.checkInternalMemoryState());
   }
 
@@ -73,7 +73,7 @@ private slots:
     board.addPiece(p2);
     board.removePiece(board.begin());
     QVERIFY(board.hasPiece(p2));
-    QVERIFY(board.getNbPiece() == 1);
+    QVERIFY(board.getNbPieces() == 1);
     QVERIFY(board.checkInternalMemoryState());
   }
 
