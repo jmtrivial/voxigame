@@ -26,14 +26,16 @@
 #include <QColor>
 #include <QSharedPointer>
 #include "core/Piece.hxx"
-
-
+#include "core/Face.hxx"
+#include "core/Edge.hxx"
 
 class PieceProperties {
 private:
   QColor color;
   QSharedPointer<Piece> piece;
   bool selected;
+
+  QPair<QList<Face>, QList<Edge> > fande;
 
   void setRandomColor();
 public:
@@ -52,10 +54,11 @@ public:
   inline bool isSelected() const { return selected; }
   /** accessor */
   inline QColor getColor() const { return color; }
+  /** accessor */
+  inline const Piece & getPiece() const { return *piece; }
 
   /** modifier */
   inline void setSelected(bool s = true) { selected = s; }
-
 };
 
 #endif // PIECE_PROPERTIES_H

@@ -29,6 +29,8 @@ PieceProperties::PieceProperties() : piece(NULL), selected(false) {
 PieceProperties::PieceProperties(const QSharedPointer<Piece> & p) : piece(p),
 								    selected(false) {
   setRandomColor();
+
+  fande = (*piece).getFacesAndEdges();
 }
 
 void PieceProperties::setRandomColor() {
