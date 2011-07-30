@@ -20,58 +20,42 @@
  *****************************************************************************/
 
 
-#ifndef VOXIGAME_H
-#define VOXIGAME_H
+#ifndef INTERACTIVE_BOARD_H
+#define INTERACTIVE_BOARD_H
 
-#include <QMainWindow>
-#include "ui_MainWindow.h"
-#include "InteractiveBoard.hxx"
+#include <QVector>
+#include <QString>
+#include "core/Board.hxx"
+#include "PieceProperties.hxx"
 
-class Voxigame : public QMainWindow
-{
-  Q_OBJECT
-public:
-  Voxigame();
 
-  virtual ~Voxigame();
-
-  void changeEvent(QEvent *e);
-
+class InteractiveBoard : public QObject {
 private:
-  /** main interface */
-  Ui::MainWindow ui;
-
+  /** list of piece properties */
+  QVector<PieceProperties> pProp;
+  /** state of the board */
+  bool editmode;
   /** the manipulated board */
-  InteractiveBoard board;
-
-  /** filename of the currently modified board */
+  Board board;
+  /** current filename */
   QString filename;
 
-  /** true if the board as been modified since the creation */
-  bool modified;
+public:
+  /** default constructor */
+  InteractiveBoard();
 
-  bool saveFile(const QString & file);
+  /** default constructor */
+  InteractiveBoard(const Board & b);
 
-  Board getBoardFromSettings();
+  /** set the manipulated board */
+  bool setBoard(const Board & b);
 
-private slots:
-  /** display the about message */
-  void aboutMessage();
+  /** save the manipulated board in the given file */
+  bool save(const QString & f) const;
 
-  /** load a board */
-  void loadBoard();
+  /** load the manipulated board from the given file */
+  bool load(const QString & f);
 
-  /** save the current board */
-  bool saveBoard();
-
-  /** save the current board in a new file */
-  bool saveAsBoard();
-
-  /** quit the application */
-  void quit();
-
-  /** close the current manipulated board */
-  void closeBoard();
 };
 
-#endif
+#endif // INTERACTIVE_BOARD_H

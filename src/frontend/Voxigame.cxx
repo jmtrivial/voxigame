@@ -130,7 +130,7 @@ void Voxigame::closeBoard() {
       return;
   }
 
-  board = getBoardFromSettings();
+  board.setBoard(getBoardFromSettings());
 }
 
 bool Voxigame::saveFile(const QString & fileName) {

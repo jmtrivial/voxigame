@@ -19,59 +19,13 @@
 
  *****************************************************************************/
 
+#include "PieceProperties.hxx"
 
-#ifndef VOXIGAME_H
-#define VOXIGAME_H
 
-#include <QMainWindow>
-#include "ui_MainWindow.h"
-#include "InteractiveBoard.hxx"
+PieceProperties::PieceProperties() {
+  // TODO
+}
 
-class Voxigame : public QMainWindow
-{
-  Q_OBJECT
-public:
-  Voxigame();
-
-  virtual ~Voxigame();
-
-  void changeEvent(QEvent *e);
-
-private:
-  /** main interface */
-  Ui::MainWindow ui;
-
-  /** the manipulated board */
-  InteractiveBoard board;
-
-  /** filename of the currently modified board */
-  QString filename;
-
-  /** true if the board as been modified since the creation */
-  bool modified;
-
-  bool saveFile(const QString & file);
-
-  Board getBoardFromSettings();
-
-private slots:
-  /** display the about message */
-  void aboutMessage();
-
-  /** load a board */
-  void loadBoard();
-
-  /** save the current board */
-  bool saveBoard();
-
-  /** save the current board in a new file */
-  bool saveAsBoard();
-
-  /** quit the application */
-  void quit();
-
-  /** close the current manipulated board */
-  void closeBoard();
-};
-
-#endif
+PieceProperties::PieceProperties(const QSharedPointer<Piece> & p) {
+  // TODO
+}

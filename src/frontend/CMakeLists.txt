@@ -24,9 +24,13 @@ INCLUDE_DIRECTORIES(${QGLVIEWER_INCLUDE_DIR})
 
 SET(VOXIGAME_HDRS
   Voxigame.hxx
+  InteractiveBoard.hxx
+  PieceProperties.hxx
   )
 SET(VOXIGAME_SRCS
   Voxigame.cxx
+  InteractiveBoard.cxx
+  PieceProperties.cxx
   main.cxx
   )
 SET(VOXIGAME_UIS

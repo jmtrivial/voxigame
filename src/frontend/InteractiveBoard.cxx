@@ -19,59 +19,33 @@
 
  *****************************************************************************/
 
-
-#ifndef VOXIGAME_H
-#define VOXIGAME_H
-
-#include <QMainWindow>
-#include "ui_MainWindow.h"
 #include "InteractiveBoard.hxx"
 
-class Voxigame : public QMainWindow
-{
-  Q_OBJECT
-public:
-  Voxigame();
 
-  virtual ~Voxigame();
+InteractiveBoard::InteractiveBoard() {
+  // TODO
 
-  void changeEvent(QEvent *e);
+}
 
-private:
-  /** main interface */
-  Ui::MainWindow ui;
+InteractiveBoard::InteractiveBoard(const Board & b) {
+  // TODO
 
-  /** the manipulated board */
-  InteractiveBoard board;
+}
 
-  /** filename of the currently modified board */
-  QString filename;
+bool InteractiveBoard::setBoard(const Board & b) {
+  // TODO
 
-  /** true if the board as been modified since the creation */
-  bool modified;
+  return true;
+}
 
-  bool saveFile(const QString & file);
+bool InteractiveBoard::save(const QString & f) const {
+  // TODO
 
-  Board getBoardFromSettings();
+  return true;
+}
 
-private slots:
-  /** display the about message */
-  void aboutMessage();
+bool InteractiveBoard::load(const QString & f) {
+  // TODO
 
-  /** load a board */
-  void loadBoard();
-
-  /** save the current board */
-  bool saveBoard();
-
-  /** save the current board in a new file */
-  bool saveAsBoard();
-
-  /** quit the application */
-  void quit();
-
-  /** close the current manipulated board */
-  void closeBoard();
-};
-
-#endif
+  return true;
+}
