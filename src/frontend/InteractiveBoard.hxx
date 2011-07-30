@@ -39,6 +39,7 @@ private:
   bool editmode;
   /** the manipulated board */
   Board board;
+  /** */
   /** current filename */
   QString filename;
   /** is the board modified */
@@ -66,11 +67,20 @@ public:
   /** load the manipulated board from the given file */
   bool load(const QString & f);
 
+  /** accessor */
+  inline unsigned int getNbPieces() const {
+    Q_ASSERT(board.getNbPieces() == (unsigned int)pProp.size());
+    return board.getNbPieces();
+  }
+
   /** toggle edit mode. Return false if editmode was false and
       there is no selected piece, or if editmode was true and
       the modification cannot be applied (because of intersections for
       example) */
   bool toggleEditMode();
+
+  /** accessor */
+  const PieceProperties & at(unsigned int pos) const;
 };
 
 #endif // INTERACTIVE_BOARD_H

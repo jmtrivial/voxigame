@@ -65,7 +65,8 @@ public:
   inline const QString & getName() const { return name; }
   /** accessor */
   inline const QString & getType() const { return ptype; }
-
+  /** accessor */
+  inline QString getDescription() const { return QString("%1 (%2)").arg(getName()).arg(getType()); }
 
   /** modifier */
   inline void setSelected(bool s = true) { selected = s; }

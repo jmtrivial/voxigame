@@ -22,6 +22,7 @@
 #include <QFileDialog>
 #include <QMessageBox>
 #include "Voxigame.hxx"
+#include "ListModelBoard.hxx"
 #include "ui_about.h"
 
 
@@ -34,6 +35,7 @@ Voxigame::Voxigame() : board(getBoardFromSettings()), filename(), modified(false
   connect(ui.actionSave_as, SIGNAL(triggered()), SLOT(saveAsBoard()));
   connect(ui.actionQuit, SIGNAL(triggered()), SLOT(quit()));
   connect(ui.actionClose, SIGNAL(triggered()), SLOT(closeBoard()));
+  ui.listView->setModel(new ListModelBoard(board));
 }
 
 Voxigame::~Voxigame() {

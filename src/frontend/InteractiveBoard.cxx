@@ -73,7 +73,7 @@ void InteractiveBoard::setPropertiesFromPieces() {
       p != ps.end(); ++p)
     pProp.push_back(PieceProperties(*p));
 
-  Q_ASSERT((unsigned int)pProp.size() == board.getNbPiece());
+  Q_ASSERT((unsigned int)pProp.size() == board.getNbPieces());
 }
 
 void InteractiveBoard::setPatternFromSelectedPieces() {
@@ -99,4 +99,11 @@ bool InteractiveBoard::toggleEditMode() {
       return true;
     }
   }
+}
+
+const PieceProperties & InteractiveBoard::at(unsigned int pos) const {
+  if (pos >= (unsigned int)pProp.size())
+    throw Exception("Wrong id");
+  else
+    return pProp[pos];
 }
