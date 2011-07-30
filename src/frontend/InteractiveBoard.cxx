@@ -39,7 +39,8 @@ bool InteractiveBoard::setBoard(const Board & b,
   filename = f;
   modified = m;
   editmode = false;
-  pProp.clear();
+
+  setPropertiesFromPieces();
 
   return true;
 }
@@ -62,4 +63,15 @@ bool InteractiveBoard::load(const QString & f) {
   else {
     return false;
   }
+}
+
+void InteractiveBoard::setPropertiesFromPieces() {
+  pProp.clear();
+
+  const QVector<QSharedPointer<Piece> > & ps = board.getPieces();
+  for(QVector<QSharedPointer<Piece> >::const_iterator p = ps.begin();
+      p != ps.end(); ++p)
+    pProp.push_back(PieceProperties(*p));
+
+  Q_ASSERT((unsigned int)pProp.size() == board.getNbPiece());
 }

@@ -43,6 +43,7 @@ private:
   /** is the board modified */
   bool modified;
 
+  void setPropertiesFromPieces();
 public:
   /** default constructor (corresponding to the given file) */
   InteractiveBoard(const Board & b,
