@@ -73,7 +73,7 @@ void Voxigame::loadBoard() {
       return;
   }
 
-  QString fname = QFileDialog::getOpenFileName(this, "Load board", "", "Voxigame files (*.xml)");
+  QString fname = QFileDialog::getOpenFileName(this, "Load board", "", "Voxigame files (*.vg)");
 
   if (!fname.isEmpty()) {
     QApplication::setOverrideCursor(Qt::WaitCursor);
