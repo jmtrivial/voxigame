@@ -20,13 +20,13 @@
  *****************************************************************************/
 
 #include "PieceProperties.hxx"
+#include "core/LPiece.hxx"
+#include "core/GenericPiece.hxx"
+#include "core/StraightPiece.hxx"
 
 unsigned int PieceProperties::nbCreated = 0;
 
 PieceProperties::PieceProperties() : piece(NULL), selected(false) {
-  ++nbCreated;
-  setRandomColor();
-  setDefaultName();
 }
 
 PieceProperties::PieceProperties(const QSharedPointer<Piece> & p) : piece(p),
@@ -34,6 +34,7 @@ PieceProperties::PieceProperties(const QSharedPointer<Piece> & p) : piece(p),
   ++nbCreated;
   setRandomColor();
   setDefaultName();
+  setType();
 
   fande = (*piece).getFacesAndEdges();
 }
@@ -47,4 +48,27 @@ void PieceProperties::setRandomColor() {
 
 void PieceProperties::setDefaultName() {
   name = QString("Piece %1").arg(nbCreated);
+}
+
+
+void PieceProperties::setType() {
+  ptype = "Unknown";
+  try {
+    dynamic_cast<const LPiece &>(*piece);
+    ptype = "L piece";
+    return;
+  }
+  catch (...) {  }
+  try {
+    dynamic_cast<const StraightPiece &>(*piece);
+    ptype = "Straight piece";
+    return;
+  }
+  catch (...) {  }
+  try {
+    dynamic_cast<const GenericPiece &>(*piece);
+    ptype = "Generic piece";
+    return;
+  }
+  catch (...) {  }
 }

@@ -39,8 +39,10 @@ private:
   QPair<QList<Face>, QList<Edge> > fande;
 
   QString name;
+  QString ptype;
   void setRandomColor();
   void setDefaultName();
+  void setType();
 public:
   /** default constructor */
   PieceProperties();
@@ -59,7 +61,11 @@ public:
   inline QColor getColor() const { return color; }
   /** accessor */
   inline const Piece & getPiece() const { return *piece; }
+  /** accessor */
   inline const QString & getName() const { return name; }
+  /** accessor */
+  inline const QString & getType() const { return ptype; }
+
 
   /** modifier */
   inline void setSelected(bool s = true) { selected = s; }
