@@ -26,6 +26,7 @@
 #include <QVector>
 #include <QString>
 #include "core/Board.hxx"
+#include "core/Pattern.hxx"
 #include "PieceProperties.hxx"
 
 
@@ -42,8 +43,12 @@ private:
   QString filename;
   /** is the board modified */
   bool modified;
+  /** the pieces manipulated during the edit mode */
+  Pattern modPieces;
 
   void setPropertiesFromPieces();
+
+  void setPatternFromSelectedPieces();
 public:
   /** default constructor (corresponding to the given file) */
   InteractiveBoard(const Board & b,
@@ -61,6 +66,11 @@ public:
   /** load the manipulated board from the given file */
   bool load(const QString & f);
 
+  /** toggle edit mode. Return false if editmode was false and
+      there is no selected piece, or if editmode was true and
+      the modification cannot be applied (because of intersections for
+      example) */
+  bool toggleEditMode();
 };
 
 #endif // INTERACTIVE_BOARD_H

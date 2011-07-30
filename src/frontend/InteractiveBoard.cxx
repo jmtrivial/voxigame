@@ -75,3 +75,28 @@ void InteractiveBoard::setPropertiesFromPieces() {
 
   Q_ASSERT((unsigned int)pProp.size() == board.getNbPiece());
 }
+
+void InteractiveBoard::setPatternFromSelectedPieces() {
+  modPieces = Pattern();
+
+  for(QVector<PieceProperties>::const_iterator pp = pProp.begin();
+      pp != pProp.end(); ++pp)
+    if ((*pp).isSelected())
+      modPieces.addPiece((*pp).getPiece());
+}
+
+bool InteractiveBoard::toggleEditMode() {
+  if (editmode) {
+    // TODO: check if the new location is valid, and apply it
+    return false;
+  }
+  else {
+    setPatternFromSelectedPieces();
+    if (modPieces.getNbPieces() == 0)
+      return false;
+    else {
+      editmode = true;
+      return true;
+    }
+  }
+}
