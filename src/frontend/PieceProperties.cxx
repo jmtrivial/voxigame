@@ -21,14 +21,19 @@
 
 #include "PieceProperties.hxx"
 
+unsigned int PieceProperties::nbCreated = 0;
 
 PieceProperties::PieceProperties() : piece(NULL), selected(false) {
+  ++nbCreated;
   setRandomColor();
+  setDefaultName();
 }
 
 PieceProperties::PieceProperties(const QSharedPointer<Piece> & p) : piece(p),
 								    selected(false) {
+  ++nbCreated;
   setRandomColor();
+  setDefaultName();
 
   fande = (*piece).getFacesAndEdges();
 }
@@ -38,4 +43,8 @@ void PieceProperties::setRandomColor() {
   const int v = int(random() / (RAND_MAX + 1.0) * (256));
   const int b = int(random() / (RAND_MAX + 1.0) * (256));
   color = QColor(r, v, b);
+}
+
+void PieceProperties::setDefaultName() {
+  name = QString("Piece %1").arg(nbCreated);
 }

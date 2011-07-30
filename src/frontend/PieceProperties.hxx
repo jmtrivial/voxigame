@@ -31,13 +31,16 @@
 
 class PieceProperties {
 private:
+  static unsigned int nbCreated;
   QColor color;
   QSharedPointer<Piece> piece;
   bool selected;
 
   QPair<QList<Face>, QList<Edge> > fande;
 
+  QString name;
   void setRandomColor();
+  void setDefaultName();
 public:
   /** default constructor */
   PieceProperties();
@@ -56,9 +59,11 @@ public:
   inline QColor getColor() const { return color; }
   /** accessor */
   inline const Piece & getPiece() const { return *piece; }
+  inline const QString & getName() const { return name; }
 
   /** modifier */
   inline void setSelected(bool s = true) { selected = s; }
+  inline void setName(const QString & n) { name = n; }
 };
 
 #endif // PIECE_PROPERTIES_H
