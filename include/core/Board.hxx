@@ -275,17 +275,17 @@ public:
   void isAvailableLocationForMove(const const_iterator & i, Direction::Type d) const;
 
   /** return the number of pieces contained by this board */
-  inline unsigned int getNbPiece() const {
+  inline unsigned int getNbPieces() const {
     return pieces.size();
   }
 
   /** return the number of pieces at the given coordinates (inside the board) */
-  inline unsigned int getNbPiece(unsigned int x, unsigned int y, unsigned int z) const {
-    return getNbPiece(x, y, z);
+  inline unsigned int getNbPieces(unsigned int x, unsigned int y, unsigned int z) const {
+    return getNbPieces(x, y, z);
   }
 
   /** return the number of pieces at the given coordinates (inside the board) */
-  inline unsigned int getNbPiece(const Coord & p) const {
+  inline unsigned int getNbPieces(const Coord & p) const {
     if (box.contains(p))
       return getCell(p).size();
     else

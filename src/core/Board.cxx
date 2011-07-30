@@ -89,7 +89,7 @@ Board & Board::addPiece(const Piece & b) {
     throw ExceptionOutside();
   if (!allowIntersections) {
     for(Piece::const_iterator c = b.begin(); c != b.end(); ++c)
-      if (getNbPiece(*c) != 0)
+      if (getNbPieces(*c) != 0)
 	throw ExceptionIntersection();
   }
   pieces.push_back(QSharedPointer<Piece>(b.clone()));
@@ -112,7 +112,7 @@ Board & Board::addPattern(const Pattern & p) {
     for(QVector<QSharedPointer<Piece> >::const_iterator piece = newPieces.begin();
 	piece != newPieces.end(); ++piece)
       for(Piece::const_iterator c = (**piece).begin(); c != (**piece).end(); ++c)
-	if (getNbPiece(*c) != 0)
+	if (getNbPieces(*c) != 0)
 	  throw ExceptionIntersection();
   }
 
@@ -263,7 +263,7 @@ bool Board::isEmpty(const Coord & c, const const_iterator & i) const {
 }
 
 bool Board::hasPathBetweenWindows() const {
-  if ((getNbPiece(window1) != 0) || (getNbPiece(window2) != 0))
+  if ((getNbPieces(window1) != 0) || (getNbPieces(window2) != 0))
     return false;
 
   QVector<Coord> open;
@@ -286,7 +286,7 @@ bool Board::hasPathBetweenWindows() const {
         Coord cc = c + d;
         if (box.contains(cc) &&
             !seen[cc.getX()][cc.getY()][cc.getZ()] &&
-            getNbPiece(cc) == 0) {
+            getNbPieces(cc) == 0) {
           seen[cc.getX()][cc.getY()][cc.getZ()] = true;
           open.push_back(cc);
         }
@@ -353,7 +353,7 @@ bool Board::save(QFile & f) const {
 bool Board::operator==(const Board & board) const {
   // check general properties
   if (!(box == board.box) || (allowOutside != board.allowOutside) || (allowIntersections != board.allowIntersections) ||
-      !(window1 == board.window1) || !(window2 == board.window2) || (getNbPiece() != board.getNbPiece()))
+      !(window1 == board.window1) || !(window2 == board.window2) || (getNbPieces() != board.getNbPieces()))
     return false;
   // check pieces
   for(const_iterator p = pieces.begin(); p != pieces.end(); ++p)
