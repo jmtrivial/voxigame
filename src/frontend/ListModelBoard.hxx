@@ -51,6 +51,7 @@ public:
   bool setData(const QModelIndex & index, const QVariant & value, int role = Qt::EditRole);
 
   Qt::DropActions supportedDropActions() const;
+
 };
 
 #endif // LIST_MODEL_BOARD_H

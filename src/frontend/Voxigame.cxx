@@ -37,7 +37,7 @@ Voxigame::Voxigame() : board(getBoardFromSettings()), filename(), modified(false
   connect(ui.actionClose, SIGNAL(triggered()), SLOT(closeBoard()));
 
   ui.listView->setModel(new ListModelBoard(board));
-  connect(&board, SIGNAL(modified()), ui.listView, SLOT(update()));
+  connect(&board, SIGNAL(modified()), ui.listView, SLOT(reset()));
 }
 
 Voxigame::~Voxigame() {
@@ -91,6 +91,9 @@ void Voxigame::loadBoard() {
       QMessageBox::warning(this, "Recent Files", QString("Cannot load file %1").arg(fname));
       statusBar()->showMessage("Abort loading", 2000);
     }
+  }
+  else {
+    statusBar()->showMessage("Loading canceled", 2000);
   }
 }
 

@@ -64,7 +64,6 @@ bool ListModelBoard::removeRows(int row, int count, const QModelIndex & p) {
 int ListModelBoard::rowCount(const QModelIndex & p) const {
   if (p.isValid())
     return 0;
-
   return (*board).getNbPieces();
 }
 
@@ -76,3 +75,4 @@ bool ListModelBoard::setData(const QModelIndex & i, const QVariant & value, int 
 Qt::DropActions ListModelBoard::supportedDropActions() const {
   return QAbstractItemModel::supportedDropActions();
 }
+
