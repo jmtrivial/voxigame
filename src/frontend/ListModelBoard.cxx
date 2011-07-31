@@ -67,9 +67,9 @@ Qt::ItemFlags ListModelBoard::flags(const QModelIndex & i) const {
       (i.column() < 0) || ((i.column() > 3)))
     return QAbstractItemModel::flags(i);
 
-  if (i.row() == 0)
+  if (i.column() == 0)
     return QAbstractItemModel::flags(i) | Qt::ItemIsUserCheckable;
-  else if (i.row() == 2)
+  else if (i.column() == 2)
     return QAbstractItemModel::flags(i) | Qt::ItemIsEditable;
   else
     return QAbstractItemModel::flags(i);
@@ -81,7 +81,7 @@ QVariant ListModelBoard::data(const QModelIndex & i, int role) const {
       (i.column() < 0) || ((i.column() > 3)))
     return QVariant();
 
-  if (role == Qt::DisplayRole) {
+  if ((role == Qt::DisplayRole) || (role == Qt::EditRole)) {
     switch(i.column()) {
     case 0:
     case 1:
