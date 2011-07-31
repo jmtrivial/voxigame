@@ -43,6 +43,8 @@ private:
   void setRandomColor();
   void setDefaultName();
   void setType();
+
+  static void resetNbCreated();
 public:
   /** default constructor */
   PieceProperties();
@@ -71,6 +73,8 @@ public:
   /** modifier */
   inline void setSelected(bool s = true) { selected = s; }
   inline void setName(const QString & n) { name = n; }
+
+  friend class InteractiveBoard;
 };
 
 #endif // PIECE_PROPERTIES_H

@@ -21,10 +21,10 @@
 
 #include "ListModelBoard.hxx"
 
-ListModelBoard::ListModelBoard(QObject * p) : QAbstractListModel(p), board(NULL) {
+ListModelBoard::ListModelBoard(QObject * p) : QAbstractTableModel(p), board(NULL) {
 }
 
-ListModelBoard::ListModelBoard(const InteractiveBoard & b, QObject * p) : QAbstractListModel(p), board(&b) {
+ListModelBoard::ListModelBoard(const InteractiveBoard & b, QObject * p) : QAbstractTableModel(p), board(&b) {
 }
 
 void ListModelBoard::setBoard(const InteractiveBoard & b) {
@@ -35,12 +35,26 @@ const InteractiveBoard & ListModelBoard::getBoard() const {
   return *board;
 }
 
-QVariant ListModelBoard::data(const QModelIndex & i, int role) const {
-  if ((i.row() < 0) || ((unsigned int)i.row() >= (*board).getNbPieces()))
+QVariant ListModelBoard::headerData(int section, Qt::Orientation orientation, int role) const {
+  if (role != Qt::DisplayRole)
     return QVariant();
 
-  if ((role == Qt::DisplayRole) || (role == Qt::EditRole)) {
-    return (*board).at(i.row()).getDescription();
+  if (orientation == Qt::Horizontal) {
+    switch (section) {
+    case 0:
+      return tr("Selected");
+    case 1:
+      return tr("Color");
+    case 2:
+      return tr("Name");
+    case 3:
+      return tr("Type");
+    default:
+      return QVariant();
+    }
+  }
+  else {
+    return section + 1;
   }
 
   return QVariant();
@@ -48,22 +62,62 @@ QVariant ListModelBoard::data(const QModelIndex & i, int role) const {
 
 Qt::ItemFlags ListModelBoard::flags(const QModelIndex & i) const {
   if (!i.isValid())
-    return QAbstractItemModel::flags(i) | Qt::ItemIsDropEnabled;
+    return QAbstractItemModel::flags(i);
+  if ((i.row() < 0) || ((unsigned int)i.row() >= (*board).getNbPieces()) ||
+      (i.column() < 0) || ((i.column() > 3)))
+    return QAbstractItemModel::flags(i);
 
-  return Qt::ItemIsUserCheckable | Qt::ItemIsSelectable;
+  if (i.row() == 0)
+    return QAbstractItemModel::flags(i) | Qt::ItemIsUserCheckable;
+  else if (i.row() == 2)
+    return QAbstractItemModel::flags(i) | Qt::ItemIsEditable;
+  else
+    return QAbstractItemModel::flags(i);
+
 }
 
-bool ListModelBoard::insertRows(int row, int count, const QModelIndex & p) {
-  // TODO
+QVariant ListModelBoard::data(const QModelIndex & i, int role) const {
+  if ((i.row() < 0) || ((unsigned int)i.row() >= (*board).getNbPieces()) ||
+      (i.column() < 0) || ((i.column() > 3)))
+    return QVariant();
+
+  if (role == Qt::DisplayRole) {
+    switch(i.column()) {
+    case 0:
+    case 1:
+      return QVariant();
+    case 2:
+      return (*board).at(i.row()).getName();
+    case 3:
+      return (*board).at(i.row()).getType();
+    default:
+      return QVariant();
+    }
+  }
+  else if (role == Qt::DecorationRole) {
+    if (i.column() == 1)
+      return (*board).at(i.row()).getColor();
+    else
+      return QVariant();
+  }
+  else if (role == Qt::CheckStateRole) {
+    if (i.column() == 0)
+      return (*board).at(i.row()).isSelected();
+    else
+      return QVariant();
+  }
+
+
+  return QVariant();
 }
 
-bool ListModelBoard::removeRows(int row, int count, const QModelIndex & p) {
-  // TODO
+int ListModelBoard::columnCount(const QModelIndex & p) const {
+  Q_UNUSED(p);
+  return 4;
 }
 
 int ListModelBoard::rowCount(const QModelIndex & p) const {
-  if (p.isValid())
-    return 0;
+  Q_UNUSED(p);
   return (*board).getNbPieces();
 }
 
@@ -72,7 +126,7 @@ bool ListModelBoard::setData(const QModelIndex & i, const QVariant & value, int 
 }
 
 
-Qt::DropActions ListModelBoard::supportedDropActions() const {
-  return QAbstractItemModel::supportedDropActions();
+bool ListModelBoard::update() {
+  emit layoutChanged();
 }
 

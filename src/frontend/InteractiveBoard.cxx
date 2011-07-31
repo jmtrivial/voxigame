@@ -56,6 +56,7 @@ void InteractiveBoard::load(const QString & f) {
 
 void InteractiveBoard::setPropertiesFromPieces() {
   pProp.clear();
+  PieceProperties::resetNbCreated();
 
   const QVector<QSharedPointer<Piece> > & ps = board.getPieces();
   for(QVector<QSharedPointer<Piece> >::const_iterator p = ps.begin();

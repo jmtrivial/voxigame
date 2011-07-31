@@ -25,7 +25,7 @@
 #include "InteractiveBoard.hxx"
 #include <QAbstractListModel>
 
-class Q_GUI_EXPORT ListModelBoard : public QAbstractListModel {
+class Q_GUI_EXPORT ListModelBoard : public QAbstractTableModel {
 Q_OBJECT
 private:
   const InteractiveBoard * board;
@@ -40,18 +40,18 @@ public:
 
   QVariant data(const QModelIndex & index, int role) const;
 
-  Qt::ItemFlags	flags(const QModelIndex & index) const;
-
-  bool insertRows(int row, int count, const QModelIndex & p = QModelIndex());
-
-  bool removeRows(int row, int count, const QModelIndex & p = QModelIndex());
+  QVariant headerData(int section, Qt::Orientation orientation, int role) const;
 
   int rowCount(const QModelIndex & parent = QModelIndex()) const;
 
+  int columnCount(const QModelIndex & parent = QModelIndex()) const;
+
+  Qt::ItemFlags flags(const QModelIndex & index) const;
+
   bool setData(const QModelIndex & index, const QVariant & value, int role = Qt::EditRole);
 
-  Qt::DropActions supportedDropActions() const;
-
+ public slots:
+  bool update();
 };
 
 #endif // LIST_MODEL_BOARD_H

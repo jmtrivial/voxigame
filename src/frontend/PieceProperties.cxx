@@ -72,3 +72,7 @@ void PieceProperties::setType() {
   }
   catch (...) {  }
 }
+
+void PieceProperties::resetNbCreated() {
+  nbCreated = 0;
+}

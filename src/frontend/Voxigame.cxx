@@ -36,8 +36,9 @@ Voxigame::Voxigame() : board(getBoardFromSettings()), filename(), modified(false
   connect(ui.actionQuit, SIGNAL(triggered()), SLOT(quit()));
   connect(ui.actionClose, SIGNAL(triggered()), SLOT(closeBoard()));
 
-  ui.listView->setModel(new ListModelBoard(board));
-  connect(&board, SIGNAL(modified()), ui.listView, SLOT(reset()));
+  ListModelBoard * model = new ListModelBoard(board, ui.flatview);
+  ui.flatview->setModel(model);
+  connect(&board, SIGNAL(modified()), model, SLOT(update()));
 }
 
 Voxigame::~Voxigame() {
