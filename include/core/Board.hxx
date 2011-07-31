@@ -191,6 +191,9 @@ public:
 	const Direction::Type & f1 = Direction::Static, const Direction::Type & f2 = Direction::Static,
 	bool aI = false, bool aO = false);
 
+  /** copy constructor */
+  Board(const Board & b);
+
   /** open the current board loading it from a file */
   Board(const QString & filename) {
     cells = NULL;
@@ -210,6 +213,9 @@ public:
     if (cells != NULL)
       delete[] cells;
   }
+
+  /** copy operator */
+  Board & operator=(const Board & b);
 
   /** accessor */
   inline unsigned int getSizeX() const { return box.getSizeX(); }

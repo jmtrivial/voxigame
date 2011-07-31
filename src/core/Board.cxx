@@ -27,6 +27,40 @@
 #include <QTextStream>
 
 
+Board::Board(const Board & b) : box(b.box),
+				allowIntersections(b.allowIntersections),
+				allowOutside(b.allowOutside),
+				window1(b.window1), window2(b.window2),
+				face1(b.face1), face2(b.face2) {
+
+  cells = new QVector<QSharedPointer<Piece> >[box.volume()];
+
+  const QVector<QSharedPointer<Piece> > & ps = b.getPieces();
+  for(QVector<QSharedPointer<Piece> >::const_iterator p = ps.begin(); p != ps.end(); ++p)
+    addPiece(**p);
+}
+
+Board & Board::operator=(const Board & b) {
+  box = b.box;
+  allowIntersections = b.allowIntersections;
+  allowOutside = b.allowOutside;
+  window1 = b.window1;
+  window2 = b.window2;
+  face1 = b.face1;
+  face2 = b.face2;
+
+  if (cells != NULL)
+    delete[] cells;
+
+  cells = new QVector<QSharedPointer<Piece> >[box.volume()];
+
+  const QVector<QSharedPointer<Piece> > & ps = b.getPieces();
+  for(QVector<QSharedPointer<Piece> >::const_iterator p = ps.begin(); p != ps.end(); ++p)
+    addPiece(**p);
+
+  return *this;
+}
+
 Board::Board(unsigned int x, unsigned int y, unsigned int z,
              const Coord & w1, const Coord & w2,
 	     const Direction::Type & f1, const Direction::Type & f2,
@@ -40,6 +74,7 @@ Board::Board(unsigned int x, unsigned int y, unsigned int z,
 
   Q_ASSERT((x > 0) && (y > 0) && (z > 0));
   cells = new QVector<QSharedPointer<Piece> >[x * y * z];
+
   if (!box.inBorder(w1)) {
     qWarning("Warning: the input window is not in the border of the board");
   }
@@ -519,7 +554,7 @@ bool Board::load(QDomDocument & elem, const QString & name) {
 
   if (cells != NULL)
     delete [] cells;
-  cells = new QVector<QSharedPointer<Piece> >[box.getSizeX() * box.getSizeY() * box.getSizeZ()];
+  cells = new QVector<QSharedPointer<Piece> >[box.volume()];
 
   pieces.clear();
   for(QVector<QSharedPointer<Piece> >::const_iterator p = newPieces.begin(); p != newPieces.end(); ++p) {
