@@ -62,6 +62,7 @@ int main(int argc, char** argv)
     out << Qt::endl;
     out << "  -2, --two-sides  The generated pages are two-side pages (for a recto/verso printing)" << Qt::endl;
     out << "  -c, --colors     Create a colored document" << Qt::endl;
+    out << "  -f, --force      Force manual creation even for non valid boards" << Qt::endl;
     out << "  -h, --help       Print this help message" << Qt::endl;
     out << Qt::endl;
     out << " INPUT: a voxigame file describing a board." << Qt::endl;
@@ -84,6 +85,7 @@ int main(int argc, char** argv)
   unsigned int nbcolumns = 2;
   bool substeps = true;
   bool usecolor = false;
+  bool force = false;
 
   // load parameters
   for(unsigned int i = 1; i != (unsigned int) args.size(); ++i) {
@@ -129,6 +131,9 @@ int main(int argc, char** argv)
 	  err << "Abort." << Qt::endl;
 	  return 1;
 	}
+      }
+      else if ((s == "-f") || (s == "--force")) {
+	force = true;
       }
       else if ((s == "-c") || (s == "--colors")) {
 	usecolor = true;
@@ -217,6 +222,16 @@ int main(int argc, char** argv)
     err << "Error: cannot load input file (" << input << ")" << Qt::endl;
     err << "Abort." << Qt::endl;
     return 3;
+  }
+
+  if (!board.isStaticAndValid()) {
+    err << "Error: this board is not valid. ";
+    if (force)
+      err << "Continue (--force option)" << Qt::endl;
+    else {
+      err << "Abort." << Qt::endl;
+      return 4;
+    }
   }
 
   Manual manual(board);
