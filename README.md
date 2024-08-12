@@ -7,7 +7,8 @@ It corresponds to an original puzzle game created by Jean-Marie Favreau
 in 2011. 
 
 A detailled description of this puzzle game is available in french: see 
-[règles (fr)](documentation/regles-fr.md).
+[règles (fr)](documentation/regles-fr.md) and
+[conception (fr)](documentation/conception-fr.md).
 
 This software is under GPL (v3 or later).
 

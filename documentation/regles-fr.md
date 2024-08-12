@@ -21,7 +21,7 @@ Les 4 paroies latérales de l'espace de jeu peuvent être déboîtées, et ajust
 ### Le jeu principal
 L'objectif du jeu est de placer les briques à l'intérieur de la boîte, tout en réservant au cordon un chemin reliant les deux fenêtres de passage.
 
-Une fois la boîte refermée, aucune brique ne dois pouvoir se déplacer.
+Une fois la boîte refermée, aucune brique ne dois pouvoir se déplacer. On dit alors que la configuration est *stable*.
 
 ### Le petit jeu bonus
 
@@ -41,3 +41,8 @@ L'image ci-dessous présente chacune des pages d'un exemple simple.
 
 
 ![les pages du manuel du tunnel](./tunnel.jpg)
+
+## Voir aussi
+
+* réflexions sur la [conception d'espaces de jeu](./conception-fr.md)
+* quelques [manuels décrivant des motifs élémentaires](https://github.com/jmtrivial/voxigame/releases/tag/first-export)
