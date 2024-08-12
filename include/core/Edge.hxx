@@ -52,6 +52,13 @@ public:
   Edge(const Edge & e) : location(e.location), direction(e.direction) {
   }
 
+
+  Edge& operator=(const Edge & e) {
+    (*this).location = e.location;
+    (*this).direction = e.direction;
+    return *this;
+  }
+
   /** destructor */
   virtual ~Edge() {}
 

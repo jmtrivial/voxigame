@@ -221,7 +221,7 @@ Angle operator+(const Angle & a, const Angle & b) {
 
   switch(b) {
   case A270: --result; break;
-  case A180: ++result; // 2 ++a: this line, and the next one
+  case A180: ++result; ++result; break;
   case A90: ++result; break;
   case A0:
   default: break;

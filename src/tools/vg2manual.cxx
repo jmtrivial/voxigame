@@ -39,34 +39,34 @@ int main(int argc, char** argv)
   args = app.arguments();
 
   if (args.size() <= 1) {
-    out << "Parameters required. See help (--help)" << endl;
+    out << "Parameters required. See help (--help)" << Qt::endl;
     return 1;
   }
   if (args.contains("--help") ||
       args.contains("-h")) {
-    out << "Generate a manual from a voxigame board." << endl;
-    out << " Usage: vg2manual [parameters] INPUT [OUTPUT|PREFIX]" << endl;
-    out << endl;
-    out << " Parameters:" << endl;
-    out << "  -s, --svg        Generate an svg rather than a pdf. The output names are PREFIX<numbers>SUFFIX.svg" << endl;
-    out << "  --suffix=SUFFIX  Suffix useed in case of svg output." << endl;
-    out << endl;
-    out << "  -n, --name=A     Name of the board" << endl;
-    out << "  -a, --author=A   Author" << endl;
-    out << "  -d, --date=A     Creation date (format: \"DD.MM.YYYY\")" << endl;
-    out << "  -i, --id=I       id (must be != 0)" << endl;
-    out << "  -l, --level=L    Level (maximum: 10)" << endl;
-    out << endl;
-    out << "  --substeps       Draw substeps (more details in the step-by-step description)" << endl;
-    out << "  --nb-columns=NB  Number of columns in the step-by-step description" << endl;
-    out << endl;
-    out << "  -2, --two-sides  The generated pages are two-side pages (for a recto/verso printing)" << endl;
-    out << "  -c, --colors     Create a colored document" << endl;
-    out << "  -h, --help       Print this help message" << endl;
-    out << endl;
-    out << " INPUT: a voxigame file describing a board." << endl;
-    out << " OUTPUT (if the generated document is a pdf): the pdf file." << endl;
-    out << " PREFIX (if the generated document is an svg): the suffix for svg filenames." << endl;
+    out << "Generate a manual from a voxigame board." << Qt::endl;
+    out << " Usage: vg2manual [parameters] INPUT [OUTPUT|PREFIX]" << Qt::endl;
+    out << Qt::endl;
+    out << " Parameters:" << Qt::endl;
+    out << "  -s, --svg        Generate an svg rather than a pdf. The output names are PREFIX<numbers>SUFFIX.svg" << Qt::endl;
+    out << "  --suffix=SUFFIX  Suffix useed in case of svg output." << Qt::endl;
+    out << Qt::endl;
+    out << "  -n, --name=A     Name of the board" << Qt::endl;
+    out << "  -a, --author=A   Author" << Qt::endl;
+    out << "  -d, --date=A     Creation date (format: \"DD.MM.YYYY\")" << Qt::endl;
+    out << "  -i, --id=I       id (must be != 0)" << Qt::endl;
+    out << "  -l, --level=L    Level (maximum: 10)" << Qt::endl;
+    out << Qt::endl;
+    out << "  --substeps       Draw substeps (more details in the step-by-step description)" << Qt::endl;
+    out << "  --nb-columns=NB  Number of columns in the step-by-step description" << Qt::endl;
+    out << Qt::endl;
+    out << "  -2, --two-sides  The generated pages are two-side pages (for a recto/verso printing)" << Qt::endl;
+    out << "  -c, --colors     Create a colored document" << Qt::endl;
+    out << "  -h, --help       Print this help message" << Qt::endl;
+    out << Qt::endl;
+    out << " INPUT: a voxigame file describing a board." << Qt::endl;
+    out << " OUTPUT (if the generated document is a pdf): the pdf file." << Qt::endl;
+    out << " PREFIX (if the generated document is an svg): the suffix for svg filenames." << Qt::endl;
     return 0;
   }
 
@@ -94,8 +94,8 @@ int main(int argc, char** argv)
       else if ((s == "-d") || (s == "--date")) {
 	++i;
 	if (i == (unsigned int)args.size()) {
-	  err << "Error: no given date (" + s + ")" << endl;
-	  err << "Abort." << endl;
+	  err << "Error: no given date (" + s + ")" << Qt::endl;
+	  err << "Abort." << Qt::endl;
 	  return 1;
 	}
 	date = QDate::fromString(args[i], "dd.MM.yyyy");
@@ -103,30 +103,30 @@ int main(int argc, char** argv)
       else if (s == "--nb-columns") {
 	++i;
 	if (i == (unsigned int)args.size()) {
-	  err << "Error: no given number of columns (" + s + ")" << endl;
-	  err << "Abort." << endl;
+	  err << "Error: no given number of columns (" + s + ")" << Qt::endl;
+	  err << "Abort." << Qt::endl;
 	  return 1;
 	}
 	bool ok;
 	nbcolumns = args[i].toUInt(&ok);
 	if ((!ok) || nbcolumns < 1) {
-	  err << "Error: Wrong number of columns (" + s + "). It should be an integer >= 1." << endl;
-	  err << "Abort." << endl;
+	  err << "Error: Wrong number of columns (" + s + "). It should be an integer >= 1." << Qt::endl;
+	  err << "Abort." << Qt::endl;
 	  return 1;
 	}
       }
       else if ((s == "-l") || (s == "--level")) {
 	++i;
 	if (i == (unsigned int)args.size()) {
-	  err << "Error: no given level (" + s + ")" << endl;
-	  err << "Abort." << endl;
+	  err << "Error: no given level (" + s + ")" << Qt::endl;
+	  err << "Abort." << Qt::endl;
 	  return 1;
 	}
 	bool ok;
 	level = args[i].toUInt(&ok);
 	if ((!ok) || level > 10) {
-	  err << "Error: Wrong level value (" + s + "). It should be an integer value between 1 and 10." << endl;
-	  err << "Abort." << endl;
+	  err << "Error: Wrong level value (" + s + "). It should be an integer value between 1 and 10." << Qt::endl;
+	  err << "Abort." << Qt::endl;
 	  return 1;
 	}
       }
@@ -145,8 +145,8 @@ int main(int argc, char** argv)
       else if (s == "--suffix") {
 	++i;
 	if (i == (unsigned int)args.size()) {
-	  err << "Error: no given suffix (" + s + ")" << endl;
-	  err << "Abort." << endl;
+	  err << "Error: no given suffix (" + s + ")" << Qt::endl;
+	  err << "Abort." << Qt::endl;
 	  return 1;
 	}
 	suffix = args[i];
@@ -154,8 +154,8 @@ int main(int argc, char** argv)
       else if ((s == "-n") || (s == "--name")) {
 	++i;
 	if (i == (unsigned int)args.size()) {
-	  err << "Error: no given name (" + s + ")" << endl;
-	  err << "Abort." << endl;
+	  err << "Error: no given name (" + s + ")" << Qt::endl;
+	  err << "Abort." << Qt::endl;
 	  return 1;
 	}
 	name = args[i];
@@ -163,30 +163,30 @@ int main(int argc, char** argv)
       else if ((s == "-i") || (s == "--id")) {
 	++i;
 	if (i == (unsigned int)args.size()) {
-	  err << "Error: no given id (" + s + ")" << endl;
-	  err << "Abort." << endl;
+	  err << "Error: no given id (" + s + ")" << Qt::endl;
+	  err << "Abort." << Qt::endl;
 	  return 1;
 	}
 	bool ok;
 	id = args[i].toUInt(&ok);
 	if (!ok) {
-	  err << "Error: Wrong id value (" + s + "). It should be a positive integer." << endl;
-	  err << "Abort." << endl;
+	  err << "Error: Wrong id value (" + s + "). It should be a positive integer." << Qt::endl;
+	  err << "Abort." << Qt::endl;
 	  return 1;
 	}
       }
       else if ((s == "-a") || (s == "--author")) {
 	++i;
 	if (i == (unsigned int)args.size()) {
-	  err << "Error: no given author name (" + s + ")" << endl;
-	  err << "Abort." << endl;
+	  err << "Error: no given author name (" + s + ")" << Qt::endl;
+	  err << "Abort." << Qt::endl;
 	  return 1;
 	}
 	author = args[i];
       }
       else {
-	err << "Error: unknown parameter (" << s << ")" << endl;
-	err << "Abort." << endl;
+	err << "Error: unknown parameter (" << s << ")" << Qt::endl;
+	err << "Abort." << Qt::endl;
 	return 1;
       }
     }
@@ -196,8 +196,8 @@ int main(int argc, char** argv)
       else if (output == "")
 	output = s;
       else {
-	err << "Error: unknown parameter (" << s << ")" << endl;
-	err << "Abort." << endl;
+	err << "Error: unknown parameter (" << s << ")" << Qt::endl;
+	err << "Abort." << Qt::endl;
 	return 1;
       }
     }
@@ -206,16 +206,16 @@ int main(int argc, char** argv)
   // load file
   QFile ifile(input);
   if (!ifile.exists()) {
-    err << "Error: input file not readable (" << input << ")" << endl;
-    err << "Abort." << endl;
+    err << "Error: input file not readable (" << input << ")" << Qt::endl;
+    err << "Abort." << Qt::endl;
     return 2;
   }
-  out << "Loading file (" << input << ")" << endl;
+  out << "Loading file (" << input << ")" << Qt::endl;
   Board board;
 
   if (!board.load(ifile)) {
-    err << "Error: cannot load input file (" << input << ")" << endl;
-    err << "Abort." << endl;
+    err << "Error: cannot load input file (" << input << ")" << Qt::endl;
+    err << "Abort." << Qt::endl;
     return 3;
   }
 
@@ -231,11 +231,11 @@ int main(int argc, char** argv)
   manual.setNbColumns(nbcolumns);
 
   if (pdf) {
-    out << "Save file (" << output << ")" << endl;
+    out << "Save file (" << output << ")" << Qt::endl;
     return manual.toPDF(output) ? 0 : 4;
   }
   else {
-    out << "Save file (" << output << "[...]" << suffix << ".svg)" << endl;
+    out << "Save file (" << output << "[...]" << suffix << ".svg)" << Qt::endl;
     return manual.toSVG(output, suffix + ".svg") ? 0 : 4;
   }
 

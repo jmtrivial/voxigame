@@ -123,15 +123,6 @@ public:
   /** modifier */
   inline CoordT & setZ(T v) { z = v; return *this; }
 
-
-  /** affectation */
-  CoordT & operator=(const CoordT & c) {
-    x = c.x;
-    y = c.y;
-    z = c.z;
-    return *this;
-  }
-
   /** comparator */
   inline bool operator==(const CoordT & c) const {
     return x == c.x && y == c.y && z == c.z;
