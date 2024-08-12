@@ -4,7 +4,10 @@
 
 This software is a tool to manipulate 3D objects (pieces) in a 3D board.
 It corresponds to an original puzzle game created by Jean-Marie Favreau 
-in 2011.
+in 2011. 
+
+A detailled description of this puzzle game is available in french: see 
+[règles (fr)](documentation/regles-fr.md).
 
 This software is under GPL (v3 or later).
 
