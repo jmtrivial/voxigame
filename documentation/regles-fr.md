@@ -40,4 +40,4 @@ Le logiciel [vg2manual](../src/tools/vg2manual.cxx) permet de générer des manu
 L'image ci-dessous présente chacune des pages d'un exemple simple.
 
 
-![les pages du manuel du tunnel](./tunnel.png)
+![les pages du manuel du tunnel](./tunnel.jpg)
