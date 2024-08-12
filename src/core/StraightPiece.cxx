@@ -23,8 +23,8 @@
 #include "core/Box.hxx"
 #include "core/Exception.hxx"
 #include <QString>
-#include <QDomElement>
-#include <QDomDocument>
+#include <QtXml/QDomElement>
+#include <QtXml/QDomDocument>
 
 
 StraightPiece::StraightPiece(const QDomElement & elem, const QString & name)

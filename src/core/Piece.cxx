@@ -21,8 +21,8 @@
 
 #include "core/Piece.hxx"
 #include "core/Exception.hxx"
-#include <QDomDocument>
-#include <QDomElement>
+#include <QtXml/QDomDocument>
+#include <QtXml/QDomElement>
 #include <QString>
 #include <QMap>
 #include "core/AbstractPiece.hxx"

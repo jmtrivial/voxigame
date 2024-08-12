@@ -26,7 +26,7 @@
 #include "core/LPiece.hxx"
 #include "core/GenericPiece.hxx"
 #include <QString>
-#include <QDomElement>
+#include <QtXml/QDomElement>
 
 
 Piece * PieceFactory::build(const QDomElement & elem, const QString & name) {

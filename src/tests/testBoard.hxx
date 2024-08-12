@@ -20,7 +20,7 @@
  *****************************************************************************/
 
 #include <QObject>
-#include <QtTest>
+#include <QtTest/QtTest>
 #include <QtCore>
 #include <QTemporaryFile>
 

@@ -20,8 +20,8 @@
  *****************************************************************************/
 
 #include <QPainter>
-#include <QPrinter>
-#include <QSvgGenerator>
+#include <QtPrintSupport/QPrinter>
+#include <QtSvg/QSvgGenerator>
 #include <QGraphicsTextItem>
 
 #include "core/export/Manual.hxx"

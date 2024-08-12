@@ -22,8 +22,8 @@
 #include "core/Box.hxx"
 #include "core/Exception.hxx"
 #include <QString>
-#include <QDomDocument>
-#include <QDomElement>
+#include <QtXml/QDomDocument>
+#include <QtXml/QDomElement>
 
 Box::Box(int x, int y, int z)
   : corner1(0, 0, 0), corner2(x - 1, y - 1, z - 1)

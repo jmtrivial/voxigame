@@ -18,8 +18,6 @@
 #   along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-FIND_PACKAGE(Qt4 COMPONENTS QtCore QtGui QtXml REQUIRED)
-
 IF(BUILD_WITH_EXPORT)
   # export manual
   SET(VG2MANUAL_EXE vg2manual)
@@ -30,8 +28,10 @@ IF(BUILD_WITH_EXPORT)
 
   ADD_EXECUTABLE(${VG2MANUAL_EXE} ${VG2MANUAL_SRCS})
   TARGET_LINK_LIBRARIES(${VG2MANUAL_EXE}
-    ${VOXIGAME_CORE_LIB} ${QT_LIBRARIES}
+    ${VOXIGAME_CORE_LIB} Qt::Widgets Qt::Core Qt::Xml Qt::Svg Qt::PrintSupport
     )
+  TARGET_COMPILE_OPTIONS(${VG2MANUAL_EXE} PRIVATE -fPIC)
+
 
 
 ENDIF(BUILD_WITH_EXPORT)

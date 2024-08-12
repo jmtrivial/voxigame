@@ -21,8 +21,8 @@
 
 #include "core/Board.hxx"
 #include "core/PieceFactory.hxx"
-#include <QDomElement>
-#include <QDomDocument>
+#include <QtXml/QDomElement>
+#include <QtXml/QDomDocument>
 #include <QFile>
 #include <QTextStream>
 

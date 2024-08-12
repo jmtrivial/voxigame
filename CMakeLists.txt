@@ -17,11 +17,9 @@
 #   You should have received a copy of the GNU General Public License
 #   along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 #
+cmake_minimum_required(VERSION 3.5)
 
 PROJECT(Voxigame)
-
-cmake_minimum_required(VERSION 2.8)
-
 
 SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wunused -Wno-long-long -Wno-deprecated -Wnon-virtual-dtor -Wcast-align -Wchar-subscripts -Wall -Wextra -Wpointer-arith -Wformat-security -Wunused-parameter -Woverloaded-virtual -Wshadow")
 

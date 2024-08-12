@@ -26,8 +26,8 @@
 #include <QVector>
 #include <QString>
 #include <QTextStream>
-#include <QDomDocument>
-#include <QDomElement>
+#include <QtXml/QDomDocument>
+#include <QtXml/QDomElement>
 #include "core/Exception.hxx"
 
 

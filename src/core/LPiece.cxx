@@ -23,8 +23,8 @@
 #include "core/Exception.hxx"
 #include "core/Box.hxx"
 #include <QString>
-#include <QDomElement>
-#include <QDomDocument>
+#include <QtXml/QDomElement>
+#include <QtXml/QDomDocument>
 
 
 LPiece::LPiece(const QDomElement & elem, const QString & name)
