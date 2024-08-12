@@ -42,7 +42,12 @@ L'image ci-dessous présente chacune des pages d'un exemple simple.
 
 ![les pages du manuel du tunnel](./tunnel.jpg)
 
+Quelques [manuels d'exemples plus ou moins complexes](https://github.com/jmtrivial/voxigame/releases/tag/second-export)
+sont disponibles en pdf, et proposent les cas présentés dans l'image ci-dessous.
+
+![exemples de configurations](./exemples.jpg)
+
 ## Voir aussi
 
 * réflexions sur la [conception d'espaces de jeu](./conception-fr.md)
-* quelques [manuels d'exemples plus ou moins complexes](https://github.com/jmtrivial/voxigame/releases/tag/second-export)
+* 
