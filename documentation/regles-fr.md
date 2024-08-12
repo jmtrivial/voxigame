@@ -45,4 +45,4 @@ L'image ci-dessous présente chacune des pages d'un exemple simple.
 ## Voir aussi
 
 * réflexions sur la [conception d'espaces de jeu](./conception-fr.md)
-* quelques [manuels décrivant des motifs élémentaires](https://github.com/jmtrivial/voxigame/releases/tag/first-export)
+* quelques [manuels d'exemples plus ou moins complexes](https://github.com/jmtrivial/voxigame/releases/tag/second-export)
