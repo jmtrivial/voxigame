@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-VG2MANUAL=../src/tools/vg2manual
+VG2MANUAL=src/tools/vg2manual
 VGDIRECTORY=../examples/patterns/
 MANUALDIRECTORY=examples/patterns/
 
