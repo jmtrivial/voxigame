@@ -50,8 +50,8 @@ private slots:
 
     QList<Face> pfaces = p.getFaces();
 
-    qSort(faces);
-    qSort(pfaces);
+    std::sort(faces);
+    std::sort(pfaces);
 
     QVERIFY(faces == pfaces);
   }
@@ -80,8 +80,8 @@ private slots:
 
     QList<Face> pfaces = piece.getFaces();
 
-    qSort(faces);
-    qSort(pfaces);
+    std::sort(faces);
+    std::sort(pfaces);
 
     QVERIFY(faces == pfaces);
   }

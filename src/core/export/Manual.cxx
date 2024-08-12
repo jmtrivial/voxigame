@@ -296,8 +296,8 @@ bool Manual::toPDF(const QString & filename) {
   printer.setOutputFormat(QPrinter::PdfFormat);
   printer.setOutputFileName(filename);
   printer.setOutputFormat(QPrinter::PdfFormat);
-  printer.setPaperSize(QPrinter::A4);
-  printer.setOrientation(QPrinter::Portrait);
+  printer.setPageSize(QPageSize::A4);
+  printer.setPageOrientation(QPageLayout::Portrait);
   printer.setFullPage(true);
 
   QPainter pdfPainter;
@@ -674,7 +674,7 @@ void Manual::drawCaption(QGraphicsScene & scene,
 }
 
 void Manual::drawObjects(QGraphicsScene &scene, const QPointF & point, QVector<DObject> & fae, float scale) const {
-  qSort(fae.begin(), fae.end());
+  std::sort(fae.begin(), fae.end());
 
   for(QVector<DObject>::const_iterator object = fae.begin(); object != fae.end(); ++object)
     drawObject(scene, point, *object, scale);
@@ -880,7 +880,7 @@ QVector<QSharedPointer<QGraphicsScene> > Manual::createStepByStepPages(unsigned 
 
   // get pieces and order them by z
   QVector<QSharedPointer<Piece> > pieces = board.getPieces();
-  qSort(pieces.begin(), pieces.end(), AbstractPiece::zLessThan);
+  std::sort(pieces.begin(), pieces.end(), AbstractPiece::zLessThan);
 
   unsigned int currentColumn = 0;
   unsigned int currentLine = 0;
