@@ -51,7 +51,7 @@ private slots:
     QList<Face> pfaces = p.getFaces();
 
     std::sort(faces.begin(), faces.end());
-    std::sort(pfaces.begin(), faces.end());
+    std::sort(pfaces.begin(), pfaces.end());
 
     QVERIFY(faces == pfaces);
   }
