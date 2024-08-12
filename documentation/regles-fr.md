@@ -50,4 +50,3 @@ sont disponibles en pdf, et proposent les cas présentés dans l'image ci-dessou
 ## Voir aussi
 
 * réflexions sur la [conception d'espaces de jeu](./conception-fr.md)
-* 
