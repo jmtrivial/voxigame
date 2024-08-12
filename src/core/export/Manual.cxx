@@ -65,11 +65,13 @@ void Manual::addFooter(QGraphicsScene & page, unsigned int nb) const {
   QGraphicsTextItem * text = new QGraphicsTextItem;
   QFont font("DejaVu Sans", 4);
   (*text).setFont(font);
+  (*text).setDefaultTextColor(QColor(0, 0, 0, 255));
   (*text).setPlainText("Voxigame " + QString::fromUtf8("#%1 — level ").arg(id) +
 		       (level != 0 ? QString("%1 / %2").arg(level).arg(maxLevel) : QString("- / %2").arg(maxLevel)));
 
   QGraphicsTextItem * npage = new QGraphicsTextItem;
   (*npage).setFont(font);
+  (*npage).setDefaultTextColor(QColor(0, 0, 0, 255));
   (*npage).setPlainText(QString("page %1").arg(nb));
 
   if (even) {
@@ -108,6 +110,7 @@ QSharedPointer<QGraphicsScene> Manual::createWNPage(unsigned int cpt) const {
   (*title).setPos(l_innermargin, headererwidth);
   (*title).setPlainText("Tip: quantity");
   (*title).setFont(titleFont);
+  (*title).setDefaultTextColor(QColor(0, 0, 0, 255));
 
   (*page).addItem(title);
   QRectF btitle = (*title).sceneBoundingRect();
@@ -139,6 +142,7 @@ QSharedPointer<QGraphicsScene> Manual::createPathPage(unsigned int cpt) const {
   (*title).setPos(l_innermargin, headererwidth);
   (*title).setPlainText("Tip: free voxels");
   (*title).setFont(titleFont);
+  (*title).setDefaultTextColor(QColor(0, 0, 0, 255));
 
   (*page).addItem(title);
   QRectF btitle = (*title).sceneBoundingRect();
@@ -175,6 +179,7 @@ QSharedPointer<QGraphicsScene> Manual::createFilledPage(unsigned int cpt) const 
   (*title).setPos(l_innermargin, headererwidth);
   (*title).setPlainText("Tip: solution");
   (*title).setFont(titleFont);
+  (*title).setDefaultTextColor(QColor(0, 0, 0, 255));
 
   (*page).addItem(title);
   QRectF btitle = (*title).sceneBoundingRect();
@@ -207,6 +212,7 @@ QSharedPointer<QGraphicsScene> Manual::createFirstPage() const {
   (*title).setPos(l_innermargin, headererwidth);
   (*title).setPlainText("Voxigame");
   (*title).setFont(titleFont);
+  (*title).setDefaultTextColor(QColor(0, 0, 0, 255));
 
   (*first).addItem(title);
   QRectF btitle = (*title).sceneBoundingRect();
@@ -224,6 +230,7 @@ QSharedPointer<QGraphicsScene> Manual::createFirstPage() const {
   QGraphicsTextItem * text = new QGraphicsTextItem;
   QFont font("DejaVu Sans", 4);
   (*text).setFont(font);
+  (*text).setDefaultTextColor(QColor(0, 0, 0, 255));
 
   // draw level and size
   (*text).setPos(btitle.right(), btitle.top());
@@ -237,6 +244,7 @@ QSharedPointer<QGraphicsScene> Manual::createFirstPage() const {
   // write author and creation date
   QGraphicsTextItem * text2 = new QGraphicsTextItem;
   (*text2).setFont(font);
+  (*text2).setDefaultTextColor(QColor(0, 0, 0, 255));
 
   (*text2).setPlainText("Author(s): " + author +
 		       "\nCreation: " + date.toString("d.M.yyyy") +
@@ -446,6 +454,7 @@ void Manual::LayoutBoardAndCaption::buildCaptionProperties(unsigned int nbc, uns
     QGraphicsTextItem * text = new QGraphicsTextItem;
     QFont font("DejaVu Sans", fontSize);
     (*text).setFont(font);
+    (*text).setDefaultTextColor(QColor(0, 0, 0, 255));
     (*text).setPlainText(QString::fromUtf8("× %1").arg(nbmax));
     maxWidthCaptionText = (*text).boundingRect().width();
     captionSizeFull.rwidth() += epsilon + maxWidthCaptionText;
@@ -665,6 +674,7 @@ void Manual::drawCaption(QGraphicsScene & scene,
       if (layout.getWriteNumbers()) {
 	QGraphicsTextItem * text = new QGraphicsTextItem;
 	(*text).setFont(font);
+  (*text).setDefaultTextColor(QColor(0, 0, 0, 255));
 	(*text).setPlainText(QString::fromUtf8("× %1").arg(*piece));
 	(*text).setPos(rect.right() - (*text).boundingRect().width(), rect.center().y() - ((*text).boundingRect().height() / 2));
 	scene.addItem(text);
@@ -923,6 +933,7 @@ QVector<QSharedPointer<QGraphicsScene> > Manual::createStepByStepPages(unsigned 
 
     QGraphicsTextItem * text = new QGraphicsTextItem;
     (*text).setFont(QFont("DejaVu Sans", 14 / nbcolumns));
+    (*text).setDefaultTextColor(QColor(0, 0, 0, 255));
     (*text).setPlainText(QString("%1").arg(step));
     (*text).setPos(point - QPointF(0., columnmargin / 2));
     QRectF rect = (*text).sceneBoundingRect();
