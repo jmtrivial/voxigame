@@ -107,7 +107,7 @@ bool Voxigame::saveBoard() {
 }
 
 bool Voxigame::saveAsBoard() {
-  QString fname = QFileDialog::getOpenFileName(this, "Save board", "", "Voxigame files (*.xml)");
+  QString fname = QFileDialog::getSaveFileName(this, "Save board", "", "Voxigame files (*.vg)");
   if (fname.isEmpty())
     return false;
 
