@@ -1,16 +1,26 @@
 # Voxigame
 
-## Description
 
 This software is a tool to manipulate 3D objects (pieces) in a 3D board.
 It corresponds to an original puzzle game created by Jean-Marie Favreau 
 in 2011. 
 
+This software is under GPL (v3 or later).
+
+## Description of the puzzle game
+
+The aim of this puzzle is to arrange the bricks in a box in such a way that 
+a path remains between the two windows on the sides of the box, while 
+ensuring that the configuration is stable, i.e. that the bricks do not
+move once the box is closed.
+
 A detailled description of this puzzle game is available in french: see 
 [règles (fr)](documentation/regles-fr.md) and
 [conception (fr)](documentation/conception-fr.md).
 
-This software is under GPL (v3 or later).
+A [blog entry](https://blog.jmtrivial.info/2024/08/12/voxigame/) from august 2024
+add some personal context about this puzzle game.
+
 
 ## Usage
 
