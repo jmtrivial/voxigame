@@ -19,7 +19,7 @@
 
  *****************************************************************************/
 
-#include <QtGui/QApplication>
+#include <QtWidgets/QApplication>
 #include "Voxigame.hxx"
 
 

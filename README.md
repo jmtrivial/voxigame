@@ -27,6 +27,7 @@ add some personal context about this puzzle game.
 
 * cmake
 * Qt5
+* QGLViewer
 
 ## Usage
 

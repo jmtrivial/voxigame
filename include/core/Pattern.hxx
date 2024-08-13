@@ -64,6 +64,9 @@ public:
   /** copy constructor */
   Pattern(const Pattern & p);
 
+  /** copy operator */
+  Pattern& operator=(const Pattern&);
+
 
   /** load pattern from the given XML document */
   static Pattern load(QDomElement & elem, const QString & name = "pattern");

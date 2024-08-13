@@ -25,15 +25,16 @@
 #include "core/LPiece.hxx"
 #include "core/GenericPiece.hxx"
 
-Pattern::Pattern(const Pattern & p)
-  : location(p.location),
-    direction(p.direction),
-    angle(p.angle),
-    box(p.box)
-{
+Pattern::Pattern(const Pattern & p) : Pattern() {
+  *this = p;
+}
+
+Pattern& Pattern::operator=(const Pattern& p) {
   for(QVector<QSharedPointer<Piece> >::const_iterator pp = p.pieces.begin();
       pp != p.pieces.end(); ++pp)
     pieces.push_back(QSharedPointer<Piece>((**pp).clone()));
+
+  return *this;
 }
 
 Pattern & Pattern::addPiece(const Piece & piece) {
