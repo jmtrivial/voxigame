@@ -5,7 +5,9 @@ This software is a tool to manipulate 3D objects (pieces) in a 3D board.
 It corresponds to an original puzzle game created by Jean-Marie Favreau 
 in 2011. 
 
-This software is under GPL (v3 or later).
+This software has been developped in 2011 under GPL (v3 or later), initially
+using Qt4. In 2024, the source code has been ported for Qt5 and is able to
+compile on a recent debian system.
 
 ## Description of the puzzle game
 
@@ -21,6 +23,10 @@ A detailled description of this puzzle game is available in french: see
 A [blog entry](https://blog.jmtrivial.info/2024/08/12/voxigame/) from august 2024
 add some personal context about this puzzle game.
 
+## Dependancies
+
+* cmake
+* Qt5
 
 ## Usage
 
