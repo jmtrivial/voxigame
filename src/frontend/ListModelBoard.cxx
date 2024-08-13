@@ -128,5 +128,6 @@ bool ListModelBoard::setData(const QModelIndex & i, const QVariant & value, int 
 
 bool ListModelBoard::update() {
   emit layoutChanged();
+  return true;
 }
 
