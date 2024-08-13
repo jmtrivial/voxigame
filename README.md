@@ -27,7 +27,7 @@ add some personal context about this puzzle game.
 
 * cmake
 * Qt5
-* QGLViewer
+* QGLViewer (optional)
 
 ## Usage
 
@@ -46,6 +46,9 @@ run the following command:
 * ```../scripts/patternManuals.sh```
 
 It will generate a ```example``` directory with the corresponding manuals.
+
+A graphic frontend using QGLViewr has been partially implemented, but it's
+not yet able to provide a display on a board (see [frontend](./src/frontend/)).
 
 ## Unit tests
 
