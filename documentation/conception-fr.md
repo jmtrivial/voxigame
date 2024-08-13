@@ -1,6 +1,6 @@
 # Conception d'espaces de jeu
 
-Les [règles du jeu Voxigame](./regles-fr.md) donnent les règles générales, mais ne donnent pas de configurations possibles.
+Les [règles du jeu Voxigame](./regles-fr.md) donnent les le fonctionnement général de Voxigame, mais ne donnent pas de configurations possibles.
 En 2011, nous avons exploré la question, en nous demandant d'abord comment aborder la question. 
 
 On s'est demandé si pour toute configuration de plateau (taille de la boîte et position des fenêtres) était *réalisable*, c'est-à-dire s'il existait un ensemble de briques satisfaisant les contraintes du jeu.
